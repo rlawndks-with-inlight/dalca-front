@@ -16,6 +16,7 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import $ from 'jquery';
 import { setLocalStorage } from "../../../functions/LocalStorage";
+import { motion } from "framer-motion";
 const SignUpCategoryButton = (props) => {
     const { icon, title, sub_title, onClick } = props;
     return (
@@ -64,9 +65,9 @@ const Login = () => {
     }
     return (
         <>
-            <Wrappers className="wrapper" style={{ ...fullBackgroundColorWrappersStyle, background: "#fff" }}>
-                <ContentWrappers>
-                    <img src={logoSrc} style={{ maxWidth: '500px', width: '90%', margin: '10vh auto' }} onClick={() => { setSignUpCount(0) }} />
+            <Wrappers className="wrapper" style={{ ...fullBackgroundColorWrappersStyle, background: "#fff", height: '100vh' }}>
+                <ContentWrappers style={{ height: '100%' }}>
+                    <img src={logoSrc} style={{ maxWidth: '500px', width: '90%', margin: 'auto auto 10vh auto' }} onClick={() => { setSignUpCount(0) }} />
                     {signUpCount == 0 ?
                         <>
                             <InputComponet
@@ -90,7 +91,8 @@ const Login = () => {
                         </>
                         :
                         <>
-                            <div style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
+                            <div
+style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
                                 <div style={{ color: '#fff' }}>
                                     원하는 회원가입 유형을 선택하세요.
                                 </div>
@@ -118,7 +120,7 @@ const Login = () => {
                             </div>
                         </>}
 
-                    <MarginBottom value={'8vh'} />
+                    <MarginBottom value={'10vh'} />
                     {signUpCount == 0 ?
                         <>
                             <Button variant="text" sx={twoOfThreeButtonStyle} onClick={onLogin}>로그인</Button>
@@ -129,6 +131,7 @@ const Login = () => {
                         <>
                             <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { setSignUpCount(0) }}>로그인 페이지로</Button>
                         </>}
+                    <div style={{ margin: '0 auto auto auto' }} />
 
                 </ContentWrappers>
             </Wrappers>

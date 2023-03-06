@@ -292,7 +292,7 @@ export const InputComponet = (props) => {
                             fontSize: `${(focused || isValue) ? theme.size.font6 : theme.size.font5}`,
                             color: `${focused ? theme.color.background1 : theme.color.font4}`,
                         }}
-                    >{label}</InputLabel>
+                    onClick={()=>$(`.${class_name}`).focus()}>{label}</InputLabel>
                     <PlaceholderLabel opacity={(focused && !isValue) ? 1 : 0} >
                         {(focused && !isValue) ?
                             <>

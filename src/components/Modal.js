@@ -26,7 +26,7 @@ opacity: 0.4;
 const ModalContent = styled.div`
 box-shadow: 0px 10px 40px #00000029;
 background-color:white;
-
+padding:32px 0;
 position: relative;
 border-radius: 12px;
 width:50%;
@@ -35,8 +35,7 @@ align-items: center;
 display:flex;
 flex-direction:column;
 @media screen and (max-width:950px) {
-width:80%;
-
+width:90%;
 }
 `
 

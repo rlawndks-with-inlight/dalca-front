@@ -23,6 +23,7 @@ const SignUp = () => {
     const [isCheckId, setIsCheckId] = useState(false);
     const [isCheckPhone, setIsCheckPhone] = useState(false);
     const [isCheckNickname, setIsCheckNickname] = useState(false);
+    const [step, setStep] = useState(0);
     useEffect(() => {
         if (params?.user_level == 0) {
             setTitle('임차인');
@@ -156,96 +157,115 @@ const SignUp = () => {
             toast.error(response?.message);
         }
     }
+    const onPreStep = () => {
+        setStep(step-1);
+        window.scrollTo(0, 0);
+    }
+    const onNextStep = () => {
+        if(params?.user_level==10){
+            setStep(step+1);
+
+        }else{
+            setStep(step+2);
+        }
+        window.scrollTo(0, 0);
+    }
     return (
         <>
             <FakeHeaders label='회원가입' />
             <Wrappers className="wrapper" style={{ width: '100%' }}>
                 <ContentWrappers>
-                    <HalfTitle>{title}</HalfTitle>
-                    <InputComponet
-                        label={'ID*'}
-                        input_type={{
-                            placeholder: '특수문자 제외한 6자리 이상 20자리 이하',
-                            disabled: isCheckId
-                        }}
-                        class_name='id'
-                        button_label={isCheckId ? '완료' : '확인'}
-                        isButtonAble={!isCheckId}
-                        is_divider={true}
-                        onKeyPress={() => onCheckId()}
-                        onClickButton={() => onCheckId()}
-                    />
-                    <InputComponet
-                        label={'PW*'}
-                        input_type={{
-                            placeholder: '영문, 숫자, 특수문자조합 8~20자',
-                            type: 'password'
-                        }}
-                        class_name='pw'
-                        is_divider={true}
-                        onKeyPress={() => $('.pw_check').focus()}
-                    />
-                    <InputComponet
-                        label={'PW 확인*'}
-                        input_type={{
-                            placeholder: '비밀번호 확인을 위해 한번 더 입력해주세요',
-                            type: 'password'
-                        }}
-                        class_name='pw_check'
-                        is_divider={true}
-                        onKeyPress={() => setIsSeePostCode(true)}
-                    />
-                    <div onClick={() => {
-                        setIsSeePostCode(true)
-                    }}>
-                        <InputComponet
-                            label={'주소* '}
-                            input_type={{
-                                placeholder: '',
-                                disabled: "true"
-                            }}
-                            class_name='address'
-                            is_divider={true}
-                        />
-                    </div>
-                    <InputComponet
-                        label={'상세주소'}
-                        input_type={{
-                            placeholder: ''
-                        }}
-                        class_name='address_detail'
-                        is_divider={true}
-                        onKeyPress={() => $('.id_number').focus()}
-                    />
-                    <InputComponet
-                        label={'주민등록번호'}
-                        input_type={{
-                            placeholder: ''
-                        }}
-                        class_name='id_number'
-                        is_divider={true}
-                        onKeyPress={() => $('.phone').focus()}
-                    />
-                    <InputComponet
-                        label={'휴대폰번호*'}
-                        input_type={{
-                            placeholder: '-없이 숫자만 입력',
-                            disabled: isCheckPhone
-                        }}
-                        class_name='phone'
-                        button_label={isCheckPhone ? '완료' : '인증'}
-                        isButtonAble={!isCheckPhone}
-                        is_divider={true}
-                    />
-                    <InputComponet
-                        label={'성명*'}
-                        input_type={{
-                            placeholder: ''
-                        }}
-                        class_name='name'
-                        is_divider={true}
-                    />
-                    {params?.user_level == 10 ?
+                    {step == 0 ?
+                        <>
+                            <HalfTitle>{title}</HalfTitle>
+                            <InputComponet
+                                label={'ID*'}
+                                input_type={{
+                                    placeholder: '특수문자 제외한 6자리 이상 20자리 이하',
+                                    disabled: isCheckId
+                                }}
+                                class_name='id'
+                                button_label={isCheckId ? '완료' : '확인'}
+                                isButtonAble={!isCheckId}
+                                is_divider={true}
+                                onKeyPress={() => onCheckId()}
+                                onClickButton={() => onCheckId()}
+                            />
+                            <InputComponet
+                                label={'PW*'}
+                                input_type={{
+                                    placeholder: '영문, 숫자, 특수문자조합 8~20자',
+                                    type: 'password'
+                                }}
+                                class_name='pw'
+                                is_divider={true}
+                                onKeyPress={() => $('.pw_check').focus()}
+                            />
+                            <InputComponet
+                                label={'PW 확인*'}
+                                input_type={{
+                                    placeholder: '비밀번호 확인을 위해 한번 더 입력해주세요',
+                                    type: 'password'
+                                }}
+                                class_name='pw_check'
+                                is_divider={true}
+                                onKeyPress={() => setIsSeePostCode(true)}
+                            />
+                            <div onClick={() => {
+                                setIsSeePostCode(true)
+                            }}>
+                                <InputComponet
+                                    label={'주소* '}
+                                    input_type={{
+                                        placeholder: '',
+                                        disabled: "true"
+                                    }}
+                                    class_name='address'
+                                    is_divider={true}
+                                />
+                            </div>
+                            <InputComponet
+                                label={'상세주소'}
+                                input_type={{
+                                    placeholder: ''
+                                }}
+                                class_name='address_detail'
+                                is_divider={true}
+                                onKeyPress={() => $('.id_number').focus()}
+                            />
+                            <InputComponet
+                                label={'주민등록번호'}
+                                input_type={{
+                                    placeholder: ''
+                                }}
+                                class_name='id_number'
+                                is_divider={true}
+                                onKeyPress={() => $('.phone').focus()}
+                            />
+                            <InputComponet
+                                label={'휴대폰번호*'}
+                                input_type={{
+                                    placeholder: '-없이 숫자만 입력',
+                                    disabled: isCheckPhone
+                                }}
+                                class_name='phone'
+                                button_label={isCheckPhone ? '완료' : '인증'}
+                                isButtonAble={!isCheckPhone}
+                                is_divider={true}
+                            />
+                            <InputComponet
+                                label={'성명*'}
+                                input_type={{
+                                    placeholder: ''
+                                }}
+                                class_name='name'
+                                is_divider={true}
+                            />
+                        </>
+                        :
+                        <>
+                        </>}
+                    {step == 1 ?
                         <>
                             <HalfTitle>{'중개업확인'}</HalfTitle>
                             <InputComponet
@@ -296,12 +316,18 @@ const SignUp = () => {
                                 class_name='name'
                                 is_divider={true}
                             />
+                        </>
+                        :
+                        <>
+                        </>}
+                    {step == 2 ?
+                        <>
+                            <HalfTitle style={{ textAlign: 'left' }}>{'약관동의'}</HalfTitle>
 
                         </>
                         :
                         <>
                         </>}
-                    <HalfTitle style={{ textAlign: 'left' }}>{'약관동의'}</HalfTitle>
                     {isSeePostCode ?
                         <>
                             <Modal onClickXbutton={() => { setIsSeePostCode(false) }}>
@@ -311,7 +337,22 @@ const SignUp = () => {
                         :
                         <>
                         </>}
-                    <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '32px' }} onClick={onSignUp}>회원가입</Button>
+                    {step != 0 ?
+                        <>
+                            <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '32px' }} onClick={onPreStep}>이전단계로</Button>
+                        </>
+                        :
+                        <>
+                        </>}
+
+                    {step == 2 ?
+                        <>
+                            <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={onSignUp}>회원가입</Button>
+                        </>
+                        :
+                        <>
+                            <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={onNextStep}>임시저장</Button>
+                        </>}
                 </ContentWrappers>
             </Wrappers>
         </>
