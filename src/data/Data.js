@@ -18,6 +18,7 @@ import menu5Icon from '../assets/images/icon/speaker.svg';
 import menu5IconWhite from '../assets/images/icon/speaker-white.svg';
 import menu5IconActive from '../assets/images/icon/speaker-active.svg';
 import logo from '../assets/images/test/logo.png'
+import logo_white from '../assets/images/test/logo-white.svg'
 import defaultImage from '../assets/images/test/default-image.png'
 import { EditorState } from "draft-js"
 import theme from '../styles/theme';
@@ -31,6 +32,7 @@ export const frontUrl = "https://1st-academy.kr";
 //export const backUrl = "https://1st-academy.kr:8443";
 
 export const logoSrc = logo;
+export const logoWhiteSrc = logo_white;
 export const defaultImageSrc = defaultImage;
 //http://weare-first.com:8001
 export const editorState = {

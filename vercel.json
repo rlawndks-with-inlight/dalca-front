@@ -3,7 +3,7 @@
     "rewrites": [
       {
         "source": "/api/:path*",
-        "destination": "https://purplevery13.cafe24.com:8443/api/:path*"
+        "destination": "https://purplevery18.cafe24.com:8443/api/:path*"
       }
     ]
 }

@@ -12,7 +12,7 @@ body::-webkit-scrollbar {
 
 body::-webkit-scrollbar-thumb {
     /* Chrome, Safari, Opera*/
-    background: #eef1fd;
+    background: #3250D255;
 }
 .ql-editor{
     -ms-overflow-style: none;
@@ -64,7 +64,7 @@ body::-webkit-scrollbar-thumb {
 }
 .scroll-table::-webkit-scrollbar-thumb {
     /* Chrome, Safari, Opera*/
-    background: #FECC2F55;
+    background: #3250D255;
 }
 .scroll-table-green::-webkit-scrollbar{
     display: none;
@@ -72,7 +72,7 @@ body::-webkit-scrollbar-thumb {
 }
 .scroll-table-green::-webkit-scrollbar-thumb {
     /* Chrome, Safari, Opera*/
-    background: rgba(103, 172, 91);
+    background: #3250D255;
     position: fixed;
     bottom: 0;
 }
@@ -83,7 +83,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .scroll-css::-webkit-scrollbar-thumb {
-    background-color: #FECC2F;
+    background-color: #3250D255;
 }
 
 .scroll-css::-webkit-scrollbar-track {

@@ -9,30 +9,17 @@ import MetaTag from '../components/MetaTag';
 import { useState } from 'react';
 import { zManagerRoute, zUserRoute } from '../routes/route';
 import ManagerLayout from '../components/layouts/ManagerLayout';
+import UserLayout from '../components/layouts/UserLayout';
+import toast, { Toaster } from 'react-hot-toast';
 const App = () => {
     return (
         <>
             <Router>
-                <Headers />
-                <ScrollToTop />
-                <MetaTag />
-                <>
-                    <Routes>
-                        {zUserRoute.map((route, idx) => (
-                            <>
-                                <Route exact key={idx} path={route.link} element={route.element} />
-                            </>
-                        ))}
-
-                    </Routes>
-                </>
-                <ScrollToTopButton />
-                <BottomMenu />
-                <Footer />
-
+                <UserLayout />
+                <Toaster position={'top-right'} containerStyle={{ zIndex: 999 }} />
             </Router>
             <Router>
-                <ManagerLayout/>
+                <ManagerLayout />
             </Router>
         </>
     );

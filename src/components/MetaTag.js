@@ -11,11 +11,11 @@ const MetaTag = props => {
     useEffect(() => {
         for (var i = 0; i < zUserRoute.length; i++) {
             if (pathname.includes(zUserRoute[i].link.replace(":pk", "")) && zUserRoute[i].link != "/") {
-                setTitle("first-academy - " + zUserRoute[i].title)
+                setTitle("dalca-pay - " + zUserRoute[i].title)
             }
         }
         if(pathname=="/"){
-            setTitle("first-academy - 홈")
+            setTitle("dalca-pay - 홈")
         }
     }, [pathname])
     return (
