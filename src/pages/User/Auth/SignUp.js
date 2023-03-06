@@ -24,6 +24,20 @@ const SignUp = () => {
     const [isCheckPhone, setIsCheckPhone] = useState(false);
     const [isCheckNickname, setIsCheckNickname] = useState(false);
     const [step, setStep] = useState(0);
+    const defaultObj = {
+        id: '',
+        pw: '',
+        pw_check: '',
+        address: '',
+        address_detail: '',
+        id_number: '',
+        phone: '',
+        name: '',
+    }
+    const [values, setValues] = useState(defaultObj);
+    const handleChange = (value, key) => {
+        setValues({ ...values, [key]: value });
+    }
     useEffect(() => {
         if (params?.user_level == 0) {
             setTitle('임차인');
@@ -38,25 +52,23 @@ const SignUp = () => {
     }, []);
     const onSelectAddress = (data) => {
         setIsSeePostCode(false);
-        $('.address').val(data?.address);
-        $('.zip_code').val(data?.zonecode);
-        $('.address_detail').val("");
+        setValues({ ...values, ['address']: data?.address,['zip_code']: data?.zonecode, ['address_detail']:'' });
         $('.address_detail').focus();
     }
     const onCheckId = async () => {
-        if (!$('.id').val()) {
+        if (!values.id) {
             toast.error('아이디를 입력해주세요.');
             return;
         }
-        if ($('.id').val().includes(' ')) {
+        if (values.id.includes(' ')) {
             toast.error('아이디의 공백을 제거해 주세요.');
             return;
         }
-        if (!regExp('id', $('.id').val())) {
+        if (!regExp('id', values.id)) {
             toast.error('아이디 정규식에 맞지 않습니다.');
             return;
         }
-        const { data: response } = await axios.post('/api/checkexistid', { id: $('.id').val() });
+        const { data: response } = await axios.post('/api/checkexistid', { id: values.id });
         if (response.result > 0) {
             toast.success(response.message);
             setIsCheckId(true);
@@ -67,15 +79,15 @@ const SignUp = () => {
         }
     }
     const onSignUp = () => {
-        if (!$('.id').val()) {
+        if (!values.id) {
             toast.error('아이디를 입력해주세요.');
             return;
         }
-        if ($('.id').val().includes(' ')) {
+        if (values.id.includes(' ')) {
             toast.error('아이디의 공백을 제거해 주세요.');
             return;
         }
-        if (!regExp('id', $('.id').val())) {
+        if (!regExp('id', values.id)) {
             toast.error('아이디 정규식에 맞지 않습니다.');
             return;
         }
@@ -83,19 +95,19 @@ const SignUp = () => {
             toast.error('아이디 중복확인을 완료해 주세요.');
             return;
         }
-        if (!$('.pw').val()) {
+        if (!values.pw) {
             toast.error('비밀번호를 입력해주세요.');
             return;
         }
-        if (!regExp('pw', $('.pw').val())) {
+        if (!regExp('pw', values.pw)) {
             toast.error('비밀번호 정규식을 지켜주세요.');
             return;
         }
-        if ($('.pw').val() !== $('.pw_check').val()) {
+        if (values.pw !== values.pw_check) {
             toast.error('비밀번호가 일치하지 않습니다.');
             return;
         }
-        if (!$('.address').val()) {
+        if (!values.address) {
             toast.error('주소를 입력해 주세요.');
             return;
         }
@@ -103,7 +115,7 @@ const SignUp = () => {
         //     alert('주민등록번호를 입력해 주세요.');
         //     return;
         // }
-        if (!$('.phone').val()) {
+        if (!values.phone) {
             toast.error('휴대폰 번호를 입력해 주세요.');
             return;
         }
@@ -111,11 +123,11 @@ const SignUp = () => {
         //     toast.error('휴대폰 번호 인증을 완료해 주세요.');
         //     return;
         // }
-        if (!$('.name').val()) {
+        if (!values.name) {
             toast.error('이름을 입력해 주세요.');
             return;
         }
-        if (!regExp('name', $('.name').val())) {
+        if (!regExp('name', values.name)) {
             toast.error('이름 정규식을 지켜주세요.');
             return;
         }
@@ -134,15 +146,7 @@ const SignUp = () => {
         })
     }
     const onSaveUser = async () => {
-        let obj = {
-            id: $('.id').val(),
-            pw: $('.pw').val(),
-            address: $('.address').val(),
-            address_detail: $('.address_detail').val(),
-            id_number: $('.id_number').val(),
-            phone: $('.phone').val(),
-            name: $('.name').val(),
-        }
+        let obj = values
         if (params.user_level == 10) {
             let add_obj = {
 
@@ -158,15 +162,20 @@ const SignUp = () => {
         }
     }
     const onPreStep = () => {
-        setStep(step-1);
+        if (params?.user_level == 10) {
+            setStep(step - 1);
+
+        } else {
+            setStep(step - 2);
+        }
         window.scrollTo(0, 0);
     }
     const onNextStep = () => {
-        if(params?.user_level==10){
-            setStep(step+1);
+        if (params?.user_level == 10) {
+            setStep(step + 1);
 
-        }else{
-            setStep(step+2);
+        } else {
+            setStep(step + 2);
         }
         window.scrollTo(0, 0);
     }
@@ -190,6 +199,8 @@ const SignUp = () => {
                                 is_divider={true}
                                 onKeyPress={() => onCheckId()}
                                 onClickButton={() => onCheckId()}
+                                onChange={(e) => handleChange(e, 'id')}
+                                value={values.id}
                             />
                             <InputComponet
                                 label={'PW*'}
@@ -200,6 +211,8 @@ const SignUp = () => {
                                 class_name='pw'
                                 is_divider={true}
                                 onKeyPress={() => $('.pw_check').focus()}
+                                onChange={(e) => handleChange(e, 'pw')}
+                                value={values.pw}
                             />
                             <InputComponet
                                 label={'PW 확인*'}
@@ -210,9 +223,11 @@ const SignUp = () => {
                                 class_name='pw_check'
                                 is_divider={true}
                                 onKeyPress={() => setIsSeePostCode(true)}
+                                onChange={(e) => handleChange(e, 'pw_check')}
+                                value={values.pw_check}
                             />
                             <div onClick={() => {
-                                setIsSeePostCode(true)
+                                setIsSeePostCode(!isSeePostCode)
                             }}>
                                 <InputComponet
                                     label={'주소* '}
@@ -222,6 +237,10 @@ const SignUp = () => {
                                     }}
                                     class_name='address'
                                     is_divider={true}
+                                    onClick={() => {
+                                        setIsSeePostCode(!isSeePostCode)
+                                    }}
+                                    value={values.address}
                                 />
                             </div>
                             <InputComponet
@@ -232,6 +251,8 @@ const SignUp = () => {
                                 class_name='address_detail'
                                 is_divider={true}
                                 onKeyPress={() => $('.id_number').focus()}
+                                onChange={(e) => handleChange(e, 'address_detail')}
+                                value={values.address_detail}
                             />
                             <InputComponet
                                 label={'주민등록번호'}
@@ -241,6 +262,8 @@ const SignUp = () => {
                                 class_name='id_number'
                                 is_divider={true}
                                 onKeyPress={() => $('.phone').focus()}
+                                onChange={(e) => handleChange(e, 'id_number')}
+                                value={values.id_number}
                             />
                             <InputComponet
                                 label={'휴대폰번호*'}
@@ -251,7 +274,8 @@ const SignUp = () => {
                                 class_name='phone'
                                 button_label={isCheckPhone ? '완료' : '인증'}
                                 isButtonAble={!isCheckPhone}
-                                is_divider={true}
+                                onChange={(e) => handleChange(e, 'phone')}
+                                value={values.phone}
                             />
                             <InputComponet
                                 label={'성명*'}
@@ -260,6 +284,8 @@ const SignUp = () => {
                                 }}
                                 class_name='name'
                                 is_divider={true}
+                                onChange={(e) => handleChange(e, 'name')}
+                                value={values.name}
                             />
                         </>
                         :
@@ -275,6 +301,8 @@ const SignUp = () => {
                                 }}
                                 class_name='cr_number'
                                 is_divider={true}
+                                onChange={(e) => handleChange(e, 'name')}
+                                value={values.name}
                             />
                             <InputComponet
                                 label={'사무소명칭'}
@@ -283,6 +311,8 @@ const SignUp = () => {
                                 }}
                                 class_name='office_name'
                                 is_divider={true}
+                                onChange={(e) => handleChange(e, 'name')}
+                                value={values.name}
                             />
                             <InputComponet
                                 label={'중개업소관리번호'}
@@ -291,6 +321,8 @@ const SignUp = () => {
                                 }}
                                 class_name='name'
                                 is_divider={true}
+                                onChange={(e) => handleChange(e, 'name')}
+                                value={values.name}
                             />
                             <InputComponet
                                 label={'중개업소직위구분'}
@@ -299,6 +331,8 @@ const SignUp = () => {
                                 }}
                                 class_name='name'
                                 is_divider={true}
+                                onChange={(e) => handleChange(e, 'name')}
+                                value={values.name}
                             />
                             <InputComponet
                                 label={'중개인구분'}
@@ -307,6 +341,8 @@ const SignUp = () => {
                                 }}
                                 class_name='name'
                                 is_divider={true}
+                                onChange={(e) => handleChange(e, 'name')}
+                                value={values.name}
                             />
                             <InputComponet
                                 label={'상태구분'}
@@ -315,6 +351,8 @@ const SignUp = () => {
                                 }}
                                 class_name='name'
                                 is_divider={true}
+                                onChange={(e) => handleChange(e, 'name')}
+                                value={values.name}
                             />
                         </>
                         :

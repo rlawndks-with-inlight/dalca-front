@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/style.css'
 import { zSidebarMenu } from '../data/ContentData';
-import { logoSrc } from '../data/Data';
+import { backUrl, logoSrc } from '../data/Data';
 import theme from '../styles/theme';
 import $ from 'jquery';
 import share from '../assets/images/icon/home/share.svg';
@@ -130,11 +130,11 @@ const PopupContent = styled.div`
 background:#fff;
 margin-right:16px;
 margin-bottom:16px;
-padding:24px 24px 48px 24px;
+padding:36px 24px 48px 24px;
 box-shadow:${props => props.theme.boxShadow};
 border-radius:8px;
 width:300px;
-min-height:450px;
+min-height:250px;
 position:relative;
 opacity:0.95;
 z-index:10;
@@ -184,7 +184,7 @@ const Headers = () => {
 
     }
     async function fetchPopup() {
-      const { data: response } = await axios.get('/api/items?table=notice&status=1&is_popup=1')
+      const { data: response } = await axios.get('/api/items?table=popup&status=1')
       setPopupList(response?.data ?? []);
     }
     if (location.pathname == '/home') {
@@ -256,13 +256,12 @@ const Headers = () => {
                   <>
                     {localStorage.getItem(`not_see_popup_${item?.pk}_${returnMoment().substring(0, 10).replaceAll('-', '_')}`) ?
                       <>
-
                       </>
                       :
                       <>
                         <PopupContent>
                           <IoMdClose style={{ color: theme.color.background1, position: 'absolute', right: '8px', top: '8px', fontSize: theme.size.font3, cursor: 'pointer' }} onClick={() => { onClosePopup(item?.pk) }} />
-                          <Viewer initialValue={item?.note ?? `<body></body>`} />
+                          <img src={backUrl+item?.img_src} style={{width:'100%'}}/>
                           <div style={{ display: 'flex', alignItems: 'center', position: 'absolute', left: '8px', bottom: '8px' }}>
                             <IoCloseCircleOutline style={{ color: theme.color.background1, fontSize: theme.size.font3, marginRight: '4px', cursor: 'pointer' }} onClick={() => { onClosePopup(item?.pk, true) }} />
                             <div style={{ fontSize: theme.size.font5, cursor: 'pointer' }} onClick={() => { onClosePopup(item?.pk, true) }}>오늘 하루 보지않기</div>
@@ -290,7 +289,7 @@ const Headers = () => {
                 {/* <img src={auth?.profile_img ? backUrl + auth?.profile_img : defaultProfile} style={{ width: '34px', height: '34px', borderRadius: '50%' }} /> */}
                 <Col style={{ marginLeft: '8px', textAlign: 'left', height: '34px' }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ fontSize: theme.size.font3, fontWeight: 'bold' }}>{auth.name} 님 환영합니다</div>
+                    <div style={{ fontSize: theme.size.font3, fontWeight: 'bold' }}>{auth?.name} 님 환영합니다</div>
                   </div>
                 </Col>
               </Row>

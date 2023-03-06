@@ -16,6 +16,7 @@ import "react-quill/dist/quill.snow.css";
 import quillEmoji from "react-quill-emoji";
 import "react-quill-emoji/dist/quill-emoji.css";
 import { useMemo } from 'react';
+import { toast } from 'react-hot-toast';
 const Font = ReactQuill.Quill.import('formats/font');
 const MItemEditComponent = (props) => {
     const { editContent, schema, params_pk, add_list, breadcrumb, editItemByParent } = props;
@@ -231,10 +232,10 @@ const MItemEditComponent = (props) => {
                 }
                 const { data: response_item } = await axios.post(api_str, obj);
                 if (response_item.result > 0) {
-                    alert("성공적으로 저장 되었습니다.");
+                    toast.success("성공적으로 저장 되었습니다.");
                     navigate(-1);
                 } else {
-                    alert(response_item?.message);
+                    toast.error(response_item?.message);
                 }
             }
 

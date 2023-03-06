@@ -36,11 +36,17 @@ const Login = () => {
     const [signUpCount, setSignUpCount] = useState(0);
     useEffect(() => {
     }, []);
+    const defaultObj = {
+        id: '',
+        pw: ''
+    }
+    const [values, setValues] = useState(defaultObj);
+
+    const handleChange = (value, key) => {
+        setValues({...values,[key]:value});
+    }
     const onLogin = async () => {
-        const { data: response } = await axios.post('/api/loginbyid', {
-            id: $('.id').val(),
-            pw: $('.pw').val()
-        })
+        const { data: response } = await axios.post('/api/loginbyid', values)
         if (response?.result > 0) {
             toast.success(response.message);
         } else {
@@ -49,7 +55,7 @@ const Login = () => {
         if (response.result > 0) {
             let params = {
                 'login_type': 0,
-                'id': $('.id').val()
+                'id': values?.id
             }
             if (window && window.flutter_inappwebview) {
                 await window.flutter_inappwebview.callHandler('native_app_login', JSON.stringify(params)).then(async function (result) {
@@ -78,6 +84,8 @@ const Login = () => {
                                 icon_label={<img src={userIcon} />}
                                 class_name='id'
                                 onKeyPress={() => $('.pw').focus()}
+                                onChange={(e) => handleChange(e, 'id')}
+                                value={values?.id}
                             />
                             <InputComponet
                                 label={'비밀번호를 입력해주세요.'}
@@ -87,12 +95,13 @@ const Login = () => {
                                 }}
                                 class_name='pw'
                                 onKeyPress={onLogin}
+                                onChange={(e) => handleChange(e, 'pw')}
+                                value={values?.pw}
                             />
                         </>
                         :
                         <>
-                            <div
-style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
+                            <div style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
                                 <div style={{ color: '#fff' }}>
                                     원하는 회원가입 유형을 선택하세요.
                                 </div>

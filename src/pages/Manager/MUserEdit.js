@@ -21,6 +21,7 @@ import quillEmoji from "react-quill-emoji";
 import "react-quill-emoji/dist/quill-emoji.css";
 import DaumPostcode from 'react-daum-postcode';
 import Modal from '../../components/Modal';
+import { toast } from 'react-hot-toast';
 
 const Table = styled.table`
 font-size:12px;
@@ -121,14 +122,13 @@ const MUserEdit = () => {
         true
     );
     const editUser = async () => {
-        if (!$(`.id`).val() || !$(`.name`).val() || !$(`.nickname`).val() || !$(`.phone`).val() || (!$(`.pw`).val() && params.pk == 0)) {
+        if (!$(`.id`).val() || !$(`.name`).val() ||  !$(`.phone`).val() || (!$(`.pw`).val() && params.pk == 0)) {
             alert('필요값이 비어있습니다.');
         } else {
             let obj = {
                 id: $(`.id`).val(),
                 pw: $(`.pw`).val(),
                 name: $(`.name`).val(),
-                nickname: $(`.nickname`).val(),
                 phone: $(`.phone`).val(),
                 user_level: $(`.level`).val(),
                 address: $(`.address`).val(),
@@ -145,10 +145,10 @@ const MUserEdit = () => {
             if (window.confirm(`${params.pk == 0 ? '추가하시겠습니까?' : '수정하시겠습니까?'}`)) {
                 const { data: response } = await axios.post(`/api/${params?.pk == 0 ? 'add' : 'update'}user`, obj);
                 if (response?.result > 0) {
-                    alert(response.message);
+                    toast.success(response.message);
                     navigate(-1);
                 } else {
-                    alert(response.message);
+                    toast.error(response.message);
                 }
             }
 
@@ -197,10 +197,6 @@ const MUserEdit = () => {
                 </Row>
 
                 <Row>
-                    <Col>
-                        <Title style={{ margintop: '32px' }}>닉네임</Title>
-                        <Input className='nickname' />
-                    </Col>
                     <Col>
                         <Title style={{ margintop: '32px' }}>폰번호</Title>
                         <Input className='phone' />

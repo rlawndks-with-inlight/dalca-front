@@ -216,34 +216,34 @@ transition-duration: 200ms;
 color: ${props => props.theme.color.font4};
 opacity:${props => props.opacity};
 `
-const HalfTitleStyle =  styled.div`
+const HalfTitleStyle = styled.div`
 width:50%;
 text-align:center;
 padding:8px 0;
 border-bottom: 2px solid ${props => props.theme.color.background1};
 `
-export const LogoHeader = (props) =>{
-    const {link} = props;
+export const LogoHeader = (props) => {
+    const { link } = props;
     const navigate = useNavigate();
     return (
         <>
-        <img src={logoSrc} style={{ maxWidth: '500px', width: '90%', margin: '16px auto' }} onClick={() => {navigate(link??'/home') }} />
+            <img src={logoSrc} style={{ maxWidth: '500px', width: '90%', margin: '16px auto' }} onClick={() => { navigate(link ?? '/home') }} />
         </>
     )
 }
-export const HalfTitle = (props)=>{
-    const {style} = props;
+export const HalfTitle = (props) => {
+    const { style } = props;
     return (
         <>
-        <div style={{maxWidth:'500px',margin:'8px auto',width:'100%'}}>
-        <HalfTitleStyle style={style}>{props.children}</HalfTitleStyle>
-        <div />
-        </div>
+            <div style={{ maxWidth: '500px', margin: '8px auto', width: '100%' }}>
+                <HalfTitleStyle style={style}>{props.children}</HalfTitleStyle>
+                <div />
+            </div>
         </>
     )
 }
 export const InputComponet = (props) => {
-    const { label, button_label, class_name, input_type, is_divider, onKeyPress, onClickButton, isButtonAble, icon_label } = props;
+    const { label, button_label, class_name, input_type, is_divider, onKeyPress, onClickButton, isButtonAble, icon_label, onClick, onChange, value } = props;
     const focusRef = useRef();
     const [focused, setFocused] = useState(false);
     const [isPlaceholder, setIsPlaceholder] = useState(false);
@@ -259,18 +259,19 @@ export const InputComponet = (props) => {
         setIsPlaceholder(false);
         setFocused(false);
     }
-    const onChange = (e) => {
+    const onChangeValue = (e) => {
+        onChange(e.target.value)
         if (e.target.value) {
             setIsValue(true);
         } else {
             setIsValue(false);
         }
     }
-    useEffect(()=>{
-        if($(`.${class_name}`).val()){
+    useEffect(() => {
+        if ($(`.${class_name}`).val()) {
             setIsValue(true);
         }
-    },[$(`.${class_name}`).val()])
+    }, [$(`.${class_name}`).val()])
     return (
         <>
             <div style={{
@@ -282,6 +283,7 @@ export const InputComponet = (props) => {
                 padding: '8px 0',
                 width: '100%',
             }}
+                onClick={onClick}
             >
                 {/* <div style={{ width: '22%', fontSize: theme.size.font5,whiteSpace:'pre',wordBreak:'break-all' }}>{label}</div> */}
                 <div style={{ width: '100%', display: 'flex' }}
@@ -292,7 +294,7 @@ export const InputComponet = (props) => {
                             fontSize: `${(focused || isValue) ? theme.size.font6 : theme.size.font5}`,
                             color: `${focused ? theme.color.background1 : theme.color.font4}`,
                         }}
-                    onClick={()=>$(`.${class_name}`).focus()}>{label}</InputLabel>
+                        onClick={() => $(`.${class_name}`).focus()}>{label}</InputLabel>
                     <PlaceholderLabel opacity={(focused && !isValue) ? 1 : 0} >
                         {(focused && !isValue) ?
                             <>
@@ -307,15 +309,16 @@ export const InputComponet = (props) => {
                         {...input_type}
                         placeholder={''}
                         ref={focusRef}
+                        value={value}
                         onFocus={onFocus}
                         onBlur={onBlur}
-                        onChange={onChange}
+                        onChange={onChangeValue}
                         type={(input_type?.type == 'password' && !isSeePassword) ? 'password' : ''}
                         style={{
                             padding: `${(button_label
                                 || input_type?.type == 'password'
                                 || icon_label
-                                )
+                            )
                                 ?
                                 '14px 60px 14px 2%' : ''}`,
                         }}
@@ -327,9 +330,9 @@ export const InputComponet = (props) => {
                     />
                     {icon_label ?
                         <>
-                        <div style={isImgIconStyle}>
-                        {icon_label}
-                        </div>
+                            <div style={isImgIconStyle}>
+                                {icon_label}
+                            </div>
                         </>
                         :
                         <>
@@ -337,7 +340,7 @@ export const InputComponet = (props) => {
                     {button_label ?
                         <>
                             <Button variant="text" sx={smallButtonStyle}
-                            onClick={onClickButton} disabled={!isButtonAble}>{button_label}</Button>
+                                onClick={onClickButton} disabled={!isButtonAble}>{button_label}</Button>
                         </>
                         :
                         <>
