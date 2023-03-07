@@ -287,6 +287,7 @@ export const InputComponet = (props) => {
             >
                 {/* <div style={{ width: '22%', fontSize: theme.size.font5,whiteSpace:'pre',wordBreak:'break-all' }}>{label}</div> */}
                 <div style={{ width: '100%', display: 'flex' }}
+                onClick={onClick}
                 >
                     <InputLabel
                         style={{
@@ -313,6 +314,7 @@ export const InputComponet = (props) => {
                         onFocus={onFocus}
                         onBlur={onBlur}
                         onChange={onChangeValue}
+                        onClick={onClick}
                         type={(input_type?.type == 'password' && !isSeePassword) ? 'password' : ''}
                         style={{
                             padding: `${(button_label

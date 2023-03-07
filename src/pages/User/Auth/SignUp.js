@@ -227,7 +227,6 @@ const SignUp = () => {
                                 value={values.pw_check}
                             />
                             <div onClick={() => {
-                                setIsSeePostCode(!isSeePostCode)
                             }}>
                                 <InputComponet
                                     label={'주소* '}
