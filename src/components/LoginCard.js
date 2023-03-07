@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import $ from 'jquery';
 import axios from 'axios';
-import logo from '../assets/images/test/logo.svg'
+import logo from '../assets/images/test/logo.png'
 import kakao from '../assets/images/icon/kakao.png'
 import naver from '../assets/images/icon/naver.png'
 import apple from '../assets/images/icon/apple.png'

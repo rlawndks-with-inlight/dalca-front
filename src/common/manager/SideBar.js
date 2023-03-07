@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GiHamburgerMenu } from 'react-icons/gi'
-import logo from '../../assets/images/test/logo.svg'
+import logo from '../../assets/images/test/logo.png'
 import { BsPerson, BsCameraVideo, BsAlarm, BsGraphUp } from 'react-icons/bs'
 import { MdOutlineAccessTime, MdNotificationImportant, MdOutlineFeaturedPlayList, MdOutlineStickyNote2 } from 'react-icons/md'
 import { IoStatsChartSharp, IoLogoReact } from 'react-icons/io5'
