@@ -38,6 +38,9 @@ const SignUp = () => {
     const [values, setValues] = useState(defaultObj);
     const handleChange = (value, key) => {
         setValues({ ...values, [key]: value });
+        if(key=='id_number_front' && value.length >=6){
+            $(`.id_number_back`).focus();
+        }
     }
     useEffect(() => {
         if (params?.user_level == 0) {
