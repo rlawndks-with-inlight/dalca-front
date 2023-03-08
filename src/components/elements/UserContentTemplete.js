@@ -243,7 +243,7 @@ export const HalfTitle = (props) => {
     )
 }
 export const InputComponet = (props) => {
-    const { label, button_label, class_name, input_type, is_divider, onKeyPress, onClickButton, isButtonAble, icon_label, onClick, onChange, value } = props;
+    const { label, button_label, class_name, input_type, is_divider, onKeyPress, onClickButton, isButtonAble, icon_label, onClick, onChange, value, divStyle, isSeeButton } = props;
     const focusRef = useRef();
     const [focused, setFocused] = useState(false);
     const [isPlaceholder, setIsPlaceholder] = useState(false);
@@ -282,6 +282,7 @@ export const InputComponet = (props) => {
                 margin: '0 auto',
                 padding: '8px 0',
                 width: '100%',
+                ...divStyle
             }}
                 onClick={onClick}
             >
@@ -318,7 +319,7 @@ export const InputComponet = (props) => {
                         type={(input_type?.type == 'password' && !isSeePassword) ? 'password' : ''}
                         style={{
                             padding: `${(button_label
-                                || input_type?.type == 'password'
+                                || isSeeButton
                                 || icon_label
                             )
                                 ?
@@ -347,9 +348,9 @@ export const InputComponet = (props) => {
                         :
                         <>
                         </>}
-                    {input_type?.type == 'password' ?
+                    {isSeeButton ?
                         <>
-                            {input_type?.type == 'password' ?
+                            {isSeeButton ?
                                 <>
                                     <IconButton style={isSeeIconStyle} onClick={() => {
                                         setIsSeePassword(!isSeePassword);

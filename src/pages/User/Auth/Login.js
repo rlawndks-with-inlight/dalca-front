@@ -97,6 +97,7 @@ const Login = () => {
                                 onKeyPress={onLogin}
                                 onChange={(e) => handleChange(e, 'pw')}
                                 value={values?.pw}
+                                isSeeButton={true}
                             />
                         </>
                         :

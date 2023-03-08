@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { GrFormPrevious } from "react-icons/gr";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { ContentWrappers, FakeHeaders, HalfTitle, InputComponet, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { ContentWrappers, FakeHeaders, HalfTitle, InputComponet, RowContent, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import theme from "../../../styles/theme";
 import Button from '@mui/material/Button';
 import { Divider } from "@mui/material";
@@ -30,7 +30,8 @@ const SignUp = () => {
         pw_check: '',
         address: '',
         address_detail: '',
-        id_number: '',
+        id_number_front: '',
+        id_number_back: '',
         phone: '',
         name: '',
     }
@@ -52,7 +53,7 @@ const SignUp = () => {
     }, []);
     const onSelectAddress = (data) => {
         setIsSeePostCode(false);
-        setValues({ ...values, ['address']: data?.address,['zip_code']: data?.zonecode, ['address_detail']:'' });
+        setValues({ ...values, ['address']: data?.address, ['zip_code']: data?.zonecode, ['address_detail']: '' });
         $('.address_detail').focus();
     }
     const onCheckId = async () => {
@@ -153,6 +154,7 @@ const SignUp = () => {
             }
             obj = { ...obj, add_obj };
         }
+        obj = { ...obj, ['id_number']: obj?.id_number_front + '-' + obj?.id_number_back }
         const { data: response } = await axios.post('/api/adduser', obj);
         if (response?.result > 0) {
             toast.success('성공적으로 회원가입 되었습니다.');
@@ -213,6 +215,7 @@ const SignUp = () => {
                                 onKeyPress={() => $('.pw_check').focus()}
                                 onChange={(e) => handleChange(e, 'pw')}
                                 value={values.pw}
+                                isSeeButton={true}
                             />
                             <InputComponet
                                 label={'PW 확인*'}
@@ -225,6 +228,7 @@ const SignUp = () => {
                                 onKeyPress={() => setIsSeePostCode(true)}
                                 onChange={(e) => handleChange(e, 'pw_check')}
                                 value={values.pw_check}
+                                isSeeButton={true}
                             />
                             <div onClick={() => {
                             }}>
@@ -253,17 +257,37 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'address_detail')}
                                 value={values.address_detail}
                             />
-                            <InputComponet
-                                label={'주민등록번호'}
-                                input_type={{
-                                    placeholder: ''
-                                }}
-                                class_name='id_number'
-                                is_divider={true}
-                                onKeyPress={() => $('.phone').focus()}
-                                onChange={(e) => handleChange(e, 'id_number')}
-                                value={values.id_number}
-                            />
+                            <RowContent style={{ maxWidth: '500px', margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <InputComponet
+                                    label={'주민등록번호 앞자리'}
+                                    input_type={{
+                                        placeholder: ''
+                                    }}
+                                    class_name='id_number_front'
+                                    is_divider={true}
+                                    onKeyPress={() => $('.id_number_back').focus()}
+                                    onChange={(e) => handleChange(e, 'id_number_front')}
+                                    value={values.id_number_front}
+                                    divStyle={{ width: '47%', margin: '0' }}
+                                />
+                                <div>
+                                    -
+                                </div>
+                                <InputComponet
+                                    label={'뒷자리'}
+                                    input_type={{
+                                        placeholder: '',
+                                        type: 'password'
+                                    }}
+                                    class_name='id_number_back'
+                                    is_divider={true}
+                                    onKeyPress={() => $('.phone').focus()}
+                                    onChange={(e) => handleChange(e, 'id_number_back')}
+                                    value={values.id_number_back}
+                                    divStyle={{ width: '47%', margin: '0' }}
+                                />
+                            </RowContent>
+
                             <InputComponet
                                 label={'휴대폰번호*'}
                                 input_type={{
