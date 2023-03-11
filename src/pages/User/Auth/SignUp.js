@@ -34,11 +34,12 @@ const SignUp = () => {
         id_number_back: '',
         phone: '',
         name: '',
+        user_level:params?.user_level
     }
     const [values, setValues] = useState(defaultObj);
     const handleChange = (value, key) => {
         setValues({ ...values, [key]: value });
-        if(key=='id_number_front' && value.length >=6){
+        if (key == 'id_number_front' && value.length >= 6) {
             $(`.id_number_back`).focus();
         }
     }

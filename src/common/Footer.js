@@ -9,7 +9,7 @@ const Wrappers = styled.footer`
     color:${props => props.theme.color.font1};
     font-weight:500;
     padding:32px 120px;
-    font-size:${props => props.theme.size.font3};
+    font-size:${props => props.theme.size.font4};
     @media screen and (max-width:1050px) {
         // margin-bottom:80px;
         display:none;

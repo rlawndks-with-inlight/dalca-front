@@ -16,7 +16,7 @@ position:relative;
 display:flex;
 flex-direction:column;
 width:90%;
-max-width:1000px;
+max-width:750px;
 margin-top:10rem;
 margin-left:auto;
 margin-right:auto;
@@ -220,6 +220,8 @@ const HalfTitleStyle = styled.div`
 width:50%;
 text-align:center;
 padding:8px 0;
+margin-right:auto;
+max-width:250px;
 border-bottom: 2px solid ${props => props.theme.color.background1};
 `
 export const LogoHeader = (props) => {
@@ -232,11 +234,11 @@ export const LogoHeader = (props) => {
     )
 }
 export const HalfTitle = (props) => {
-    const { style } = props;
+    const { style, line_percent } = props;
     return (
         <>
-            <div style={{ maxWidth: '500px', margin: '8px auto', width: '100%' }}>
-                <HalfTitleStyle style={style}>{props.children}</HalfTitleStyle>
+            <div style={{ maxWidth: '500px', margin: '8px auto', width: '100%', ...style }} >
+                <HalfTitleStyle>{props.children}</HalfTitleStyle>
                 <div />
             </div>
         </>
@@ -288,7 +290,7 @@ export const InputComponet = (props) => {
             >
                 {/* <div style={{ width: '22%', fontSize: theme.size.font5,whiteSpace:'pre',wordBreak:'break-all' }}>{label}</div> */}
                 <div style={{ width: '100%', display: 'flex' }}
-                onClick={onClick}
+                    onClick={onClick}
                 >
                     <InputLabel
                         style={{
@@ -443,6 +445,7 @@ export const twoOfThreeButtonStyle = {
     width: '70%',
     maxWidth: '400px',
     borderRadius: '10px',
+    minWidth: '160px',
     fontSize: `${theme.size.font4}`,
     fontWeight: 'bold',
     '&:hover': {

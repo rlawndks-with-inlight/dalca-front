@@ -27,7 +27,7 @@ import axios from 'axios';
 const test = true;
 
 //export const frontUrl = "http://localhost:3000";
-export const backUrl = "https://dalcapay.com:8443";
+export const backUrl = "http://localhost:8001";
 export const frontUrl = "https://dalcapay.com";
 //export const backUrl = "https://1st-academy.kr:8443";
 

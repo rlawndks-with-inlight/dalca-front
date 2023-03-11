@@ -76,7 +76,7 @@ const ContentTable = (props) => {
     }
     return (
         <>
-            <div className='subtype-container' style={{ overflowX: 'auto', display: 'flex', width: '100%', margin: '0 auto', marginBottom: marginBottom }} >
+            <div className='subtype-container' style={{ overflowX: 'auto', display: 'flex', width: '100%', margin: '8px auto', marginBottom: marginBottom }} >
                 <Table style={{ fontSize: `${fontSize ? fontSize : ''}` }}>
                     <Tr style={{ fontWeight: `${columnsBold ? 'bold' : ''}`, fontWeight: `${schema == 'master_subscribe' ? 'bold' : ''}` }}>
                         {columns && columns.map((item, idx) => (

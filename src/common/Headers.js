@@ -16,6 +16,9 @@ import { Viewer } from '@toast-ui/react-editor';
 import { IoMdClose } from 'react-icons/io'
 import { IoCloseCircleOutline } from 'react-icons/io5'
 import { getLocalStorage } from '../functions/LocalStorage';
+import { AiOutlineBell, AiOutlineSearch, AiOutlineSetting } from 'react-icons/ai';
+import { Icon } from '@iconify/react';
+import { IconButton } from '@mui/material';
 const Header = styled.header`
 position:fixed;
 height:6rem;
@@ -158,7 +161,7 @@ const Headers = () => {
 
   useEffect(() => {
 
-     function isAuth() {
+    function isAuth() {
       let user_auth = getLocalStorage('auth');
       setAuth(user_auth);
     }
@@ -261,7 +264,7 @@ const Headers = () => {
                       <>
                         <PopupContent>
                           <IoMdClose style={{ color: theme.color.background1, position: 'absolute', right: '8px', top: '8px', fontSize: theme.size.font3, cursor: 'pointer' }} onClick={() => { onClosePopup(item?.pk) }} />
-                          <img src={backUrl+item?.img_src} style={{width:'100%'}}/>
+                          <img src={backUrl + item?.img_src} style={{ width: '100%' }} />
                           <div style={{ display: 'flex', alignItems: 'center', position: 'absolute', left: '8px', bottom: '8px' }}>
                             <IoCloseCircleOutline style={{ color: theme.color.background1, fontSize: theme.size.font3, marginRight: '4px', cursor: 'pointer' }} onClick={() => { onClosePopup(item?.pk, true) }} />
                             <div style={{ fontSize: theme.size.font5, cursor: 'pointer' }} onClick={() => { onClosePopup(item?.pk, true) }}>오늘 하루 보지않기</div>
@@ -280,16 +283,23 @@ const Headers = () => {
 
           <LeftNoneIcon />
           <HeaderLogo src={logoSrc} alt="홈으로" onClick={() => { navigate('/home') }} />
-          <img src={hamburger} className='hamburgur' onClick={onChangeMenuDisplay} style={{ cursor: 'pointer' }} />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton>
+              <Icon icon="mdi:bell-outline" style={{color:theme.color.background1,marginRight:'6px'}} />
+            </IconButton>
+            <img src={hamburger} className='hamburgur' onClick={onChangeMenuDisplay} style={{ cursor: 'pointer' }} />
+          </div>
           <OpenSideBarBackground className='sidebar-open-background' onClick={onChangeMenuDisplay} />
+
           <SideBarContainer className="sidebar-menu-list">
             <img src={logoutIcon} className='hamburgur' style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', width: '32px' }} onClick={onLogout} />
             <div style={{ width: '100%', background: theme.color.background1, margin: '0', height: '18vh', color: '#fff', display: 'flex' }}>
               <Row style={{ justifyContent: 'flex-start', margin: 'auto' }}>
                 {/* <img src={auth?.profile_img ? backUrl + auth?.profile_img : defaultProfile} style={{ width: '34px', height: '34px', borderRadius: '50%' }} /> */}
                 <Col style={{ marginLeft: '8px', textAlign: 'left', height: '34px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ fontSize: theme.size.font3, fontWeight: 'bold' }}>{auth?.name} 님 환영합니다</div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <img src={logoSrc} style={{ height: '24px', width: 'auto', margin: '0 auto 6px 0' }} />
+                    <div style={{ fontSize: theme.size.font3, fontWeight: 'bold', margin: '0 auto 6px 0' }}>{auth?.name} 님 환영합니다</div>
                   </div>
                 </Col>
               </Row>
@@ -298,7 +308,14 @@ const Headers = () => {
             <SideBarList className='scroll-table'>
               {zSidebarMenu.map((item, idx) => (
                 <>
-                  <SideBarMenu key={idx} onClick={() => { onClickLink(item.link) }} style={{ color: `${item.link == location.pathname ? theme.color.background1 : ''}` }}>{item.name}</SideBarMenu>
+                  {item.level_list.includes(auth.user_level) ?
+                    <>
+                      <SideBarMenu key={idx} onClick={() => { onClickLink(item.link) }} style={{ color: `${item.link == location.pathname ? theme.color.background1 : ''}` }}>{item.name}</SideBarMenu>
+                    </>
+                    :
+                    <>
+                    </>
+                  }
                 </>
               ))}
             </SideBarList>

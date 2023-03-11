@@ -64,7 +64,7 @@ const Login = () => {
                     let obj = JSON.parse(result);
                 });
             }
-            setLocalStorage('auth', JSON.stringify(response.data))
+            await setLocalStorage('auth', JSON.stringify(response.data));
             window.location.href = '/home';
 
         }
