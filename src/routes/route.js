@@ -54,6 +54,7 @@ const zUserRoute = [
     { link: '/home', element: <Home />, title: "홈" },
     { link: '/insert-info', element: <InsertInfo />, title: "정보등록" },
     { link: '/post/:table/:pk', element: <Post />, title: "게시물" },
+
     //{ link: '/payready/:pk', element: <PayReady />, title: "결제준비" },
     //{ link: '/authpay/:pk', element: <AuthPay />, title: "결제" },
     //{ link: '/authpay', element: <AuthPay />, title: "결제" },
@@ -74,7 +75,6 @@ const zUserRoute = [
     { link: '/mypage', element: <MyPage />, title: "마이페이지" },
     { link: '/editmyinfo', element: <EditMyInfo />, title: "회원수정" },
     { link: '/findmyinfo', element: <FindMyInfo />, title: "아이디/비밀번호 찾기" },
-    { link: '/signup', element: <SignUp />, title: "회원가입" },
     { link: '/signup/:user_level', element: <SignUp />, title: "회원가입" },
     { link: '/resign', element: <Resign />, title: "회원탈퇴" },
     { link: '/oauth/callback/kakao', element: <KakaoRedirectHandler />, title: "" },
