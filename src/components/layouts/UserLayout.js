@@ -7,32 +7,19 @@ import ScrollToTopButton from "../ScrollToTopButton";
 import BottomMenu from "../../common/BottomMenu";
 import Footer from "../../common/Footer";
 import { useEffect } from "react";
-
+import { AnimatePresence } from "framer-motion";
 const UserLayout = () => {
     const location = useLocation();
     const nonLayoutList = ['/', '/login', '/findmyinfo', '/signup', '/randombox/lottery'];
 
     return (
         <>
-            {nonLayoutList.includes(location.pathname) || location.pathname.includes('/signup') ?
-                <>
+            <AnimatePresence>
 
-                    <Routes>
-                        {zUserRoute.map((route, idx) => (
-                            <>
-                                <Route exact key={idx} path={route.link} element={route.element} />
-                            </>
-                        ))}
-
-                    </Routes>
-                </>
-                :
-                <>
-                    <Headers />
-                    <ScrollToTop />
-                    <MetaTag />
+                {nonLayoutList.includes(location.pathname) || location.pathname.includes('/signup') ?
                     <>
-                        <Routes>
+
+                        <Routes location={location} key={location.pathname}>
                             {zUserRoute.map((route, idx) => (
                                 <>
                                     <Route exact key={idx} path={route.link} element={route.element} />
@@ -41,12 +28,27 @@ const UserLayout = () => {
 
                         </Routes>
                     </>
-                    <ScrollToTopButton />
-                    {/* <BottomMenu /> */}
-                    <Footer />
-                </>
-            }
+                    :
+                    <>
+                        <Headers />
+                        <ScrollToTop />
+                        <MetaTag />
+                        <>
+                            <Routes location={location} key={location.pathname}>
+                                {zUserRoute.map((route, idx) => (
+                                    <>
+                                        <Route exact key={idx} path={route.link} element={route.element} />
+                                    </>
+                                ))}
 
+                            </Routes>
+                        </>
+                        <ScrollToTopButton />
+                        {/* <BottomMenu /> */}
+                        <Footer />
+                    </>
+                }
+            </AnimatePresence>
         </>
     )
 }

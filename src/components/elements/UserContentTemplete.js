@@ -11,6 +11,7 @@ import { Button, Divider, IconButton } from "@mui/material";
 import { useRef } from "react";
 import { Icon } from '@iconify/react';
 import { logoSrc } from "../../data/Data";
+import { motion } from "framer-motion";
 export const WrappersStyle = styled.div`
 position:relative;
 display:flex;
@@ -27,7 +28,14 @@ font-family:${props => props.theme.font.normal};
     margin-top:5rem;
 }
 `
-
+export const postCodeStyle = {
+    display: 'block',
+    position: 'relative',
+    top: '0%',
+    width: '90%',
+    height: '450px',
+    margin: '16px auto'
+};
 export const Wrappers = (props) => {
     let { className, style } = props;
     const { pathname } = useLocation();
@@ -178,6 +186,20 @@ export const smallButtonStyle = {
         background: `${theme.color.background3}`,
     },
 }
+export const colorButtonStyle = {
+    height: '45px',
+    minWidth: '55px',
+    fontSize: `${theme.size.font5}`,
+    fontWeight: 'bold',
+    color: '#fff',
+    background: `${theme.color.background1}`,
+    '&:hover': {
+        background: `${theme.color.background1}`,
+    },
+    '&:active': {
+        background: `${theme.color.background1}`,
+    },
+}
 export const Input = styled.input`
 padding:14px 2%;
 width:96%;
@@ -237,7 +259,7 @@ export const HalfTitle = (props) => {
     const { style, line_percent } = props;
     return (
         <>
-            <div style={{ maxWidth: '500px', margin: '8px auto', width: '100%', ...style }} >
+            <div style={{ margin: '8px auto', width: '100%', ...style }} >
                 <HalfTitleStyle>{props.children}</HalfTitleStyle>
                 <div />
             </div>
@@ -245,7 +267,7 @@ export const HalfTitle = (props) => {
     )
 }
 export const InputComponet = (props) => {
-    const { label, button_label, class_name, input_type, is_divider, onKeyPress, onClickButton, isButtonAble, icon_label, onClick, onChange, value, divStyle, isSeeButton } = props;
+    const { label, button_label, class_name, input_type, is_divider, onKeyPress, onClickButton, isButtonAble, icon_label,onClickIcon, onClick, onChange, value, divStyle, isSeeButton, autoCompleteList, onAutoCompleteClick } = props;
     const focusRef = useRef();
     const [focused, setFocused] = useState(false);
     const [isPlaceholder, setIsPlaceholder] = useState(false);
@@ -279,7 +301,6 @@ export const InputComponet = (props) => {
             <div style={{
                 display: 'flex',
                 position: 'relative',
-                maxWidth: '500px',
                 alignItems: 'center',
                 margin: '0 auto',
                 padding: '8px 0',
@@ -328,14 +349,14 @@ export const InputComponet = (props) => {
                                 '14px 60px 14px 2%' : ''}`,
                         }}
                         onKeyPress={(e) => {
-                            if (e.key == 'Enter') {
+                            if (e.key == 'Enter' && onKeyPress) {
                                 onKeyPress();
                             }
                         }}
                     />
                     {icon_label ?
                         <>
-                            <div style={isImgIconStyle}>
+                            <div style={isImgIconStyle} onClick={onClickIcon}>
                                 {icon_label}
                             </div>
                         </>
@@ -366,7 +387,6 @@ export const InputComponet = (props) => {
                                                 <Icon icon="ph:eye-slash" />
                                             </>}
                                     </IconButton>
-
                                 </>
                                 :
                                 <>
@@ -375,8 +395,64 @@ export const InputComponet = (props) => {
                         :
                         <>
                         </>}
+                    {autoCompleteList && autoCompleteList.length > 0 ?
+                        <>
+                            <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            style={{
+                                position: 'absolute',
+                                top: '60px',
+                                maxWidth: '560px',
+                                width: '92%',
+                                padding: '4%',
+                                background: '#fff',
+                                borderRadius: '8px',
+                                boxShadow: theme.boxShadow,
+                                height:'130px',
+                                overflowY:'auto',
+                            }}>
+                                {autoCompleteList.map((item, idx) => (
+                                    <>
+                                        <div style={{ 
+                                            display: 'flex', 
+                                            flexDirection: 'column',
+                                            padding:'6px 0',
+                                            background: '#fff',
+                                            borderBottom:`1px solid ${theme.color.font3}`,
+                                            width:'100%',
+                                            '&:hover': {
+                                                background: `${theme.color.background1}`,
+                                            },
+                                            '&:active': {
+                                                background: `${theme.color.background1}`,
+                                            },
+                                            cursor:'pointer'
+                                             }}
+                                            onClick={()=>onAutoCompleteClick(item)}
+                                            >
+                                            <div style={{
+                                                fontSize:theme.size.font4,
+                                                marginBottom:`6px`
+                                            }}>{item.name}</div>
+                                            <div style={{
+                                                display:'flex',
+                                                justifyContent:'space-between',
+                                                fontSize:theme.size.font5,
+                                                color:theme.color.font3
+                                            }}>
+                                                <div>{item.id_number && item.id_number.substring(0,6)}-*******</div>
+                                                <div>{item.phone}</div>
+                                            </div>
+                                        </div>
+                                    </>
+                                ))}
+                            </motion.div>
+                        </>
+                        :
+                        <>
+                        </>}
                 </div>
-
             </div>
         </>
     )
@@ -397,7 +473,7 @@ export const TitleInputComponent = (props) => {
     const { label, icon, class_name, input_type, is_blue, onKeyPress } = props;
     return (
         <>
-            <div style={{ display: 'flex', position: 'relative', flexDirection: 'column', maxWidth: '500px', margin: '0 auto', width: '100%' }}>
+            <div style={{ display: 'flex', position: 'relative', flexDirection: 'column', margin: '0 auto', width: '100%' }}>
                 <div style={{ color: `${is_blue ? '#fff' : ''}`, fontSize: theme.size.font4, margin: '6px 0' }}>{label}</div>
                 <Input
                     className={class_name}

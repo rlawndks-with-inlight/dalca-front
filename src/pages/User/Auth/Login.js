@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MarginBottom, Title, TitleInputComponent, TwoOfThreeButton, Wrappers, ContentWrappers, twoOfThreeButtonStyle, InputComponet } from "../../../components/elements/UserContentTemplete";
+import { MarginBottom, Wrappers, ContentWrappers, twoOfThreeButtonStyle, InputComponet } from "../../../components/elements/UserContentTemplete";
 import LoginCard from "../../../components/LoginCard";
 import { fullBackgroundColorWrappersStyle } from "../../../data/ContentData";
 import { logoSrc } from "../../../data/Data";
@@ -43,7 +43,7 @@ const Login = () => {
     const [values, setValues] = useState(defaultObj);
 
     const handleChange = (value, key) => {
-        setValues({...values,[key]:value});
+        setValues({ ...values, [key]: value });
     }
     const onLogin = async () => {
         const { data: response } = await axios.post('/api/loginbyid', values)
@@ -71,8 +71,8 @@ const Login = () => {
     }
     return (
         <>
-            <Wrappers className="wrapper" style={{ ...fullBackgroundColorWrappersStyle, background: "#fff", height: '100vh' }}>
-                <ContentWrappers style={{ height: '100%' }}>
+            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff", height: '100vh' }}>
+                <ContentWrappers style={{margin:'auto'}}>
                     <img src={logoSrc} style={{ maxWidth: '500px', width: '90%', margin: 'auto auto 10vh auto' }} onClick={() => { setSignUpCount(0) }} />
                     {signUpCount == 0 ?
                         <>
@@ -142,7 +142,6 @@ const Login = () => {
                             <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { setSignUpCount(0) }}>로그인 페이지로</Button>
                         </>}
                     <div style={{ margin: '0 auto auto auto' }} />
-
                 </ContentWrappers>
             </Wrappers>
         </>

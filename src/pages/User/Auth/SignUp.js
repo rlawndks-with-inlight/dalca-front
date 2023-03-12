@@ -261,7 +261,7 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'address_detail')}
                                 value={values.address_detail}
                             />
-                            <RowContent style={{ maxWidth: '500px', margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <RowContent style={{ margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <InputComponet
                                     label={'주민등록번호 앞자리'}
                                     input_type={{

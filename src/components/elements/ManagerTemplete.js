@@ -66,12 +66,13 @@ border:1px solid #dadde6;
 border-radius:4px;
 `
 export const ImageContainer = styled.label`
-border: 2px dashed ${props=>props.theme.color.manager.font3};
+border: 1px dashed ${props=>props.theme.color.font4};
 margin:12px auto 6px 24px;
 width:100%;
 height:12rem;
-border-radius:2rem;
+border-radius:4px;
 text-align:center;
+display:flex;
 @media screen and (max-width:700px) {
     width:90%;
 }

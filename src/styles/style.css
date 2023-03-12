@@ -1,3 +1,19 @@
+:root{
+    --background1:#3250D2;
+    --background2:#FFDC00;
+}
+.css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active{
+    color: var(--background2) !important;
+}
+.css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed{
+    color: var(--background1) !important;
+}
+.css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+    font-size: 15px !important;
+}
+.swal2-title {
+    font-size: 17px !important;
+  }
 body {
     -ms-overflow-style: none;
     /* IE and Edge */

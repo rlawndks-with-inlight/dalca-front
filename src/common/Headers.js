@@ -146,7 +146,7 @@ width:78vw;
 }
 `
 const LeftNoneIcon = styled.div`
-width:2rem;
+width:62px;
 @media screen and (max-width:1050px) { 
   display:none;
 }
@@ -284,10 +284,12 @@ const Headers = () => {
           <LeftNoneIcon />
           <HeaderLogo src={logoSrc} alt="홈으로" onClick={() => { navigate('/home') }} />
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton>
+            <IconButton sx={{padding:'0',mr:1}}>
               <Icon icon="mdi:bell-outline" style={{color:theme.color.background1,marginRight:'6px'}} />
             </IconButton>
-            <img src={hamburger} className='hamburgur' onClick={onChangeMenuDisplay} style={{ cursor: 'pointer' }} />
+            <IconButton sx={{padding:'0'}}>
+              <Icon icon="icon-park-outline:hamburger-button" onClick={onChangeMenuDisplay} style={{color:theme.color.background1}} />
+            </IconButton>
           </div>
           <OpenSideBarBackground className='sidebar-open-background' onClick={onChangeMenuDisplay} />
 

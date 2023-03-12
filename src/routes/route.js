@@ -29,7 +29,10 @@ import MPayEdit from '../pages/Manager/MPayEdit';
 import MPayCancelEdit from '../pages/Manager/MPayCancelEdit';
 import MPayExcelEdit from '../pages/Manager/MPayExcelEdit';
 import InsertInfo from '../pages/User/InsertInfo';
-
+import AddContract from '../pages/User/Contract/AddContract';
+import List from '../pages/User/Community/CommunityList'
+import History from '../pages/User/History/History'
+import CustomerInfo from '../pages/User/Auth/CustomerInfo'
 
 const zManagerRoute = [
     { link: '/manager', element: <MLogin />, title: "관리자로그인" },
@@ -54,7 +57,12 @@ const zUserRoute = [
     { link: '/home', element: <Home />, title: "홈" },
     { link: '/insert-info', element: <InsertInfo />, title: "정보등록" },
     { link: '/post/:table/:pk', element: <Post />, title: "게시물" },
-
+    { link: '/addcontract', element: <AddContract />, title: "" },
+    { link: '/addcontract/:pk', element: <AddContract />, title: "" },
+    { link: '/list/:category', element: <List />, title: "" },
+    { link: '/history/:category', element: <History />, title: "" },
+    { link: '/customer-info', element: <CustomerInfo />, title: "" },
+    
     //{ link: '/payready/:pk', element: <PayReady />, title: "결제준비" },
     //{ link: '/authpay/:pk', element: <AuthPay />, title: "결제" },
     //{ link: '/authpay', element: <AuthPay />, title: "결제" },
@@ -78,11 +86,10 @@ const zUserRoute = [
     { link: '/signup/:user_level', element: <SignUp />, title: "회원가입" },
     { link: '/resign', element: <Resign />, title: "회원탈퇴" },
     { link: '/oauth/callback/kakao', element: <KakaoRedirectHandler />, title: "" },
-
     // { link: '/post/notice/:pk', element: <Notice />, title: "공지사항" },
     // { link: '/video/:pk', element: <Video />, title: "핵심비디오" },
-
     { link: '/policy/:pk', element: <Policy />, title: "" },
+    //{ link: '*', element: <Page404 />, title: "" },
 ];
 
 export { zUserRoute, zManagerRoute }

@@ -84,11 +84,13 @@ const Home = () => {
         getHomeContent();
     }, [])
     const getHomeContent = async () => {
-
+        setLoading(true);
         let user_data = getLocalStorage('auth');
         setUserData(user_data);
         const { data: response } = await axios.get('/api/gethomecontent');
         setPost(response?.data);
+        setLoading(false);
+
     }
     return (
         <>
@@ -106,7 +108,7 @@ const Home = () => {
                             <>
                                 <BorderContainer>
                                     <img src={editIcon} style={{ width: '48px', margin: 'auto auto 16px auto' }} />
-                                    <Button variant="text" sx={{ ...twoOfThreeButtonStyle, margin: '16px auto auto auto' }} onClick={() => { }}>계약생성하러 가기</Button>
+                                    <Button variant="text" sx={{ ...twoOfThreeButtonStyle, margin: '16px auto auto auto' }} onClick={() => { navigate('/addcontract') }}>계약생성하러 가기</Button>
                                 </BorderContainer>
                             </>
                             :
@@ -155,7 +157,6 @@ const Home = () => {
                             data={post?.pay ?? []}
                             schema={'subscribe'} />
                     </>}
-
             </Wrappers>
         </>
     )

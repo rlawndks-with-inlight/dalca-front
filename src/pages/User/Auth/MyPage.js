@@ -186,7 +186,7 @@ const MyPage = () => {
                     </Container>
                 </MyCard>
                 <div style={{ marginTop: '36px' }} />
-                {isWebView ?
+                {/* {isWebView ?
                     <>
 
                     </>
@@ -228,7 +228,7 @@ const MyPage = () => {
                                 schema={'subscribe'} />
                         </ShadowContainer>
                         <div style={{ marginTop: '36px' }} />
-                    </>}
+                    </>} */}
 
                 <Content>
                     <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
