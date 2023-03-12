@@ -54,9 +54,9 @@ const AddContract = () => {
         pay_type: 0,
         deposit: 0,
         monthly: 0,
-        address:'',
-        address_detail:'',
-        zip_code:''
+        address: '',
+        address_detail: '',
+        zip_code: ''
     })
     useEffect(() => {
         let user_data = getLocalStorage('auth');
@@ -156,11 +156,15 @@ const AddContract = () => {
                     }
 
                 })
-            }else{
+            } else {
                 setActiveStep(activeStep + 1);
                 setLandlordList([]);
                 setLesseeList([]);
             }
+        } else {
+            setActiveStep(activeStep + 1);
+            setLandlordList([]);
+            setLesseeList([]);
         }
     }
     const onPrevButton = () => {
