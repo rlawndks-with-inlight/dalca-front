@@ -161,11 +161,13 @@ const AddContract = () => {
                 setLandlordList([]);
                 setLesseeList([]);
             }
-        } else {
+        } 
+        if (activeStep == 1) {
             setActiveStep(activeStep + 1);
             setLandlordList([]);
             setLesseeList([]);
         }
+        
     }
     const onPrevButton = () => {
         setActiveStep(activeStep - 1);
