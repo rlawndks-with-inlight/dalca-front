@@ -25,7 +25,7 @@ import Picker from 'emoji-picker-react';
 import fontSize from "tui-editor-plugin-font-size";
 import "tui-editor-plugin-font-size/dist/tui-editor-plugin-font-size.css";
 import { backUrl, cardDefaultColor } from '../../data/Data';
-import { objManagerListContent } from '../../data/Data';
+import { objManagerListContent } from '../../data/Manager/ManagerContentData';
 import { categoryToNumber } from '../../functions/utils';
 import CommentComponent from '../../components/CommentComponent';
 const MVideoEdit = () => {

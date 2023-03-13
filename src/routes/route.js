@@ -33,6 +33,7 @@ import AddContract from '../pages/User/Contract/AddContract';
 import List from '../pages/User/Community/CommunityList'
 import History from '../pages/User/History/History'
 import CustomerInfo from '../pages/User/Auth/CustomerInfo'
+import Contract from '../pages/User/Contract/Contract';
 
 const zManagerRoute = [
     { link: '/manager', element: <MLogin />, title: "관리자로그인" },
@@ -59,6 +60,7 @@ const zUserRoute = [
     { link: '/post/:table/:pk', element: <Post />, title: "게시물" },
     { link: '/addcontract', element: <AddContract />, title: "" },
     { link: '/addcontract/:pk', element: <AddContract />, title: "" },
+    { link: '/contract/:pk', element: <Contract />, title: "" },
     { link: '/list/:category', element: <List />, title: "" },
     { link: '/history/:category', element: <History />, title: "" },
     { link: '/customer-info', element: <CustomerInfo />, title: "" },

@@ -11,7 +11,7 @@ import AddButton from '../../components/elements/button/AddButton';
 import $ from 'jquery';
 import { addItem, updateItem } from '../../functions/utils';
 import { Card, Title, Input, Row, Col, ImageContainer, Textarea } from '../../components/elements/ManagerTemplete';
-import { objManagerListContent } from '../../data/Data';
+import { objManagerListContent } from '../../data/Manager/ManagerContentData';
 import theme from '../../styles/theme';
 const MAlarmEdit = () => {
     const { pathname } = useLocation();

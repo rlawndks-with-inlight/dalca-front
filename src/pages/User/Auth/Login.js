@@ -41,7 +41,15 @@ const Login = () => {
         pw: ''
     }
     const [values, setValues] = useState(defaultObj);
-
+    useEffect(()=>{
+        isAuth();
+    },[])
+    const isAuth = async () =>{
+        const {data:response} = await axios.get(`/api/auth`);
+        if(response?.pk>0){
+            navigate('/home');
+        }
+    }
     const handleChange = (value, key) => {
         setValues({ ...values, [key]: value });
     }

@@ -13,7 +13,20 @@
 }
 .swal2-title {
     font-size: 17px !important;
-  }
+}
+.swal2-styled.swal2-confirm{
+    background: var(--background1) !important;
+}
+.swal2-styled.swal2-cancel{
+    outline: none;
+}
+.swal2-popup .swal2-styled{
+    cursor: pointer;
+}
+.swal2-popup .swal2-styled:focus {
+    box-shadow: none !important;
+
+}
 body {
     -ms-overflow-style: none;
     /* IE and Edge */

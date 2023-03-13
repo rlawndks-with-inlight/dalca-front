@@ -48,7 +48,7 @@ export const zSidebarMenu = [
     { name: '문의하기', link: '/list/request', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '마이페이지', link: '/mypage', level_list: [0, 5, 10, ...zManagerLevel] },
 ]
-export const historyContent = {
+export const objHistoryListContent = {
     point: {
         title: "포인트",
         columns: [
@@ -60,49 +60,56 @@ export const historyContent = {
     pay_0: {
         title: "결제",
         columns: [
-            columnObjFormat('임차인 ', '', 'text', 'name'),
-            columnObjFormat(' ', '', 'text', 'price'),
+            columnObjFormat('임대인명', '', 'text', 'landlord_name'),
+            columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('옵션명', '', 'text', 'option_name'),
         ]
     },
     pay_5: {
         title: "결제",
         columns: [
-            columnObjFormat('임차인 ', '', 'text', 'name'),
-            columnObjFormat(' ', '', 'text', 'price'),
+            columnObjFormat('임차인명', '', 'text', 'lessee_name'),
+            columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('옵션명', '', 'text', 'option_name'),
         ]
     },
     pay_10: {
         title: "결제",
         columns: [
-            columnObjFormat('임차인 ', '', 'text', 'name'),
-            columnObjFormat(' ', '', 'text', 'price'),
+            columnObjFormat('임대인명 ', '', 'text', 'landlord_name'),
+            columnObjFormat('임차인명', '', 'text', 'lessee_name'),
             columnObjFormat('옵션명', '', 'text', 'option_name'),
         ]
     },
     contract_0: {
         title: "계약",
         columns: [
-            columnObjFormat('상품명', '', 'text', 'name'),
-            columnObjFormat('상품가격', '', 'text', 'price'),
-            columnObjFormat('옵션명', '', 'text', 'option_name'),
+            columnObjFormat('임대인명', '', 'text', 'landlord_name'),
+            columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
+            columnObjFormat('등록일', '', 'date', 'date'),
+            columnObjFormat('비고', '', 'contract_comment', ''),
+            columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
         ]
     },
     contract_5: {
         title: "계약",
         columns: [
-            columnObjFormat('상품명', '', 'text', 'name'),
-            columnObjFormat('상품가격', '', 'text', 'price'),
-            columnObjFormat('옵션명', '', 'text', 'option_name'),
+            columnObjFormat('임차인명', '', 'text', 'lessee_name'),
+            columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
+            columnObjFormat('등록일', '', 'date', 'date'),
+            columnObjFormat('비고', '', 'contract_comment', ''),
+            columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
         ]
     },
     contract_10: {
         title: "계약",
         columns: [
-            columnObjFormat('상품명', '', 'text', 'name'),
-            columnObjFormat('상품가격', '', 'text', 'price'),
-            columnObjFormat('옵션명', '', 'text', 'option_name'),
+            columnObjFormat('임대인명 ', '', 'text', 'landlord_name'),
+            columnObjFormat('임차인명', '', 'text', 'lessee_name'),
+            columnObjFormat('등록일', '', 'date', 'date'),
+            columnObjFormat('비고', '', 'contract_comment', ''),
+            columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
+            columnObjFormat('삭제', '', 'delete', 'delete'),
         ]
     },
 };

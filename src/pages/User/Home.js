@@ -14,6 +14,7 @@ import { Icon } from '@iconify/react';
 import { getLocalStorage } from '../../functions/LocalStorage';
 import { backUrl } from '../../data/Data';
 import ContentTable from '../../components/ContentTable';
+import { objHistoryListContent } from '../../data/ContentData';
 const BorderContainer = styled.div`
 height:220px;
 width:100%;
@@ -81,16 +82,19 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState({});
     useEffect(() => {
-        getHomeContent();
+        getHomeContent(true);
     }, [])
-    const getHomeContent = async () => {
-        setLoading(true);
+    const getHomeContent = async (is_loading) => {
+        if(is_loading){
+            setLoading(true);
+        }
         let user_data = getLocalStorage('auth');
         setUserData(user_data);
         const { data: response } = await axios.get('/api/gethomecontent');
         setPost(response?.data);
-        setLoading(false);
-
+        if(is_loading){
+            setLoading(false);
+        }
     }
     return (
         <>
@@ -122,7 +126,11 @@ const Home = () => {
                 :
                 <>
                     <div style={{ width: '100%', display: 'flex' }}>
-                        <img src={backUrl + post?.setting?.home_banner_img_1} style={{ width: '100%', margin: '16px auto', maxWidth: '750px' }} />
+                        <img
+                            src={backUrl + post?.setting?.home_banner_img_1}
+                            style={{ width: '100%', margin: '16px auto', maxWidth: '750px', cursor: `${post?.setting?.home_banner_link_1 ? 'pointer' : ''}` }}
+                            onClick={() => { if (post?.setting?.home_banner_link_1) window.location.href = post?.setting?.home_banner_link_1; }}
+                        />
                     </div>
                 </>}
 
@@ -133,13 +141,13 @@ const Home = () => {
                     :
                     <>
                         <HalfTitle style={{ maxWidth: '1050px' }}>계약내역</HalfTitle>
-                        <ContentTable columns={[
-                            { name: "수강상품", column: "title", width: 30, type: 'text' },
-                            { name: "강사", column: "master_name", width: 40, type: 'text' },
-                            { name: "이용기간", column: "end_date", width: 30, type: 'end_date' },
-                        ]}
+                        <ContentTable
+                            columns={objHistoryListContent[`contract_${userData?.user_level}`] ?? []}
                             data={post?.contract ?? []}
-                            schema={'subscribe'} />
+                            schema={`contract_${userData?.user_level}`}
+                            pageSetting={getHomeContent}
+                            table={'contract'}
+                            />
                         <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
                         <ContentTable columns={[
                             { name: "수강상품", column: "title", width: 30, type: 'text' },
@@ -147,7 +155,8 @@ const Home = () => {
                             { name: "이용기간", column: "end_date", width: 30, type: 'end_date' },
                         ]}
                             data={post?.point ?? []}
-                            schema={'subscribe'} />
+                            schema={'subscribe'}
+                            />
                         <HalfTitle style={{ maxWidth: '1050px' }}>결제내역</HalfTitle>
                         <ContentTable columns={[
                             { name: "수강상품", column: "title", width: 30, type: 'text' },

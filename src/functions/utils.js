@@ -153,7 +153,30 @@ export const numberToCategory = (num) => {
     }
 
 }
-
+export const getEnLevelByNum = (num) => {
+    if (num == 0)
+        return 'lessee';
+    else if (num == 5)
+        return 'landlord';
+    else if (num == 10)
+        return 'realtor';
+    else if (num == 40)
+        return 'manager';
+    else if (num == 50)
+        return 'developer';
+}
+export const getKoLevelByNum = (num) => {
+    if (num == 0)
+        return '임차인';
+    else if (num == 5)
+        return '임대인';
+    else if (num == 10)
+        return '공인중개사';
+    else if (num == 40)
+        return '관리자';
+    else if (num == 50)
+        return '개발자';
+}
 export const regExp = (type, str) => {//id,pw,nickname,name
     let reg = undefined;
     if (type == 'id') {
