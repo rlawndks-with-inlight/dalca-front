@@ -1,10 +1,13 @@
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Input, Textarea } from "../../../components/elements/ManagerTemplete";
-import { Content, TextButton, TextFillButton, Title, Wrappers } from "../../../components/elements/UserContentTemplete"
+import { borderButtonStyle, colorButtonStyle, Content, TextButton, TextFillButton, Title, Wrappers } from "../../../components/elements/UserContentTemplete"
 import theme from "../../../styles/theme";
 import $ from 'jquery';
 import { useEffect, useState } from "react";
+import { Button } from "@mui/material";
+import Swal from "sweetalert2";
+import { toast } from "react-hot-toast";
 const Request = () => {
     const navigate = useNavigate();
     const params = useParams();
@@ -36,57 +39,62 @@ const Request = () => {
         }
     }, [])
     const onRequest = async () => {
-        if(!$('.title_').val() || !$('.note').val()){
+        if (!$('.title_').val() || !$('.note').val()) {
             alert("필수 값이 비어있습니다.");
             return;
         }
-        if (window.confirm("저장 하시겠습니까?")) {
+        Swal.fire({
+            title: `저장 하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
             const { data: response } = await axios.post('/api/additembyuser', {
                 table: 'request',
                 title: $('.title_').val(),
                 note: $('.note').val(),
             })
             if (response?.result > 0) {
-                alert("성공적으로 저장되었습니다.");
-                navigate('/servicecenter', { state: { type_num: 1 } })
+                toast.success("성공적으로 저장되었습니다.");
+                navigate('/history/request', { state: { type_num: 1 } })
             } else {
-                alert(response?.message);
+                toast.error(response?.message);
             }
-        }
+        })
     }
     return (
         <Wrappers>
             <Content>
                 <Title>문의하기</Title>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>제목</div>
-                    <Input style={{ margin: '0 0 0 8px', width: '80%',padding:'14px 8px' }} className='title_' disabled={params?.pk > 0 ? true : false} />
+                    <Input style={{ margin: '0 0 0 8px', width: '80%', maxWidth: '650px', padding: '14px 8px' }} className='title' disabled={params?.pk > 0 ? true : false} />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
                     <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>내용</div>
-                    <Textarea style={{ margin: '0 0 0 8px', width: '80%', height: '360px' }} className='note' disabled={params?.pk > 0 ? true : false} />
+                    <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '600px' }} className='note' disabled={params?.pk > 0 ? true : false} />
                 </div>
                 {post?.status == 1 ?
                     <>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px' }}>
-                            <div style={{ width: '48px', fontSize: theme.size.font4, fontWeight: 'bold' }}>답변</div>
-                            <Textarea style={{ margin: '0 0 0 8px', width: '80%', maxWidth: '400px', height: '360px' }} className='reply' disabled={params?.pk > 0 ? true : false} />
+                        <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
+                            <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>답변</div>
+                            <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '600px' }} className='reply' disabled={params?.pk > 0 ? true : false} />
                         </div>
                         <div style={{ display: "flex", marginTop: '16px', marginLeft: 'auto' }}>
-                            <TextButton style={{ margin: '0 4px 0 0' }} onClick={() => navigate(-1)}>뒤로가기</TextButton>
+                            <Button sx={borderButtonStyle} onClick={() => navigate(-1)}>뒤로가기</Button>
                         </div>
                     </>
                     :
                     <>
                         <div style={{ display: "flex", marginTop: '16px', marginLeft: 'auto' }}>
-                            <TextButton style={{ margin: '0' }} onClick={() => navigate(-1)}>취소</TextButton>
-                            {params?.pk>0?
-                            <>
-                            </>
-                            :
-                            <>
-                            <TextFillButton style={{ margin: '0 0 0 8px' }} onClick={onRequest}>완료</TextFillButton>
-                            </>}
+                            <Button sx={borderButtonStyle} onClick={() => navigate(-1)}>취소</Button>
+                            {params?.pk > 0 ?
+                                <>
+                                </>
+                                :
+                                <>
+                                    <Button sx={{ ...colorButtonStyle, margin: '0 0 0 8px' }} onClick={onRequest}>완료</Button>
+                                </>}
                         </div>
                     </>}
 

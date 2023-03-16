@@ -27,7 +27,7 @@ export const zSidebar = [
         sidebarObjListFormat('팝업관리', '/manager/list/popup', 40, ['/manager/list/popup']),//list
     ], <AiTwotoneSetting />),
     sidebarContentFormat('게시판관리', [
-        //sidebarObjListFormat('문의관리', '/manager/list/request', 40, ['/manager/list/request']),//list
+        sidebarObjListFormat('문의관리', '/manager/list/request', 40, ['/manager/list/request']),//list
         sidebarObjListFormat('FAQ관리', '/manager/list/faq', 40, ['/manager/list/faq']),//list
         //sidebarObjListFormat('이벤트관리', '/manager/list/event', 40, ['/manager/list/event']),//list
         sidebarObjListFormat('공지사항', '/manager/list/notice', 40, ['/manager/list/notice']),//list
@@ -224,7 +224,7 @@ export const objManagerListContent = {
         'request',
         [
             columnObjFormat('문의자아이디', '', 'text', 'id'),
-            columnObjFormat('문의자닉네임', '', 'text', 'nickname'),
+            columnObjFormat('문의자주민번호', '', 'text', 'id_number'),
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('확인여부', '', 'request_status', 'request_status'),
             columnObjFormat('문의날짜', '', 'text', 'date'),

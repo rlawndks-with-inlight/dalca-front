@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { ShadowContainer, TextButton, Title, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { borderButtonStyle, HalfTitle, ShadowContainer, TextButton, Title, Wrappers } from "../../../components/elements/UserContentTemplete";
 import { backUrl } from "../../../data/Data";
 import defaultImg from '../../../assets/images/icon/default-profile.png'
 import axios from "axios";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { MdEdit } from 'react-icons/md';
 import theme from "../../../styles/theme";
 import ContentTable from "../../../components/ContentTable";
+import { Button } from "@mui/material";
 
 const MyCard = styled.div`
 display:flex;
@@ -134,8 +135,8 @@ const MyPage = () => {
     return (
         <>
             <Wrappers className="wrapper" style={{ maxWidth: '800px' }}>
-                <Title>마이페이지</Title>
-                <div style={{ margin: '2rem 0 1rem auto', color: `${theme.color.font2}`, fontSize: theme.size.font3, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center' }} onClick={() => { navigate('/editmyinfo') }}>
+                <HalfTitle>마이페이지</HalfTitle>
+                <div style={{ margin: '2rem 0 1rem auto', color: `${theme.color.font2}`, fontSize: theme.size.font4, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center' }} onClick={() => { navigate('/editmyinfo') }}>
                     <div style={{ paddingRight: '8px' }}>내정보 수정하기</div>
                     <MdEdit />
                 </div>
@@ -145,12 +146,7 @@ const MyPage = () => {
                         <img src={auth?.profile_img ? auth?.profile_img.substring(0, 4) == "http" ? auth?.profile_img : backUrl + auth?.profile_img : defaultImg} alt="#" onError={defaultImg} style={{ height: '125px', width: '125px', borderRadius: '50%', background: '#fff', margin: 'auto' }} />
                     </ProfileContainer>
                     <Container>
-                        <Content>
-                            <Category>닉네임</Category>
-                            <Result>
-                                {auth?.nickname ?? "---"}
-                            </Result>
-                        </Content>
+
                         <Content>
                             <Category>아이디</Category>
                             <Result>
@@ -161,6 +157,12 @@ const MyPage = () => {
                         <Content>
                             <Category>비밀번호</Category>
                             <Result>********</Result>
+                        </Content>
+                        <Content>
+                            <Category>이름</Category>
+                            <Result>
+                                {auth?.name ?? "---"}
+                            </Result>
                         </Content>
                         <Content>
                             <Category>전화번호</Category>
@@ -232,17 +234,15 @@ const MyPage = () => {
 
                 <Content>
                     <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                        <TextButton onClick={onLogout} style={{ margin: '0 8px 0 auto' }}>로그아웃</TextButton>
-                        <TextButton onClick={() => { navigate('/resign') }}>회원탈퇴</TextButton>
+                        <Button 
+                        sx={{ ...borderButtonStyle, margin: '0 0px 0 auto' }} 
+                        onClick={onLogout}
+                        >로그아웃</Button>
+                        {/* <TextButton 
+                        onClick={() => { navigate('/resign') }}
+                        >회원탈퇴</TextButton> */}
                     </div>
                 </Content>
-                {/* <LogoutButton onClick={onLogout}>
-                    로그아웃
-                </LogoutButton>
-
-                <LogoutButton onClick={() => navigate('/appsetting')}>
-                    설정
-                </LogoutButton> */}
 
                 {isWebView ?
                     <>

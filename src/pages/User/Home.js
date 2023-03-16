@@ -85,14 +85,14 @@ const Home = () => {
         getHomeContent(true);
     }, [])
     const getHomeContent = async (is_loading) => {
-        if(is_loading){
+        if (is_loading) {
             setLoading(true);
         }
         let user_data = getLocalStorage('auth');
         setUserData(user_data);
         const { data: response } = await axios.get('/api/gethomecontent');
         setPost(response?.data);
-        if(is_loading){
+        if (is_loading) {
             setLoading(false);
         }
     }
@@ -147,16 +147,7 @@ const Home = () => {
                             schema={`contract_${userData?.user_level}`}
                             pageSetting={getHomeContent}
                             table={'contract'}
-                            />
-                        <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
-                        <ContentTable columns={[
-                            { name: "수강상품", column: "title", width: 30, type: 'text' },
-                            { name: "강사", column: "master_name", width: 40, type: 'text' },
-                            { name: "이용기간", column: "end_date", width: 30, type: 'end_date' },
-                        ]}
-                            data={post?.point ?? []}
-                            schema={'subscribe'}
-                            />
+                        />
                         <HalfTitle style={{ maxWidth: '1050px' }}>결제내역</HalfTitle>
                         <ContentTable columns={[
                             { name: "수강상품", column: "title", width: 30, type: 'text' },
@@ -165,6 +156,16 @@ const Home = () => {
                         ]}
                             data={post?.pay ?? []}
                             schema={'subscribe'} />
+                        <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
+                        <ContentTable columns={[
+                            { name: "수강상품", column: "title", width: 30, type: 'text' },
+                            { name: "강사", column: "master_name", width: 40, type: 'text' },
+                            { name: "이용기간", column: "end_date", width: 30, type: 'end_date' },
+                        ]}
+                            data={post?.point ?? []}
+                            schema={'subscribe'}
+                        />
+
                     </>}
             </Wrappers>
         </>

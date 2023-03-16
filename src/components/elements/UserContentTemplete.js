@@ -187,7 +187,7 @@ export const smallButtonStyle = {
     },
 }
 export const colorButtonStyle = {
-    height: '45px',
+    height: '43px',
     minWidth: '55px',
     fontSize: `${theme.size.font5}`,
     fontWeight: 'bold',
@@ -198,6 +198,21 @@ export const colorButtonStyle = {
     },
     '&:active': {
         background: `${theme.color.background1}`,
+    },
+}
+export const borderButtonStyle = {
+    height: '43px',
+    minWidth: '53px',
+    fontSize: `${theme.size.font5}`,
+    fontWeight: 'bold',
+    border: `2px solid ${theme.color.background1}`,
+    color: `${theme.color.background1}`,
+    background: `#fff`,
+    '&:hover': {
+        background: `#fff`,
+    },
+    '&:active': {
+        background: `#fff`,
     },
 }
 export const Input = styled.input`
@@ -267,7 +282,7 @@ export const HalfTitle = (props) => {
     )
 }
 export const InputComponet = (props) => {
-    const { label, button_label, class_name, input_type, is_divider, onKeyPress, onClickButton, isButtonAble, icon_label,onClickIcon, onClick, onChange, value, divStyle, isSeeButton, autoCompleteList, onAutoCompleteClick } = props;
+    const { label, button_label, class_name, input_type, is_divider, onKeyPress, onClickButton, isButtonAble, icon_label, onClickIcon, onClick, onChange, value, divStyle, isSeeButton, autoCompleteList, onAutoCompleteClick } = props;
     const focusRef = useRef();
     const [focused, setFocused] = useState(false);
     const [isPlaceholder, setIsPlaceholder] = useState(false);
@@ -398,50 +413,50 @@ export const InputComponet = (props) => {
                     {autoCompleteList && autoCompleteList.length > 0 ?
                         <>
                             <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            style={{
-                                position: 'absolute',
-                                top: '60px',
-                                maxWidth: '560px',
-                                width: '92%',
-                                padding: '4%',
-                                background: '#fff',
-                                borderRadius: '8px',
-                                boxShadow: theme.boxShadow,
-                                height:'130px',
-                                overflowY:'auto',
-                            }}>
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                style={{
+                                    position: 'absolute',
+                                    top: '60px',
+                                    maxWidth: '560px',
+                                    width: '92%',
+                                    padding: '4%',
+                                    background: '#fff',
+                                    borderRadius: '8px',
+                                    boxShadow: theme.boxShadow,
+                                    height: '130px',
+                                    overflowY: 'auto',
+                                }}>
                                 {autoCompleteList.map((item, idx) => (
                                     <>
-                                        <div style={{ 
-                                            display: 'flex', 
+                                        <div style={{
+                                            display: 'flex',
                                             flexDirection: 'column',
-                                            padding:'6px 0',
+                                            padding: '6px 0',
                                             background: '#fff',
-                                            borderBottom:`1px solid ${theme.color.font3}`,
-                                            width:'100%',
+                                            borderBottom: `1px solid ${theme.color.font3}`,
+                                            width: '100%',
                                             '&:hover': {
                                                 background: `${theme.color.background1}`,
                                             },
                                             '&:active': {
                                                 background: `${theme.color.background1}`,
                                             },
-                                            cursor:'pointer'
-                                             }}
-                                            onClick={()=>onAutoCompleteClick(item)}
-                                            >
+                                            cursor: 'pointer'
+                                        }}
+                                            onClick={() => onAutoCompleteClick(item)}
+                                        >
                                             <div style={{
-                                                fontSize:theme.size.font4,
-                                                marginBottom:`6px`
+                                                fontSize: theme.size.font4,
+                                                marginBottom: `6px`
                                             }}>{item.name}</div>
                                             <div style={{
-                                                display:'flex',
-                                                justifyContent:'space-between',
-                                                fontSize:theme.size.font5,
-                                                color:theme.color.font3
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                fontSize: theme.size.font5,
+                                                color: theme.color.font3
                                             }}>
-                                                <div>{item.id_number && item.id_number.substring(0,6)}-*******</div>
+                                                <div>{item.id_number && item.id_number.substring(0, 6)}-*******</div>
                                                 <div>{item.phone}</div>
                                             </div>
                                         </div>

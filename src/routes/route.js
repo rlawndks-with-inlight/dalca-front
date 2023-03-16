@@ -34,6 +34,8 @@ import List from '../pages/User/Community/CommunityList'
 import History from '../pages/User/History/History'
 import CustomerInfo from '../pages/User/Auth/CustomerInfo'
 import Contract from '../pages/User/Contract/Contract';
+import Request from '../pages/User/Auth/Request';
+import PayReady from '../pages/User/Pay/PayReady';
 
 const zManagerRoute = [
     { link: '/manager', element: <MLogin />, title: "관리자로그인" },
@@ -61,9 +63,12 @@ const zUserRoute = [
     { link: '/addcontract', element: <AddContract />, title: "" },
     { link: '/addcontract/:pk', element: <AddContract />, title: "" },
     { link: '/contract/:pk', element: <Contract />, title: "" },
-    { link: '/list/:category', element: <List />, title: "" },
     { link: '/history/:category', element: <History />, title: "" },
+    { link: '/list/:category', element: <History />, title: "" },
     { link: '/customer-info', element: <CustomerInfo />, title: "" },
+    { link: '/request', element: <Request />, title: "" },
+    { link: '/request/:pk', element: <Request />, title: "" },
+    { link: '/payready/:contract_pk', element: <PayReady />, title: "" },
     
     //{ link: '/payready/:pk', element: <PayReady />, title: "결제준비" },
     //{ link: '/authpay/:pk', element: <AuthPay />, title: "결제" },

@@ -24,6 +24,7 @@ const SignUp = () => {
     const [isCheckPhone, setIsCheckPhone] = useState(false);
     const [isCheckNickname, setIsCheckNickname] = useState(false);
     const [step, setStep] = useState(0);
+    const [values, setValues] = useState({});
     const defaultObj = {
         id: '',
         pw: '',
@@ -34,9 +35,16 @@ const SignUp = () => {
         id_number_back: '',
         phone: '',
         name: '',
-        user_level:params?.user_level
+        user_level: params?.user_level
     }
-    const [values, setValues] = useState(defaultObj);
+    const realtorObj = {
+        company_number: '',
+        office_name: '',
+        office_number: '',
+        office_classification: '',
+        broker_classification: '',
+        status_classification: '',
+    }
     const handleChange = (value, key) => {
         setValues({ ...values, [key]: value });
         if (key == 'id_number_front' && value.length >= 6) {
@@ -45,11 +53,15 @@ const SignUp = () => {
     }
     useEffect(() => {
         if (params?.user_level == 0) {
+            setValues(defaultObj);
             setTitle('임차인');
         } else if (params?.user_level == 5) {
+            setValues(defaultObj);
             setTitle('임대인');
         } else if (params?.user_level == 10) {
+            setValues({ ...defaultObj, ...realtorObj });
             setTitle('공인중개사');
+
         } else {
             toast.error('잘못된 접근입니다.');
             navigate(-1);
@@ -137,8 +149,15 @@ const SignUp = () => {
             return;
         }
         if (params.user_level == 10) {
-
+            for(var i = 0;i<Object.keys(realtorObj).length;i++){
+                let key = Object.keys(realtorObj)[i];
+                if(!values[key]){
+                    toast.error('중개업 확인 내용을 채워주세요.');
+                    return;
+                }
+            }
         }
+
         Swal.fire({
             title: '회원가입 하시겠습니까?',
             showCancelButton: true,
@@ -326,10 +345,10 @@ const SignUp = () => {
                                 input_type={{
                                     placeholder: '대표자 필수입력'
                                 }}
-                                class_name='cr_number'
+                                class_name='company_number'
                                 is_divider={true}
-                                onChange={(e) => handleChange(e, 'name')}
-                                value={values.name}
+                                onChange={(e) => handleChange(e, 'company_number')}
+                                value={values.company_number}
                             />
                             <InputComponet
                                 label={'사무소명칭'}
@@ -338,48 +357,48 @@ const SignUp = () => {
                                 }}
                                 class_name='office_name'
                                 is_divider={true}
-                                onChange={(e) => handleChange(e, 'name')}
-                                value={values.name}
+                                onChange={(e) => handleChange(e, 'office_name')}
+                                value={values.office_name}
                             />
                             <InputComponet
                                 label={'중개업소관리번호'}
                                 input_type={{
                                     placeholder: ''
                                 }}
-                                class_name='name'
+                                class_name='office_number'
                                 is_divider={true}
-                                onChange={(e) => handleChange(e, 'name')}
-                                value={values.name}
+                                onChange={(e) => handleChange(e, 'office_number')}
+                                value={values.office_number}
                             />
                             <InputComponet
                                 label={'중개업소직위구분'}
                                 input_type={{
                                     placeholder: ''
                                 }}
-                                class_name='name'
+                                class_name='office_classification'
                                 is_divider={true}
-                                onChange={(e) => handleChange(e, 'name')}
-                                value={values.name}
+                                onChange={(e) => handleChange(e, 'office_classification')}
+                                value={values.office_classification}
                             />
                             <InputComponet
                                 label={'중개인구분'}
                                 input_type={{
                                     placeholder: ''
                                 }}
-                                class_name='name'
+                                class_name='broker_classification'
                                 is_divider={true}
-                                onChange={(e) => handleChange(e, 'name')}
-                                value={values.name}
+                                onChange={(e) => handleChange(e, 'broker_classification')}
+                                value={values.broker_classification}
                             />
                             <InputComponet
                                 label={'상태구분'}
                                 input_type={{
                                     placeholder: ''
                                 }}
-                                class_name='name'
+                                class_name='status_classification'
                                 is_divider={true}
-                                onChange={(e) => handleChange(e, 'name')}
-                                value={values.name}
+                                onChange={(e) => handleChange(e, 'status_classification')}
+                                value={values.status_classification}
                             />
                         </>
                         :

@@ -45,7 +45,7 @@ export const zSidebarMenu = [
     { name: '결제내역', link: '/history/pay', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '공지사항', link: '/list/notice', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: 'FAQ', link: '/list/faq', level_list: [0, 5, 10, ...zManagerLevel] },
-    { name: '문의하기', link: '/list/request', level_list: [0, 5, 10, ...zManagerLevel] },
+    { name: '문의하기', link: '/history/request', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '마이페이지', link: '/mypage', level_list: [0, 5, 10, ...zManagerLevel] },
 ]
 export const objHistoryListContent = {
@@ -87,8 +87,9 @@ export const objHistoryListContent = {
             columnObjFormat('임대인명', '', 'text', 'landlord_name'),
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('비고', '', 'contract_comment', ''),
+            columnObjFormat('상태', '', 'contract_comment', ''),
             columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
+            columnObjFormat('결제하기', '', 'go_pay', 'go_pay'),
         ]
     },
     contract_5: {
@@ -97,7 +98,7 @@ export const objHistoryListContent = {
             columnObjFormat('임차인명', '', 'text', 'lessee_name'),
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('비고', '', 'contract_comment', ''),
+            columnObjFormat('상태', '', 'contract_comment', ''),
             columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
         ]
     },
@@ -107,9 +108,34 @@ export const objHistoryListContent = {
             columnObjFormat('임대인명 ', '', 'text', 'landlord_name'),
             columnObjFormat('임차인명', '', 'text', 'lessee_name'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('비고', '', 'contract_comment', ''),
+            columnObjFormat('상태', '', 'contract_comment', ''),
             columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
+        ]
+    },
+    request: {
+        title: "문의",
+        columns: [
+            columnObjFormat('제목', '', 'text', 'title'),
+            columnObjFormat('등록일', '', 'date', 'date'),
+            columnObjFormat('자세히보기', '', 'link', ''),
+            columnObjFormat('답변상태', '', 'is_request_com', ''),
+        ]
+    },
+    notice: {
+        title: "공지사항",
+        columns: [
+            columnObjFormat('제목', '', 'text', 'title'),
+            columnObjFormat('등록일', '', 'date', 'date'),
+            columnObjFormat('자세히보기', '', 'link', ''),
+        ]
+    },
+    faq: {
+        title: "FAQ",
+        columns: [
+            columnObjFormat('제목', '', 'text', 'title'),
+            columnObjFormat('등록일', '', 'date', 'date'),
+            columnObjFormat('자세히보기', '', 'link', ''),
         ]
     },
 };

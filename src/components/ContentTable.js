@@ -14,7 +14,7 @@ import { Icon } from "@iconify/react";
 import { getLocalStorage } from "../functions/LocalStorage";
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
-
+import { motion } from "framer-motion";
 const Table = styled.table`
 font-size:${props => props.theme.size.font4};
 width:100%;
@@ -52,7 +52,6 @@ const ContentTable = (props) => {
         }
     }, [columns])
     useEffect(() => {
-        console.log(props)
     }, [data])
     const deleteItem = async (pk, table, cha) => {
         Swal.fire({
@@ -60,7 +59,7 @@ const ContentTable = (props) => {
             showCancelButton: true,
             confirmButtonText: '확인',
             cancelButtonText: '취소'
-        }).then(async(result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 let obj = {
                     pk: pk,
@@ -72,7 +71,7 @@ const ContentTable = (props) => {
                     pageSetting();
                 } else {
                     toast.error(response?.message);
-                }        
+                }
             }
         })
     }
@@ -149,6 +148,16 @@ const ContentTable = (props) => {
             navigate(`/contract/${data?.pk}`);
         }
     }
+    const goToLink = (data) => {
+        let user_data = getLocalStorage('auth');
+        if (table == 'request')
+            navigate(`/request/${data?.pk}`);
+        if (table == 'notice')
+            navigate(`/post/notice/${data?.pk}`);
+        if (table == 'faq')
+            navigate(`/post/faq/${data?.pk}`);
+
+    }
     return (
         <>
             {loading ?
@@ -181,8 +190,31 @@ const ContentTable = (props) => {
                                                     </AddButton> ?? "---"
                                                     :
                                                     null}
+                                                {column.type == 'is_request_com' ?
+                                                    item['status'] == 1 ?
+                                                        <div style={{ color: theme.color.blue }}>답변완료</div>
+                                                        :
+                                                        <div style={{ color: theme.color.red }}>답변대기</div>
+                                                    :
+                                                    null}
                                                 {column.type == 'text' ?
                                                     item[column.column] ?? "---"
+                                                    :
+                                                    null}
+                                                {column.type == 'link' ?
+                                                    <IconButton onClick={() => {
+                                                        goToLink(item)
+                                                    }}>
+                                                        <Icon icon="ph:eye" />
+                                                    </IconButton>
+                                                    :
+                                                    null}
+                                                {column.type == 'go_pay' ?
+                                                    <IconButton onClick={() => {
+                                                        navigate(`/payready/${item?.pk}`)
+                                                    }}>
+                                                        <Icon icon="ri:money-dollar-circle-line" style={{ color: theme.color.background1 }} />
+                                                    </IconButton>
                                                     :
                                                     null}
                                                 {column.type == 'contract_comment' ?
@@ -254,6 +286,24 @@ const ContentTable = (props) => {
 
                         </Table>
                     </div>
+                    {data.length == 0 ?
+                        <>
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', alignItems: 'center' }}
+                            >
+                                <div style={{ margin: 'auto auto 8px auto' }}>
+                                    <Icon icon="material-symbols:cancel-outline" style={{ fontSize: '52px', color: theme.color.background1 }} />
+                                </div>
+                                <div style={{ margin: '8px auto auto auto' }}>
+                                    데이터가 없습니다.
+                                </div>
+                            </motion.div>
+                        </>
+                        :
+                        <>
+                        </>}
                 </>}
 
         </>
