@@ -18,6 +18,7 @@ import ZoomButton from "../../../components/ZoomButton";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import './post.css';
+import { motion } from "framer-motion";
 const Progress = styled.progress`
 
 appearance: none;
@@ -120,7 +121,7 @@ const Post = (props) => {
                 await new Promise((r) => setTimeout(r, 300));
                 setPost(obj);
                 setTimeout(() => setLoading(false), 1000);
-                
+
                 if (localStorage.getItem('dark_mode')) {
                     // $('body').addClass("dark-mode");
                     // $('p').addClass("dark-mode");
@@ -261,31 +262,38 @@ const Post = (props) => {
                         :
                         <>
                         </>} */}
-                        <Title not_arrow={true}>{post.title}</Title>
-                        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'end', fontSize: `${theme.size.font4}` }}>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                {/* <div style={{ margin: '0 4px' }}>{post.nickname}</div> / */}
-                                <div style={{ margin: '0 4px' }}>{post?.date?.substring(0, 10)}</div> /
-                                <div style={{ margin: '0 8px 0 4px' }}>조회수 {commarNumber(post?.views ?? 0)}</div>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
+                        >
+                            <Title not_arrow={true}>{post.title}</Title>
+                            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'end', fontSize: `${theme.size.font4}` }}>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    {/* <div style={{ margin: '0 4px' }}>{post.nickname}</div> / */}
+                                    <div style={{ margin: '0 4px' }}>{post?.date?.substring(0, 10)}</div> /
+                                    <div style={{ margin: '0 8px 0 4px' }}>조회수 {commarNumber(post?.views ?? 0)}</div>
+                                </div>
                             </div>
-                        </div>
-                        <div style={{ fontSize: `${theme.size.font4}`, color: `${theme.color.font2}` }}>{post.hash}</div>
-                        <ViewerContainer className="viewer" style={{ margin: `${getViewerMarginByNumber(post?.note_align)}` }}>
-                            {/* <Viewer initialValue={post?.note ?? `<body></body>`} /> */}
-                             <ReactQuill
-                                value={post?.note ?? `<body></body>`}
-                                readOnly={true}
-                                theme={"bubble"}
-                                bounds={'.app'}
-                                ref={viewerRef}
-                            /> 
-                        </ViewerContainer>
-                        {/* <ZoomButton/> */}
-                        <CommentComponent addComment={addComment} data={comments} fetchComments={fetchComments} updateComment={updateComment} auth={auth} />
+                            <div style={{ fontSize: `${theme.size.font4}`, color: `${theme.color.font2}` }}>{post.hash}</div>
+                            <ViewerContainer className="viewer" style={{ margin: `${getViewerMarginByNumber(post?.note_align)}` }}>
+                                {/* <Viewer initialValue={post?.note ?? `<body></body>`} /> */}
+                                <ReactQuill
+                                    value={post?.note ?? `<body></body>`}
+                                    readOnly={true}
+                                    theme={"bubble"}
+                                    bounds={'.app'}
+                                    ref={viewerRef}
+                                />
+                            </ViewerContainer>
+                            {/* <ZoomButton/> */}
+                            <CommentComponent addComment={addComment} data={comments} fetchComments={fetchComments} updateComment={updateComment} auth={auth} />
+
+                        </motion.div>
 
                     </>}
 
-                {/* <Progress value={`${percent}`} max="100"></Progress> */}
+                <Progress value={`${percent}`} max="100"></Progress>
                 {/* <Logo src={logo} style={{left:`${percent-1}.7%`}}/> */}
             </Wrappers>
         </>

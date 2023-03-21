@@ -345,6 +345,7 @@ export const InputComponet = (props) => {
                             </>}
                     </PlaceholderLabel>
                     <Input
+                        {...props}
                         className={class_name}
                         {...input_type}
                         placeholder={''}

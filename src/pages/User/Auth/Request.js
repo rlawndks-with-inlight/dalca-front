@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
 const Request = () => {
     const navigate = useNavigate();
     const params = useParams();
@@ -30,7 +31,7 @@ const Request = () => {
             })
             setPost(response?.data);
             await new Promise((r) => setTimeout(r, 400));
-            $('.title').val(response?.data?.title);
+            $('.title_').val(response?.data?.title);
             $('.note').val(response?.data?.note);
             $('.reply').val(response?.data?.reply_note);
         }
@@ -40,7 +41,7 @@ const Request = () => {
     }, [])
     const onRequest = async () => {
         if (!$('.title_').val() || !$('.note').val()) {
-            alert("필수 값이 비어있습니다.");
+            toast.error("필수 값이 비어있습니다.");
             return;
         }
         Swal.fire({
@@ -65,38 +66,45 @@ const Request = () => {
     return (
         <Wrappers>
             <Content>
-                <Title>문의하기</Title>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>제목</div>
-                    <Input style={{ margin: '0 0 0 8px', width: '80%', maxWidth: '650px', padding: '14px 8px' }} className='title' disabled={params?.pk > 0 ? true : false} />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
-                    <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>내용</div>
-                    <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '600px' }} className='note' disabled={params?.pk > 0 ? true : false} />
-                </div>
-                {post?.status == 1 ?
-                    <>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
-                            <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>답변</div>
-                            <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '600px' }} className='reply' disabled={params?.pk > 0 ? true : false} />
-                        </div>
-                        <div style={{ display: "flex", marginTop: '16px', marginLeft: 'auto' }}>
-                            <Button sx={borderButtonStyle} onClick={() => navigate(-1)}>뒤로가기</Button>
-                        </div>
-                    </>
-                    :
-                    <>
-                        <div style={{ display: "flex", marginTop: '16px', marginLeft: 'auto' }}>
-                            <Button sx={borderButtonStyle} onClick={() => navigate(-1)}>취소</Button>
-                            {params?.pk > 0 ?
-                                <>
-                                </>
-                                :
-                                <>
-                                    <Button sx={{ ...colorButtonStyle, margin: '0 0 0 8px' }} onClick={onRequest}>완료</Button>
-                                </>}
-                        </div>
-                    </>}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
+                >
+                    <Title>문의하기</Title>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>제목</div>
+                        <Input style={{ margin: '0 0 0 8px', width: '80%', maxWidth: '650px', padding: '14px 8px' }} className='title_' disabled={params?.pk > 0 ? true : false} />
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
+                        <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>내용</div>
+                        <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '600px' }} className='note' disabled={params?.pk > 0 ? true : false} />
+                    </div>
+                    {post?.status == 1 ?
+                        <>
+                            <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
+                                <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>답변</div>
+                                <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '600px' }} className='reply' disabled={params?.pk > 0 ? true : false} />
+                            </div>
+                            <div style={{ display: "flex", marginTop: '16px', marginLeft: 'auto' }}>
+                                <Button sx={borderButtonStyle} onClick={() => navigate(-1)}>뒤로가기</Button>
+                            </div>
+                        </>
+                        :
+                        <>
+                            <div style={{ display: "flex", marginTop: '16px', marginLeft: 'auto' }}>
+                                <Button sx={borderButtonStyle} onClick={() => navigate(-1)}>취소</Button>
+                                {params?.pk > 0 ?
+                                    <>
+                                    </>
+                                    :
+                                    <>
+                                        <Button sx={{ ...colorButtonStyle, margin: '0 0 0 8px' }} onClick={onRequest}>완료</Button>
+                                    </>}
+                            </div>
+                        </>}
+                </motion.div>
+
 
             </Content>
         </Wrappers>
