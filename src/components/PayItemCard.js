@@ -107,7 +107,7 @@ const PayItemCard = (props) => {
                     :
                     <>
                         <PriceContainer>
-                            <div style={{ display: "flex", marginTop: 'auto' }}>
+                            <div style={{ display: "flex", margin: 'auto 0 0 auto' }}>
                                 <Button sx={borderButtonStyle} style={{ margin: '0 4px 0 12px' }} onClick={() => onPay(1)}>보증금결제</Button>
                                 <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={() => onPay(0)}>월세결제</Button>
                             </div>

@@ -53,7 +53,9 @@ const Contract = () => {
         monthly: 0,
         address: '',
         address_detail: '',
-        zip_code: ''
+        zip_code: '',
+        start_date: '',
+        pay_day: 1,
     })
 
     useEffect(() => {
@@ -80,7 +82,7 @@ const Contract = () => {
             }
             obj['monthly'] = obj['monthly'] / 10000;
             obj['deposit'] = obj['deposit'] / 10000;
-           
+
             if (obj['document_src']) {
                 setImgUrlObj({ ...imgUrlObj, ['document_src']: backUrl + obj['document_src'] })
             }
@@ -200,6 +202,28 @@ const Contract = () => {
                                     icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                 />
                                 <InputComponet
+                                    label={'월세 납부 시작일'}
+                                    input_type={{
+                                        placeholder: '',
+                                        type: 'date',
+                                        disabled: "true"
+                                    }}
+                                    class_name='start_date'
+                                    is_divider={true}
+                                    value={values.start_date}
+                                />
+                                <InputComponet
+                                    label={'월세 납부일'}
+                                    input_type={{
+                                        placeholder: '',
+                                        disabled: "true"
+                                    }}
+                                    class_name='pay_day'
+                                    is_divider={true}
+                                    value={values.pay_day}
+                                    icon_label={<div style={{ fontSize: theme.size.font4 }}>일</div>}
+                                />
+                                <InputComponet
                                     label={'임대인'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',
@@ -208,6 +232,16 @@ const Contract = () => {
                                     class_name='landlord'
                                     is_divider={true}
                                     value={values.landlord?.name}
+                                />
+                                <InputComponet
+                                    label={'임대인 전화번호'}
+                                    input_type={{
+                                        placeholder: '숫자를 입력해 주세요.',
+                                        disabled: "true"
+                                    }}
+                                    class_name='landlord_phone'
+                                    is_divider={true}
+                                    value={values.landlord?.phone}
                                 />
                                 <InputComponet
                                     label={'임차인'}
@@ -220,6 +254,16 @@ const Contract = () => {
                                     value={values.lessee?.name}
                                 />
                                 <InputComponet
+                                    label={'임차인 전화번호'}
+                                    input_type={{
+                                        placeholder: '숫자를 입력해 주세요.',
+                                        disabled: "true"
+                                    }}
+                                    class_name='lessee_phone'
+                                    is_divider={true}
+                                    value={values.lessee?.phone}
+                                />
+                                <InputComponet
                                     label={'공인중개사'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',
@@ -228,6 +272,16 @@ const Contract = () => {
                                     class_name='realtor'
                                     is_divider={true}
                                     value={values.realtor?.name}
+                                />
+                                <InputComponet
+                                    label={'공인중개사 전화번호'}
+                                    input_type={{
+                                        placeholder: '숫자를 입력해 주세요.',
+                                        disabled: "true"
+                                    }}
+                                    class_name='realtor_phone'
+                                    is_divider={true}
+                                    value={values.realtor?.phone}
                                 />
                                 {imgUrlObj[`document_src`] ?
                                     <>
@@ -259,6 +313,7 @@ const Contract = () => {
                                                 confirmContractAppr();
                                             }
                                         }}
+                                        disabled={values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? true : false}
                                     >{values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? '수락완료' : `${getKoLevelByNum(userData?.user_level)} 수락`}</Button>
                                 </div>
                             </motion.div>

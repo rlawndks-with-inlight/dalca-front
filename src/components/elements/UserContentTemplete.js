@@ -7,7 +7,7 @@ import { MdNavigateNext } from 'react-icons/md';
 import theme from "../../styles/theme";
 import umziIcon from '../../assets/images/icon/umzi.svg';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
-import { Button, Divider, IconButton } from "@mui/material";
+import { Button, Divider, IconButton, makeStyles, Select } from "@mui/material";
 import { useRef } from "react";
 import { Icon } from '@iconify/react';
 import { logoSrc } from "../../data/Data";
@@ -199,6 +199,11 @@ export const colorButtonStyle = {
     '&:active': {
         background: `${theme.color.background1}`,
     },
+    '&:disabled': {
+        background: `${theme.color.font4}`,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
 }
 export const borderButtonStyle = {
     height: '43px',
@@ -281,6 +286,23 @@ export const HalfTitle = (props) => {
         </>
     )
 }
+
+export const CustomSelect = styled(Select)(() => ({
+    '& label.Mui-focused': {
+        color: theme.color.background1,
+    },
+    "&.MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: theme.color.font5
+      },
+      "&:hover fieldset": {
+        borderColor: theme.color.font4_5
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: theme.color.background1
+      }
+    }
+  }));
 export const InputComponet = (props) => {
     const { label, button_label, class_name, input_type, is_divider, on_focus, on_blur, onKeyPress, onClickButton, isButtonAble, icon_label, onClickIcon, onClick, onChange, value, divStyle, isSeeButton, autoCompleteList, onAutoCompleteClick } = props;
     const focusRef = useRef();
@@ -311,6 +333,16 @@ export const InputComponet = (props) => {
             setIsValue(true);
         }
     }, [$(`.${class_name}`).val()])
+
+    const getInputType = () =>{
+        if((input_type?.type == 'password' && !isSeePassword)){
+            return 'password'
+        }
+        if(input_type?.type){
+            return input_type?.type
+        }
+        return '';
+    }
     return (
         <>
             <div style={{
@@ -355,7 +387,7 @@ export const InputComponet = (props) => {
                         onBlur={onBlur}
                         onChange={onChangeValue}
                         onClick={onClick}
-                        type={(input_type?.type == 'password' && !isSeePassword) ? 'password' : ''}
+                        type={getInputType()}
                         style={{
                             padding: `${(button_label
                                 || isSeeButton

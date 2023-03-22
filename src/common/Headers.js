@@ -19,6 +19,8 @@ import { getLocalStorage } from '../functions/LocalStorage';
 import { AiOutlineBell, AiOutlineSearch, AiOutlineSetting } from 'react-icons/ai';
 import { Icon } from '@iconify/react';
 import { IconButton } from '@mui/material';
+import Swal from 'sweetalert2';
+import { toast } from 'react-hot-toast';
 const Header = styled.header`
 position:fixed;
 height:6rem;
@@ -223,15 +225,22 @@ const Headers = () => {
     alert("추천 url이 복사되었습니다.");
   }
   const onLogout = async () => {
-    if (window.confirm('정말 로그아웃 하시겠습니까?')) {
-      const { data: response } = await axios.post('/api/logout');
-      if (response.result > 0) {
-        localStorage.removeItem('auth');
-        navigate('/login');
-      } else {
-        alert('error');
+    Swal.fire({
+      title: '정말 로그아웃 하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '확인',
+      cancelButtonText: '취소'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { data: response } = await axios.post('/api/logout');
+        if (response.result > 0) {
+          localStorage.removeItem('auth');
+          navigate('/login');
+        } else {
+          toast.error('error');
+        }
       }
-    }
+    })
   }
   const onClosePopup = async (pk, is_not_see) => {
     if (is_not_see) {
@@ -284,11 +293,11 @@ const Headers = () => {
           <LeftNoneIcon />
           <HeaderLogo src={logoSrc} alt="홈으로" onClick={() => { navigate('/home') }} />
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton sx={{padding:'0',mr:1}}>
-              <Icon icon="mdi:bell-outline" style={{color:theme.color.background1,marginRight:'6px'}} />
+            <IconButton sx={{ padding: '0', mr: 1 }}>
+              <Icon icon="mdi:bell-outline" style={{ color: theme.color.background1, marginRight: '6px' }} />
             </IconButton>
-            <IconButton sx={{padding:'0'}}>
-              <Icon icon="icon-park-outline:hamburger-button" onClick={onChangeMenuDisplay} style={{color:theme.color.background1}} />
+            <IconButton sx={{ padding: '0' }}>
+              <Icon icon="icon-park-outline:hamburger-button" onClick={onChangeMenuDisplay} style={{ color: theme.color.background1 }} />
             </IconButton>
           </div>
           <OpenSideBarBackground className='sidebar-open-background' onClick={onChangeMenuDisplay} />

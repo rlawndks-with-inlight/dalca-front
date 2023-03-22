@@ -134,7 +134,7 @@ const Home = () => {
                     </div>
                 </>}
 
-            <Wrappers className='wrappers' style={{ marginTop: '0', minHeight: '0px' }}>
+            <Wrappers className='wrappers' style={{ marginTop: '0', minHeight: '53vh' }}>
                 {loading ?
                     <>
                     </>
@@ -149,21 +149,16 @@ const Home = () => {
                             table={'contract'}
                         />
                         <HalfTitle style={{ maxWidth: '1050px' }}>결제내역</HalfTitle>
-                        <ContentTable columns={[
-                            { name: "수강상품", column: "title", width: 30, type: 'text' },
-                            { name: "강사", column: "master_name", width: 40, type: 'text' },
-                            { name: "이용기간", column: "end_date", width: 30, type: 'end_date' },
-                        ]}
+                        <ContentTable
+                            columns={objHistoryListContent[`pay_${userData?.user_level}`] ?? []}
                             data={post?.pay ?? []}
-                            schema={'subscribe'} />
+                            schema={`pay_${userData?.user_level}`}
+                            table={'pay'} />
                         <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
-                        <ContentTable columns={[
-                            { name: "수강상품", column: "title", width: 30, type: 'text' },
-                            { name: "강사", column: "master_name", width: 40, type: 'text' },
-                            { name: "이용기간", column: "end_date", width: 30, type: 'end_date' },
-                        ]}
+                        <ContentTable
+                            columns={objHistoryListContent[`point`] ?? []}
                             data={post?.point ?? []}
-                            schema={'subscribe'}
+                            schema={'point'}
                         />
 
                     </>}

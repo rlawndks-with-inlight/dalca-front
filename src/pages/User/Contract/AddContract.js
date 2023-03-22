@@ -1,6 +1,6 @@
 //계약생성
 
-import { colorButtonStyle, ContentWrappers, InputComponet, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponet, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -27,6 +27,8 @@ import { backUrl } from "../../../data/Data";
 import Modal from '../../../components/Modal';
 import DaumPostcode from 'react-daum-postcode';
 import Loading from "../../../components/Loading";
+import { range } from "../../../functions/utils";
+
 const steps = ['계약서등록', '임대인\n동의구하기', '임차인\n동의구하기', '완료'];
 const stepLabelStyle = {
     whiteSpace: 'pre'
@@ -60,7 +62,8 @@ const AddContract = () => {
         monthly: 0,
         address: '',
         address_detail: '',
-        zip_code: ''
+        start_date: '',
+        pay_day: 1,
     })
     useEffect(() => {
         let user_data = getLocalStorage('auth');
@@ -183,6 +186,8 @@ const AddContract = () => {
         if (response?.result > 0) {
             toast.success("유저에게 동의확인 신호를 보내었습니다.");
             getContract(userData);
+            setLandlordList([]);
+            setLesseeList([]);
         } else {
             toast.error(response?.message);
         }
@@ -191,6 +196,17 @@ const AddContract = () => {
 
     const isConfirm = async () => {
         try {
+            if (
+                !values?.address ||
+                !values?.zip_code ||
+                !values?.address_detail ||
+                !values?.start_date ||
+                !values?.pay_day
+            ) {
+                toast.error("필수값이 비어 있습니다.");
+                setActiveStep(0);
+                return;
+            }
             let response_img = undefined;
             if (imgContentObj?.document_src && imgUrlObj?.document_src != -1) {
                 let formData = new FormData();
@@ -198,6 +214,7 @@ const AddContract = () => {
                 const { data: response_image } = await axios.post('/api/addimageitems', formData);
                 response_img = response_image?.data[0];
             }
+
             let obj = {
                 pay_type: values?.pay_type,
                 address: values?.address,
@@ -205,6 +222,9 @@ const AddContract = () => {
                 address_detail: values?.address_detail,
                 deposit: parseInt(values?.deposit) * 10000,
                 monthly: parseInt(values?.monthly) * 10000,
+                start_date: values?.start_date,
+                pay_day: values?.pay_day,
+
             }
             if (response_img) {
                 obj['document_src'] = response_img?.filename;
@@ -220,11 +240,12 @@ const AddContract = () => {
                 if (!params?.pk) {
                     toast.success('등록되었습니다. 다음 절차를 진행해 주세요.');
                     navigate(`/addcontract/${response?.data?.result_pk}`)
+                }else{
+                    setActiveStep(1);
                 }
             } else {
                 toast.error(response?.message);
             }
-
         } catch (err) {
             console.log(err);
             toast.error(err?.message)
@@ -249,7 +270,6 @@ const AddContract = () => {
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         isConfirm();
-                        setActiveStep(activeStep + 1);
                         setLandlordList([]);
                         setLesseeList([]);
                     }
@@ -257,7 +277,6 @@ const AddContract = () => {
                 })
             } else {
                 isConfirm();
-                setActiveStep(activeStep + 1);
                 setLandlordList([]);
                 setLesseeList([]);
             }
@@ -290,12 +309,12 @@ const AddContract = () => {
         }
     }
     const onSelectLandlord = async (obj) => {
-        setLandlordList([]);
         setValues({ ...values, ['landlord']: obj, ['landlord_search']: obj?.name });
+        setLandlordList([]);
     }
     const onSelectLessee = async (obj) => {
-        setLesseeList([]);
         setValues({ ...values, ['lessee']: obj, ['lessee_search']: obj?.name });
+        setLesseeList([]);
     }
     const canNextButton = (num) => {
         if (num == 0) {
@@ -394,16 +413,17 @@ const AddContract = () => {
                                         />
                                         <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
                                             <InputLabel id="demo-select-small">전/월세</InputLabel>
-                                            <Select
+                                            <CustomSelect
                                                 labelId="demo-select-small"
                                                 id="demo-select-small"
                                                 value={values.pay_type}
                                                 label="전/월세"
+
                                                 onChange={(e) => handleChange(e.target.value, 'pay_type')}
                                             >
                                                 <MenuItem value={0}>월세</MenuItem>
                                                 <MenuItem value={1}>전세</MenuItem>
-                                            </Select>
+                                            </CustomSelect>
                                         </FormControl>
                                         <InputComponet
                                             label={'보증금'}
@@ -427,6 +447,31 @@ const AddContract = () => {
                                             value={values.monthly}
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
+                                        <InputComponet
+                                            label={'월세 납부 시작일'}
+                                            input_type={{
+                                                placeholder: '',
+                                                type: 'date'
+                                            }}
+                                            class_name='start_date'
+                                            is_divider={true}
+                                            onChange={(e) => handleChange(e, 'start_date')}
+                                            value={values.start_date}
+                                        />
+                                        <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
+                                            <InputLabel id="demo-select-small">월세 납부일</InputLabel>
+                                            <CustomSelect
+                                                labelId="demo-select-small"
+                                                id="demo-select-small"
+                                                value={values.pay_day}
+                                                label="월세 납부일"
+                                                onChange={(e) => handleChange(e.target.value, 'pay_day')}
+                                            >
+                                                {range(1, 28).map((item, idx) => {
+                                                    return <MenuItem value={item}>{item} 일</MenuItem>
+                                                })}
+                                            </CustomSelect>
+                                        </FormControl>
                                         <ImageContainer for={`document_src`} style={{ margin: '0', width: '100%' }}>
 
                                             {imgUrlObj[`document_src`] && imgUrlObj[`document_src`] != -1 ?
@@ -478,7 +523,7 @@ const AddContract = () => {
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'landlord_search')}
                                             value={values.landlord_search}
-                                            autoCompleteList={landlordList}
+                                            autoCompleteList={(values.landlord?.name ? []:landlordList)}
                                             onAutoCompleteClick={onSelectLandlord}
                                             icon_label={!isComplete ? (values.landlord?.name ? <Icon icon="zondicons:reload" /> : '') : ''}
                                             onClickIcon={() => {
@@ -557,7 +602,7 @@ const AddContract = () => {
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'lessee_search')}
                                             value={values.lessee_search}
-                                            autoCompleteList={lesseeList}
+                                            autoCompleteList={(values.lessee?.name ?[]:lesseeList)}
                                             onAutoCompleteClick={onSelectLessee}
                                             icon_label={!isComplete ? (values.landlord?.name ? <Icon icon="zondicons:reload" /> : '') : ''}
                                             onClickIcon={() => {

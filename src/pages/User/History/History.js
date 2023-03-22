@@ -57,6 +57,8 @@ const History = () => {
 
         if (params?.category == 'contract') {
             setSchema(`contract_${user_data?.user_level}`);
+        } else if (params?.category == 'pay') {
+            setSchema(`pay_${user_data?.user_level}`);
         } else {
             setSchema(params?.category);
         }

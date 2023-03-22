@@ -5,29 +5,15 @@ import { colorButtonStyle, ContentWrappers, InputComponet, Wrappers } from "../.
 import { useState } from 'react'
 
 // ** MUI Imports
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import Radio from '@mui/material/Radio'
-import Button from '@mui/material/Button'
-import Select from '@mui/material/Select'
-import Switch from '@mui/material/Switch'
-import Dialog from '@mui/material/Dialog'
-import MenuItem from '@mui/material/MenuItem'
-import { styled } from '@mui/material/styles'
-import RadioGroup from '@mui/material/RadioGroup'
-import Typography from '@mui/material/Typography'
-import InputLabel from '@mui/material/InputLabel'
-import Box from '@mui/material/Box'
-import CardHeader from '@mui/material/CardHeader'
-import DialogTitle from '@mui/material/DialogTitle'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import DialogContentText from '@mui/material/DialogContentText'
-import MuiTextField from '@mui/material/TextField'
 
+import Button from '@mui/material/Button'
+
+import { styled } from '@mui/material/styles'
+
+import Box from '@mui/material/Box'
+
+import MuiTextField from '@mui/material/TextField'
+import $ from 'jquery';
 import { motion } from "framer-motion";
 import { formatCVC, formatExpirationDate, formatCreditCardNumber } from '../../../functions/format';
 // ** Third Party Imports
@@ -40,6 +26,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { Icon } from "@iconify/react";
 import Swal from "sweetalert2";
+import { toast } from "react-hot-toast";
 const CreditCardWrapper = styled(Box)(({ }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -77,6 +64,8 @@ const ChangeCard = () => {
     const [cardNumber, setCardNumber] = useState('')
     const [focus, setFocus] = useState()
     const [expiry, setExpiry] = useState('')
+    const [password, setPassword] = useState('')
+    const [passwordCheck, setPasswordCheck] = useState('')
 
     useEffect(() => {
         getAuth();
@@ -117,37 +106,51 @@ const ChangeCard = () => {
                 console.log(cvc)
                 console.log(cardNumber)
                 console.log(expiry)
+                const { data: response } = await axios.post('/api/change-card', {
+                    card_number: cardNumber,
+                    card_name: name,
+                    card_expire: expiry,
+                    card_cvc: cvc,
+                    card_password: password,
+                })
+                if(response?.result>0){
+                    toast.success('성공적으로 저장 되었습니다.');
+                }else{
+                    toast.error(response?.message);
+                }
             }
         })
     }
     return (
         <>
-            <Wrappers>
+            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff", height: '100vh' }}>
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
+                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', margin: 'auto' }}
                 >
                     <CardWrapper>
                         <Cards cvc={cvc} focused={focus} expiry={expiry} name={name} number={cardNumber} />
                     </CardWrapper>
                     <ContentWrappers style={{ marginTop: '1rem' }}>
-                        <FormControl fullWidth>
-                            <TextField
-                                fullWidth
-                                name='cardNumber'
-                                value={cardNumber}
-                                autoComplete='off'
-                                label='카드 번호'
-                                onBlur={handleBlur}
-                                onChange={handleInputChange}
-                                placeholder='0000 0000 0000 0000'
-                                onFocus={e => setFocus(e.target.name)}
-                            />
-                        </FormControl>
                         <TextField
                             fullWidth
+                            size="small"
+                            name='cardNumber'
+                            className="cardNumber"
+                            value={cardNumber}
+                            autoComplete='off'
+                            label='카드 번호'
+                            onBlur={handleBlur}
+                            onChange={handleInputChange}
+                            placeholder='0000 0000 0000 0000'
+                            onFocus={e => setFocus(e.target.name)}
+                        />
+                        <TextField
+                            fullWidth
+                            size="small"
                             name='name'
+                            className="name"
                             value={name}
                             autoComplete='off'
                             onBlur={handleBlur}
@@ -158,7 +161,9 @@ const ChangeCard = () => {
                         />
                         <TextField
                             fullWidth
+                            size="small"
                             name='expiry'
+                            className="expiry"
                             label='만료일'
                             value={expiry}
                             onBlur={handleBlur}
@@ -169,7 +174,9 @@ const ChangeCard = () => {
                         />
                         <TextField
                             fullWidth
+                            size="small"
                             name='cvc'
+                            className="cvc"
                             label='CVC 번호'
                             value={cvc}
                             autoComplete='off'
@@ -178,7 +185,20 @@ const ChangeCard = () => {
                             onFocus={e => setFocus(e.target.name)}
                             placeholder={Payment.fns.cardType(cardNumber) === 'amex' ? '1234' : '123'}
                         />
-
+                        <TextField
+                            fullWidth
+                            size="small"
+                            name='password'
+                            className="password"
+                            label='카드 비밀번호'
+                            value={password}
+                            autoComplete='off'
+                            onBlur={handleBlur}
+                            type='password'
+                            inputProps={{ maxLength: '4' }}
+                            onChange={e => setPassword(e.target.value)}
+                            onFocus={e => setFocus(e.target.name)}
+                        />
                         <div style={{
                             display: 'flex',
                             justifyContent: 'space-between',
