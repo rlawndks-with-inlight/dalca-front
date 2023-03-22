@@ -107,6 +107,13 @@ const Login = () => {
                                 value={values?.pw}
                                 isSeeButton={true}
                             />
+                            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
+                                <div style={{marginLeft:'auto',cursor:'pointer',color:theme.color.background1}}
+                                onClick={()=>{
+                                    navigate('/findmyinfo')
+                                }}
+                                >아이디/비밀번호 찾기</div>
+                            </div>
                         </>
                         :
                         <>

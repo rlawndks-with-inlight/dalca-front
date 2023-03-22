@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { WrapperForm, CategoryName, Input, Button, FlexBox, SnsLogo, RegularNotice } from './elements/AuthContentTemplete';
-import { Title,SelectType } from "./elements/UserContentTemplete";
+import { WrapperForm, CategoryName, Input, FlexBox, SnsLogo, RegularNotice } from './elements/AuthContentTemplete';
+import { Title, SelectType, InputComponet, twoOfThreeButtonStyle } from "./elements/UserContentTemplete";
 import theme from "../styles/theme";
 import $ from 'jquery';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { formatPhoneNumber } from "../functions/utils";
-
+import { Button } from "@mui/material";
+import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
 const Type = styled.div`
 width:50%;
 text-align:center;
@@ -33,36 +35,69 @@ const FindMyInfoCard = () => {
     const [isCoinside, setIsCoinside] = useState(false);
     const [isSendSms, setIsSendSms] = useState(false)
     const [fixPhoneNumber, setFixPhoneNumber] = useState("")
-    const sendSms = async () => {
-        if (typeNum == 2 && !$('.id').val()) {
-            alert("아이디를 입력해 주세요.")
-            return;
+    const [values, setValues] = useState({
+        phone: '',
+        phoneCheck: ''
+    })
+    const [values2, setValues2] = useState({
+        id: '',
+        phone: '',
+        phoneCheck: ''
+    })
+    const [passwordValues, setPasswordValues] = useState({
+        password: '',
+        passwordCheck: ''
+    })
+    useEffect(() => {
+        if (typeNum == 1) {
+            setValues({
+                phone: '',
+                phoneCheck: ''
+            })
         }
-        if (!$('.phone').val()) {
-            alert("핸드폰 번호를 입력해주세요.")
-            return;
+        if (typeNum == 2) {
+            setValues2({
+                id: '',
+                phone: '',
+                phoneCheck: ''
+            })
+        }
+    }, [typeNum])
+    const sendSms = async () => {
+        let phone = "";
+        if (typeNum == 1) {
+            if (!values.phone) {
+                toast.error("필수 값을 입력해 주세요.");
+                return;
+            }
+            phone = values.phone;
+        }
+        if (typeNum == 2) {
+            if (!values2.id || !values2.phone) {
+                toast.error("필수 값을 입력해 주세요.");
+                return;
+            }
+            phone = values2.phone;
         }
         setIsCheckPhoneNumber(false);
-        let fix_phone = $('.phone').val().replace('-', '');
+        let fix_phone = phone.replace('-', '');
         setFixPhoneNumber(fix_phone);
         let content = "";
         for (var i = 0; i < 6; i++) {
             content += Math.floor(Math.random() * 10).toString();
         }
-
         let string = `\n인증번호를 입력해주세요 ${content}.\n\n-퍼스트아카데미-`;
+        setRandNum(content);
         try {
             const { data: response } = await axios.post(`/api/sendsms`, {
                 receiver: [fix_phone, formatPhoneNumber(fix_phone)],
                 content: string
             })
             if (response?.result > 0) {
-                alert('인증번호가 발송되었습니다.');
-
+                toast.success('인증번호가 발송되었습니다.');
                 setIsSendSms(true)
-                setRandNum(content);
-                $('phone-check').focus();
             } else {
+                toast.error(response?.message);
                 setIsSendSms(false)
             }
         } catch (e) {
@@ -70,8 +105,8 @@ const FindMyInfoCard = () => {
         }
     }
     const confirmCoincide = async (e) => {
-        if (randNum === $('.phone-check').val()) {
-            alert("인증번호가 일치합니다.");
+        if (randNum == values.phoneCheck) {
+            toast.success("인증번호가 일치합니다.");
             const { data: response } = await axios.post('/api/findidbyphone', {
                 phone: fixPhoneNumber
             })
@@ -88,36 +123,7 @@ const FindMyInfoCard = () => {
 
         } else {
             setIsCheckPhoneNumber(false);
-            alert("인증번호가 일차하지 않습니다.");
-        }
-    }
-    const onKeyPressId = (e) => {
-        if (e.key == 'Enter') {
-            $('.phone').focus();
-        }
-    }
-    const onKeyPressPhone = (e) => {
-        if (e.key == 'Enter') {
-            sendSms();
-        }
-    }
-    const onKeyPressPhoneCheck = (e) => {
-        if (e.key == 'Enter') {
-            if (typeNum == 1) {
-                confirmCoincide();
-            } else {
-                confirmCoincideIdAndPhone();
-            }
-        }
-    }
-    const onKeyPressPw = (e) => {
-        if (e.key == 'Enter') {
-            $('.pw-check').focus();
-        }
-    }
-    const onKeyPressPwCheck = (e) => {
-        if (e.key == 'Enter') {
-            changePassword();
+            toast.error("인증번호가 일차하지 않습니다.");
         }
     }
     const onChangeTypeNum = (num) => {
@@ -132,45 +138,58 @@ const FindMyInfoCard = () => {
             setIsCheckIdAndPhone(false);
         }
     }
+    const handleChange = (value, key) => {
+        setValues({ ...values, [key]: value });
+    }
+    const handleChange2 = (value, key) => {
+        setValues2({ ...values2, [key]: value });
+    }
+    const handleChangePasswordValue = (value, key) => {
+        setPasswordValues({ ...passwordValues, [key]: value });
+    }
     const confirmCoincideIdAndPhone = async () => {
-        if (randNum === $('.phone-check').val()) {
-            alert("인증번호가 일치합니다.");
+        if (randNum === values2.phoneCheck) {
+            toast.success("인증번호가 일치합니다.");
             const { data: response } = await axios.post('/api/findauthbyidandphone', {
-                id: $('.id').val(),
+                id: values2.id,
                 phone: fixPhoneNumber
             })
+            setIsCheckIdAndPhone(true);
             if (response.result > 0) {
-                $('.pw').val('');
-                $('.pw-check').val('');
-                setMyId($('.id').val())
-                $('.id').val('');
-                $('.phone').val('');
+                setMyId(values2.id)
                 setIsCheckIdAndPhone(true);
             } else {
-                alert(response.message);
+                toast.error(response.message);
             }
         } else {
             setIsCheckIdAndPhone(false);
-            alert("인증번호가 일차하지 않습니다.");
+            toast.error("인증번호가 일차하지 않습니다.");
         }
     }
     const changePassword = async () => {
-        if ($('.pw').val() != $('.pw-check').val()) {
-            alert('비밀번호가 일치하지 않습니다.');
+        if (passwordValues.password != passwordValues.passwordCheck) {
+            toast.error('비밀번호가 일치하지 않습니다.');
             return;
         } else {
-            if (window.confirm("저장 하시겠습니까?")) {
-                const { data: response } = await axios.post('/api/changepassword', {
-                    pw: $('.pw').val(),
-                    id: myId
-                })
-                if (response.result > 0) {
-                    alert('저장되었습니다.')
-                    navigate('/login');
-                } else {
-                    alert(response.message);
+            Swal.fire({
+                title: '저장 하시겠습니까?',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                cancelButtonText: '취소'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const { data: response } = await axios.post('/api/changepassword', {
+                        pw: passwordValues.password,
+                        id: myId
+                    })
+                    if (response.result > 0) {
+                        toast.success('저장되었습니다.')
+                        navigate('/login');
+                    } else {
+                        toast.error(response.message);
+                    }
                 }
-            }
+            })
         }
     }
 
@@ -191,14 +210,26 @@ const FindMyInfoCard = () => {
                             </>
                             :
                             <>
-                                <CategoryName>전화번호</CategoryName>
-                                <Input placeholder='전화번호를 입력해주세요.' type={'text'} className='phone' disabled={isCheckPhoneNumber} onKeyPress={onKeyPressPhone} />
-                                <RegularNotice></RegularNotice>
-                                <Button onClick={sendSms} disabled={isCheckPhoneNumber}>인증번호 발송</Button>
-                                <Input style={{ marginTop: '36px' }} placeholder='인증번호를 입력해주세요.' type={'text'} className='phone-check' disabled={isCheckPhoneNumber} onKeyPress={onKeyPressPhoneCheck} />
-                                <RegularNotice></RegularNotice>
-
-                                <Button onClick={confirmCoincide} disabled={isCheckPhoneNumber}>{isCheckPhoneNumber ? '확인완료' : '인증번호 확인'}</Button>
+                                <InputComponet
+                                    label={'전화번호를 입력해주세요.'}
+                                    input_type={{
+                                        placeholder: '',
+                                    }}
+                                    class_name='phone'
+                                    onChange={(e) => handleChange(e, 'phone')}
+                                    value={values?.phone}
+                                />
+                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={sendSms} disabled={isCheckPhoneNumber}>인증번호 발송</Button>
+                                <InputComponet
+                                    label={'인증번호를 입력해주세요.'}
+                                    input_type={{
+                                        placeholder: '',
+                                    }}
+                                    class_name='phoneCheck'
+                                    onChange={(e) => handleChange(e, 'phoneCheck')}
+                                    value={values?.phoneCheck}
+                                />
+                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={confirmCoincide} disabled={isCheckPhoneNumber}>{isCheckPhoneNumber ? '확인완료' : '인증번호 확인'}</Button>
                             </>
                         }
 
@@ -207,23 +238,61 @@ const FindMyInfoCard = () => {
                     <>
                         {isCheckIdAndPhone ?
                             <>
-                                <CategoryName>비밀번호</CategoryName>
-                                <Input placeholder='비밀번호를 입력해주세요.' type={'password'} className='pw' onKeyPress={onKeyPressPw} />
-                                <CategoryName>비밀번호 확인</CategoryName>
-                                <Input placeholder='비밀번호를 한번더 입력해주세요.' type={'password'} className='pw-check' onKeyPress={onKeyPressPwCheck} />
-                                <Button style={{ marginTop: '36px' }} onClick={changePassword} >저장</Button>
+                                <InputComponet
+                                    label={'비밀번호를 입력해주세요.'}
+                                    input_type={{
+                                        placeholder: '',
+                                        type: 'password'
+                                    }}
+                                    class_name='password'
+                                    onChange={(e) => handleChangePasswordValue(e, 'password')}
+                                    value={passwordValues?.password}
+                                    isSeeButton={true}
+                                />
+                                <InputComponet
+                                    label={'비밀번호를 한번더 입력해주세요.'}
+                                    input_type={{
+                                        placeholder: '',
+                                        type: 'password'
+                                    }}
+                                    class_name='passwordCheck'
+                                    onChange={(e) => handleChangePasswordValue(e, 'passwordCheck')}
+                                    value={passwordValues?.passwordCheck}
+                                    isSeeButton={true}
+                                />
+                                <Button sx={twoOfThreeButtonStyle} onClick={changePassword} >저장</Button>
                             </>
                             :
                             <>
-                                <CategoryName>아이디</CategoryName>
-                                <Input placeholder='아이디를 입력해주세요.' type={'text'} className='id' disabled={isCheckId} onKeyPress={onKeyPressId} />
-                                <CategoryName>전화번호</CategoryName>
-                                <Input placeholder='전화번호를 입력해주세요.' type={'text'} className='phone' disabled={isCheckIdAndPhone} onKeyPress={onKeyPressPhone} />
-                                <RegularNotice></RegularNotice>
-                                <Button onClick={sendSms} disabled={isCheckIdAndPhone}>인증번호 발송</Button>
-                                <Input style={{ marginTop: '36px' }} placeholder='인증번호를 입력해주세요.' type={'text'} className='phone-check' disabled={isCheckIdAndPhone} onKeyPress={onKeyPressPhoneCheck} />
-                                <RegularNotice></RegularNotice>
-                                <Button onClick={confirmCoincideIdAndPhone} disabled={isCheckIdAndPhone}>{'인증번호 확인'}</Button>
+                                <InputComponet
+                                    label={'아이디를 입력해주세요.'}
+                                    input_type={{
+                                        placeholder: '',
+                                    }}
+                                    class_name='id'
+                                    onChange={(e) => handleChange2(e, 'id')}
+                                    value={values2?.id}
+                                />
+                                <InputComponet
+                                    label={'전화번호를 입력해주세요.'}
+                                    input_type={{
+                                        placeholder: '',
+                                    }}
+                                    class_name='phone'
+                                    onChange={(e) => handleChange2(e, 'phone')}
+                                    value={values2?.phone}
+                                />
+                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={sendSms} disabled={isCheckIdAndPhone}>인증번호 발송</Button>
+                                <InputComponet
+                                    label={'인증번호를 입력해주세요.'}
+                                    input_type={{
+                                        placeholder: '',
+                                    }}
+                                    class_name='phoneCheck'
+                                    onChange={(e) => handleChange2(e, 'phoneCheck')}
+                                    value={values2?.phoneCheck}
+                                />
+                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={confirmCoincideIdAndPhone} disabled={isCheckIdAndPhone}>{isCheckPhoneNumber ? '확인완료' : '인증번호 확인'}</Button>
                             </>
                         }
 
