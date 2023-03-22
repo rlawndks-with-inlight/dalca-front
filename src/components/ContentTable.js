@@ -158,6 +158,28 @@ const ContentTable = (props) => {
             navigate(`/post/faq/${data?.pk}`);
 
     }
+    const getPayCategory = (data) => {
+        if (data?.pay_category == 0) {
+            return "월세";
+        }
+        if (data?.pay_category == 1) {
+            return "보증금";
+        }
+        return "---";
+    }
+    const getPayStatus = (data) => {
+        if (data?.status == 0)
+            return "납부안함"
+        else if (data?.status == 1)
+            return "걀제완료"
+        else if (data?.status == -1)
+            return "결제취소"
+        else
+            return "---"
+    }
+    const getPayMonth = (data) => {
+
+    }
     return (
         <>
             {loading ?
@@ -211,7 +233,14 @@ const ContentTable = (props) => {
                                                     null}
                                                 {column.type == 'go_pay' ?
                                                     <IconButton onClick={() => {
-                                                        navigate(`/payready/${item?.pk}`)
+                                                        if (table == 'pay') {
+                                                            navigate(`/payready/${item?.contract_pk}`)
+
+                                                        }
+                                                        if (table == 'contract') {
+                                                            navigate(`/payready/${item?.pk}`)
+
+                                                        }
                                                     }}>
                                                         <Icon icon="ri:money-dollar-circle-line" style={{ color: theme.color.background1 }} />
                                                     </IconButton>
@@ -219,6 +248,18 @@ const ContentTable = (props) => {
                                                     null}
                                                 {column.type == 'contract_comment' ?
                                                     getContactComment(item) ?? "---"
+                                                    :
+                                                    null}
+                                                {column.type == 'pay_month' ?
+                                                    getPayMonth(item) ?? "---"
+                                                    :
+                                                    null}
+                                                {column.type == 'pay_status' ?
+                                                    getPayStatus(item) ?? "---"
+                                                    :
+                                                    null}
+                                                {column.type == 'pay_category' ?
+                                                    getPayCategory(item) ?? "---"
                                                     :
                                                     null}
                                                 {column.type == 'date' ?
