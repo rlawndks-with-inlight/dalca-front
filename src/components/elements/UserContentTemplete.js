@@ -282,7 +282,7 @@ export const HalfTitle = (props) => {
     )
 }
 export const InputComponet = (props) => {
-    const { label, button_label, class_name, input_type, is_divider, onKeyPress, onClickButton, isButtonAble, icon_label, onClickIcon, onClick, onChange, value, divStyle, isSeeButton, autoCompleteList, onAutoCompleteClick } = props;
+    const { label, button_label, class_name, input_type, is_divider, on_focus, on_blur, onKeyPress, onClickButton, isButtonAble, icon_label, onClickIcon, onClick, onChange, value, divStyle, isSeeButton, autoCompleteList, onAutoCompleteClick } = props;
     const focusRef = useRef();
     const [focused, setFocused] = useState(false);
     const [isPlaceholder, setIsPlaceholder] = useState(false);
