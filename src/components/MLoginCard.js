@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import $ from 'jquery';
 import axios from 'axios';
 import logo from '../assets/images/test/logo.png'
+import { toast } from 'react-hot-toast';
 const WrapperForm = styled.div`
 width:90%;
 background:#fff;
@@ -102,14 +103,14 @@ const MLoginCard = () => {
         if (response.result > 0) {
             await localStorage.setItem('auth', JSON.stringify(response.data));
             if (response.data?.user_level >= 40) {
-                alert(response.message);
+                toast.success(response.message);
                 navigate('/manager/list/user');
 
             } else if (response.data?.user_level >= 30) {
-                alert(response.message);
+                toast.success(response.message);
                 navigate('/manager/list/strategy');
             }else{
-                alert("아이디 또는 비밀번호를 확인해주세요.");
+                toast.error("아이디 또는 비밀번호를 확인해주세요.");
                 navigate("/")
             }
         }

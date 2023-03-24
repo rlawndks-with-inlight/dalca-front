@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { toast } from 'react-hot-toast';
 
 const Wrappers = styled.div`
 padding:24px;
@@ -72,11 +74,15 @@ const Breadcrumb = (props) => {
         }
     }, [location])
     const onLogout = async () => {
-        const { data: response } = await axios.post('/api/logout')
-        alert(response.message);
+        const { data: response } = await axios.post('/api/logout');
+        
         if (response.result > 0) {
+            toast.success(response.message);
             localStorage.removeItem('auth')
             navigate('/manager')
+        }else{
+            toast.error(response.message);
+
         }
     }
     return (
@@ -87,10 +93,17 @@ const Breadcrumb = (props) => {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div style={{ marginRight: '12px', fontSize: '14px', fontWeight: '400' }}>{nickname}</div>
                         <Logout onClick={() => {
-                            if (window.confirm("Do you want to log out?")) {
-                                onLogout();
-                            }
-                        }}>logout</Logout>
+                            Swal.fire({
+                                title: `로그아웃 하시겠습니까?`,
+                                showCancelButton: true,
+                                confirmButtonText: '확인',
+                                cancelButtonText: '취소'
+                            }).then(async (result) => {
+                                if (result.isConfirmed) {
+                                    onLogout();
+                                }
+                            })
+                        }}>로그아웃</Logout>
                     </div>
                 </Wrappers>
             </div>
