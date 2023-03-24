@@ -15,6 +15,7 @@ import { getLocalStorage } from "../functions/LocalStorage";
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
+import { getPayCategory, getPayStatus } from "../functions/format";
 const Table = styled.table`
 font-size:${props => props.theme.size.font4};
 width:100%;
@@ -158,25 +159,7 @@ const ContentTable = (props) => {
             navigate(`/post/faq/${data?.pk}`);
 
     }
-    const getPayCategory = (data) => {
-        if (data?.pay_category == 0) {
-            return "월세";
-        }
-        if (data?.pay_category == 1) {
-            return "보증금";
-        }
-        return "---";
-    }
-    const getPayStatus = (data) => {
-        if (data?.status == 0)
-            return "납부안함"
-        else if (data?.status == 1)
-            return "걀제완료"
-        else if (data?.status == -1)
-            return "결제취소"
-        else
-            return "---"
-    }
+   
     const getPayMonth = (data) => {
 
     }

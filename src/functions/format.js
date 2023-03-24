@@ -49,3 +49,22 @@ export const formatCreditCardNumber = (value, Payment) => {
   
     return clearValue.slice(0, maxLength)
   }
+  export  const getPayCategory = (data) => {
+    if (data?.pay_category == 0) {
+        return "월세";
+    }
+    if (data?.pay_category == 1) {
+        return "보증금";
+    }
+    return "---";
+}
+export const getPayStatus = (data) => {
+    if (data?.status == 0)
+        return "납부안함"
+    else if (data?.status == 1)
+        return "걀제완료"
+    else if (data?.status == -1)
+        return "결제취소"
+    else
+        return "---"
+}
