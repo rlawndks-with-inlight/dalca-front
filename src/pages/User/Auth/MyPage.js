@@ -233,13 +233,15 @@ const MyPage = () => {
 
                 <Content>
                     <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                        <Button 
-                        sx={{ ...borderButtonStyle, margin: '0 0px 0 auto' }} 
-                        onClick={onLogout}
+                        <Button
+                            sx={{ ...borderButtonStyle, margin: '0 0px 0 auto' }}
+                            onClick={() => { navigate('/resign') }}
+                        >회원탈퇴</Button>
+                        <Button
+                            sx={{ ...borderButtonStyle, margin: '0 0px 0 16px' }}
+                            onClick={onLogout}
                         >로그아웃</Button>
-                        {/* <TextButton 
-                        onClick={() => { navigate('/resign') }}
-                        >회원탈퇴</TextButton> */}
+
                     </div>
                 </Content>
 

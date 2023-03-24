@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { WrapperForm, CategoryName, Input, Button, FlexBox, SnsLogo, RegularNotice } from './elements/AuthContentTemplete';
-import { Title, SelectType } from "./elements/UserContentTemplete";
+import { WrapperForm } from './elements/AuthContentTemplete';
+import { Title, SelectType, InputComponent, twoOfThreeButtonStyle } from "./elements/UserContentTemplete";
 import theme from "../styles/theme";
 import $ from 'jquery';
 import axios from "axios";
@@ -9,7 +9,9 @@ import { useNavigate } from "react-router-dom";
 import { formatPhoneNumber } from "../functions/utils";
 import defaultImg from '../assets/images/icon/default-profile.png';
 import { backUrl } from "../data/Data";
-
+import { Button } from "@mui/material";
+import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const Type = styled.div`
 width:50%;
@@ -46,7 +48,9 @@ const ResignCard = () => {
     const [isSendSms, setIsSendSms] = useState(false)
     const [fixPhoneNumber, setFixPhoneNumber] = useState("")
     const [auth, setAuth] = useState({});
-
+    const [values, setValues] = useState({
+        password: ''
+    })
     const zType = [{ title: "프로필 변경" }, { title: "닉네임 변경" }, { title: "비밀번호 변경" }, { title: "전화번호 변경" }];
     useEffect(() => {
         let auth = JSON.parse(localStorage.getItem('auth'))
@@ -73,7 +77,7 @@ const ResignCard = () => {
             content += Math.floor(Math.random() * 10).toString();
         }
 
-        let string = `\n인증번호를 입력해주세요 ${content}.\n\n-퍼스트아카데미-`;
+        let string = `\n인증번호를 입력해주세요 ${content}.\n\n-달카페이-`;
         try {
             const { data: response } = await axios.post(`/api/sendsms`, {
                 receiver: [fix_phone, formatPhoneNumber(fix_phone)],
@@ -92,48 +96,53 @@ const ResignCard = () => {
         }
     }
 
-    
-    
+
+
     const onResign = async () => {
-
+        if (!values?.password) {
+            toast.error("비밀번호를 입력해 주세요.")
+        }
         let str = '/api/resign';
-        let obj = { id: myId, pw: $('.pw').val() };
+        let obj = { pw: values?.password };
+        Swal.fire({
+            title: `정말로 탈퇴 하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const { data: response } = await axios.post(str, obj);
+                if (response.result > 0) {
+                    toast.success("성공적으로 탈퇴되었습니다.");
+                    const { data: response } = await axios.post('/api/logout');
+                    navigate('/login');
+                } else {
+                    toast.error(response.message);
+                }
+            }
+        })
 
-
-        if (!randNum) {
-            alert("인증번호를 발송해 주세요.");
-            return;
-        }
-        if (fixPhoneNumber != auth.phone) {
-            alert("가입한 전화번호와 일치하지 않습니다.");
-            return;
-        }
-        if ($('.phone-check').val() != randNum) {
-            alert("인증번호가 일치하지 않습니다.");
-            return;
-        }
-        const { data: response } = await axios.post(str, obj);
-        if (response.result > 0) {
-            alert("성공적으로 탈퇴되었습니다.");
-            const { data: response } = await axios.post('/api/logout');
-            navigate('/login');
-        } else {
-            alert(response.message);
-        }
+    }
+    const handleChange = (value, key) => {
+        setValues({ ...values, [key]: value });
     }
     return (
         <>
             <WrapperForm>
                 <Title>회원탈퇴</Title>
+                <InputComponent
+                    label={'비밀번호를 입력해주세요.'}
+                    input_type={{
+                        placeholder: '',
+                        type: 'password'
+                    }}
+                    class_name='password'
+                    onChange={(e) => handleChange(e, 'password')}
+                    value={values?.password}
+                    isSeeButton={true}
+                />
+                <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '32px' }} onClick={onResign} >회원탈퇴</Button>
 
-                <CategoryName>가입한 전화번호</CategoryName>
-                <Input className="phone" placeholder="전화번호를 입력해 주세요." onKeyPress={(e) => e.key == 'Enter' ? sendSms() : null} />
-                <RegularNotice></RegularNotice>
-                <Button onClick={sendSms}>인증번호 발송</Button>
-                <CategoryName>인증번호</CategoryName>
-                <Input className="phone-check" placeholder="인증번호를 입력해 주세요." onKeyPress={(e) => e.key == 'Enter' ? onResign() : null} />
-
-                <Button style={{ marginTop: '36px' }} onClick={() => onResign()}>탈퇴</Button>
             </WrapperForm>
         </>
     )

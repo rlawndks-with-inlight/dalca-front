@@ -1,6 +1,6 @@
 //계약생성
 
-import { colorButtonStyle, ContentWrappers, InputComponet, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, InputComponent, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MarginBottom, Wrappers, ContentWrappers, twoOfThreeButtonStyle, InputComponet } from "../../../components/elements/UserContentTemplete";
+import { MarginBottom, Wrappers, ContentWrappers, twoOfThreeButtonStyle, InputComponent } from "../../../components/elements/UserContentTemplete";
 import LoginCard from "../../../components/LoginCard";
 import { fullBackgroundColorWrappersStyle } from "../../../data/ContentData";
 import { logoSrc } from "../../../data/Data";
@@ -84,7 +84,7 @@ const Login = () => {
                     <img src={logoSrc} style={{ maxWidth: '500px', width: '90%', margin: 'auto auto 10vh auto' }} onClick={() => { setSignUpCount(0) }} />
                     {signUpCount == 0 ?
                         <>
-                            <InputComponet
+                            <InputComponent
                                 label={'아이디를 입력해주세요.'}
                                 input_type={{
                                     placeholder: '',
@@ -95,7 +95,7 @@ const Login = () => {
                                 onChange={(e) => handleChange(e, 'id')}
                                 value={values?.id}
                             />
-                            <InputComponet
+                            <InputComponent
                                 label={'비밀번호를 입력해주세요.'}
                                 input_type={{
                                     placeholder: '',

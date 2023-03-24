@@ -1,6 +1,6 @@
 //계약생성
 
-import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponet, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -387,7 +387,7 @@ const AddContract = () => {
                                     >
                                         <div onClick={() => {
                                         }}>
-                                            <InputComponet
+                                            <InputComponent
                                                 label={'주소* '}
                                                 input_type={{
                                                     placeholder: '',
@@ -401,7 +401,7 @@ const AddContract = () => {
                                                 value={values.address}
                                             />
                                         </div>
-                                        <InputComponet
+                                        <InputComponent
                                             label={'상세주소'}
                                             input_type={{
                                                 placeholder: ''
@@ -425,7 +425,7 @@ const AddContract = () => {
                                                 <MenuItem value={1}>전세</MenuItem>
                                             </CustomSelect>
                                         </FormControl>
-                                        <InputComponet
+                                        <InputComponent
                                             label={'보증금'}
                                             input_type={{
                                                 placeholder: '숫자를 입력해 주세요.'
@@ -436,7 +436,7 @@ const AddContract = () => {
                                             value={values.deposit}
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
-                                        <InputComponet
+                                        <InputComponent
                                             label={'월세'}
                                             input_type={{
                                                 placeholder: '숫자를 입력해 주세요.'
@@ -447,7 +447,7 @@ const AddContract = () => {
                                             value={values.monthly}
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
-                                        <InputComponet
+                                        <InputComponent
                                             label={'월세 납부 시작일'}
                                             input_type={{
                                                 placeholder: '',
@@ -513,7 +513,7 @@ const AddContract = () => {
                                         animate={{ opacity: 1 }}
                                         style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                                     >
-                                        <InputComponet
+                                        <InputComponent
                                             label={'임대인'}
                                             input_type={{
                                                 placeholder: '임대인 이름, 주민등록번호, 전화번호 검색가능.',
@@ -592,7 +592,7 @@ const AddContract = () => {
                                         animate={{ opacity: 1 }}
                                         style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                                     >
-                                        <InputComponet
+                                        <InputComponent
                                             label={'임차인'}
                                             input_type={{
                                                 placeholder: '임차인 이름, 주민등록번호, 전화번호 검색가능.',

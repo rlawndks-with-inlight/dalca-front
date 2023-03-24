@@ -1,6 +1,6 @@
 //카드변경
 
-import { colorButtonStyle, ContentWrappers, InputComponet, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, InputComponent, Wrappers } from "../../../components/elements/UserContentTemplete";
 // ** React Imports
 import { useState } from 'react'
 

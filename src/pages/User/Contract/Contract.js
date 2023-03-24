@@ -1,6 +1,6 @@
 //계약생성
 
-import { colorButtonStyle, ContentWrappers, InputComponet, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, InputComponent, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -148,7 +148,7 @@ const Contract = () => {
                             >
                                 <div onClick={() => {
                                 }}>
-                                    <InputComponet
+                                    <InputComponent
                                         label={'주소* '}
                                         input_type={{
                                             placeholder: '',
@@ -159,7 +159,7 @@ const Contract = () => {
                                         value={values.address}
                                     />
                                 </div>
-                                <InputComponet
+                                <InputComponent
                                     label={'상세주소'}
                                     input_type={{
                                         placeholder: '',
@@ -169,7 +169,7 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.address_detail}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'전/월세'}
                                     input_type={{
                                         placeholder: '',
@@ -179,7 +179,7 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.pay_type == 0 ? '월세' : '전세'}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'보증금'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',
@@ -190,7 +190,7 @@ const Contract = () => {
                                     value={values.deposit}
                                     icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'월세'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',
@@ -201,7 +201,7 @@ const Contract = () => {
                                     value={values.monthly}
                                     icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'월세 납부 시작일'}
                                     input_type={{
                                         placeholder: '',
@@ -212,7 +212,7 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.start_date}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'월세 납부일'}
                                     input_type={{
                                         placeholder: '',
@@ -223,7 +223,7 @@ const Contract = () => {
                                     value={values.pay_day}
                                     icon_label={<div style={{ fontSize: theme.size.font4 }}>일</div>}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'임대인'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',
@@ -233,7 +233,7 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.landlord?.name}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'임대인 전화번호'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',
@@ -243,7 +243,7 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.landlord?.phone}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'임차인'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',
@@ -253,7 +253,7 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.lessee?.name}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'임차인 전화번호'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',
@@ -263,7 +263,7 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.lessee?.phone}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'공인중개사'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',
@@ -273,7 +273,7 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.realtor?.name}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'공인중개사 전화번호'}
                                     input_type={{
                                         placeholder: '숫자를 입력해 주세요.',

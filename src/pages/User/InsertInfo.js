@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { GrFormPrevious } from "react-icons/gr";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { ContentWrappers, FakeHeaders, HalfTitle, InputComponet, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../components/elements/UserContentTemplete";
+import { ContentWrappers, FakeHeaders, HalfTitle, InputComponent, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../components/elements/UserContentTemplete";
 import theme from "../../styles/theme";
 import Button from '@mui/material/Button';
 import { Divider } from "@mui/material";
@@ -30,7 +30,7 @@ const InsertInfo = () => {
             <FakeHeaders label='회원가입' />
             <Wrappers className="wrapper" style={{ width: '100%' }}>
                 <ContentWrappers>
-                    <InputComponet
+                    <InputComponent
                         label={'ID*'}
                         input_type={{
                             placeholder: '특수문자 제외한 6자리 이상 20자리 이하',
@@ -41,7 +41,7 @@ const InsertInfo = () => {
                         isButtonAble={!isCheckId}
                         is_divider={true}
                     />
-                    <InputComponet
+                    <InputComponent
                         label={'PW*'}
                         input_type={{
                             placeholder: '영문, 숫자, 특수문자조합 8~20자',

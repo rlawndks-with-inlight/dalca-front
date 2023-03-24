@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { GrFormPrevious } from "react-icons/gr";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { ContentWrappers, FakeHeaders, HalfTitle, InputComponet, RowContent, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { ContentWrappers, FakeHeaders, HalfTitle, InputComponent, RowContent, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import theme from "../../../styles/theme";
 import Button from '@mui/material/Button';
 import { Divider } from "@mui/material";
@@ -212,7 +212,7 @@ const SignUp = () => {
                     {step == 0 ?
                         <>
                             <HalfTitle>{title}</HalfTitle>
-                            <InputComponet
+                            <InputComponent
                                 label={'ID*'}
                                 input_type={{
                                     placeholder: '특수문자 제외한 6자리 이상 20자리 이하',
@@ -227,7 +227,7 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'id')}
                                 value={values.id}
                             />
-                            <InputComponet
+                            <InputComponent
                                 label={'PW*'}
                                 input_type={{
                                     placeholder: '영문, 숫자, 특수문자조합 8~20자',
@@ -240,7 +240,7 @@ const SignUp = () => {
                                 value={values.pw}
                                 isSeeButton={true}
                             />
-                            <InputComponet
+                            <InputComponent
                                 label={'PW 확인*'}
                                 input_type={{
                                     placeholder: '비밀번호 확인을 위해 한번 더 입력해주세요',
@@ -255,7 +255,7 @@ const SignUp = () => {
                             />
                             <div onClick={() => {
                             }}>
-                                <InputComponet
+                                <InputComponent
                                     label={'주소* '}
                                     input_type={{
                                         placeholder: '',
@@ -269,7 +269,7 @@ const SignUp = () => {
                                     value={values.address}
                                 />
                             </div>
-                            <InputComponet
+                            <InputComponent
                                 label={'상세주소'}
                                 input_type={{
                                     placeholder: ''
@@ -281,7 +281,7 @@ const SignUp = () => {
                                 value={values.address_detail}
                             />
                             <RowContent style={{ margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <InputComponet
+                                <InputComponent
                                     label={'주민등록번호 앞자리'}
                                     input_type={{
                                         placeholder: ''
@@ -296,7 +296,7 @@ const SignUp = () => {
                                 <div>
                                     -
                                 </div>
-                                <InputComponet
+                                <InputComponent
                                     label={'뒷자리'}
                                     input_type={{
                                         placeholder: '',
@@ -311,7 +311,7 @@ const SignUp = () => {
                                 />
                             </RowContent>
 
-                            <InputComponet
+                            <InputComponent
                                 label={'휴대폰번호*'}
                                 input_type={{
                                     placeholder: '-없이 숫자만 입력',
@@ -323,7 +323,7 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'phone')}
                                 value={values.phone}
                             />
-                            <InputComponet
+                            <InputComponent
                                 label={'성명*'}
                                 input_type={{
                                     placeholder: ''
@@ -340,7 +340,7 @@ const SignUp = () => {
                     {step == 1 ?
                         <>
                             <HalfTitle>{'중개업확인'}</HalfTitle>
-                            <InputComponet
+                            <InputComponent
                                 label={'사업자등록번호'}
                                 input_type={{
                                     placeholder: '대표자 필수입력'
@@ -350,7 +350,7 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'company_number')}
                                 value={values.company_number}
                             />
-                            <InputComponet
+                            <InputComponent
                                 label={'사무소명칭'}
                                 input_type={{
                                     placeholder: ''
@@ -360,7 +360,7 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'office_name')}
                                 value={values.office_name}
                             />
-                            <InputComponet
+                            <InputComponent
                                 label={'중개업소관리번호'}
                                 input_type={{
                                     placeholder: ''
@@ -370,7 +370,7 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'office_number')}
                                 value={values.office_number}
                             />
-                            <InputComponet
+                            <InputComponent
                                 label={'중개업소직위구분'}
                                 input_type={{
                                     placeholder: ''
@@ -380,7 +380,7 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'office_classification')}
                                 value={values.office_classification}
                             />
-                            <InputComponet
+                            <InputComponent
                                 label={'중개인구분'}
                                 input_type={{
                                     placeholder: ''
@@ -390,7 +390,7 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'broker_classification')}
                                 value={values.broker_classification}
                             />
-                            <InputComponet
+                            <InputComponent
                                 label={'상태구분'}
                                 input_type={{
                                     placeholder: ''

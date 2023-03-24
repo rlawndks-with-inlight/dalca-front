@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { WrapperForm, CategoryName, Input, FlexBox, SnsLogo, RegularNotice } from './elements/AuthContentTemplete';
-import { Title, SelectType, InputComponet, twoOfThreeButtonStyle } from "./elements/UserContentTemplete";
+import { Title, SelectType, InputComponent, twoOfThreeButtonStyle } from "./elements/UserContentTemplete";
 import theme from "../styles/theme";
 import $ from 'jquery';
 import axios from "axios";
@@ -86,7 +86,7 @@ const FindMyInfoCard = () => {
         for (var i = 0; i < 6; i++) {
             content += Math.floor(Math.random() * 10).toString();
         }
-        let string = `\n인증번호를 입력해주세요 ${content}.\n\n-퍼스트아카데미-`;
+        let string = `\n인증번호를 입력해주세요 ${content}.\n\n-달카페이-`;
         setRandNum(content);
         try {
             const { data: response } = await axios.post(`/api/sendsms`, {
@@ -210,7 +210,7 @@ const FindMyInfoCard = () => {
                             </>
                             :
                             <>
-                                <InputComponet
+                                <InputComponent
                                     label={'전화번호를 입력해주세요.'}
                                     input_type={{
                                         placeholder: '',
@@ -220,7 +220,7 @@ const FindMyInfoCard = () => {
                                     value={values?.phone}
                                 />
                                 <Button variant="text" sx={twoOfThreeButtonStyle} onClick={sendSms} disabled={isCheckPhoneNumber}>인증번호 발송</Button>
-                                <InputComponet
+                                <InputComponent
                                     label={'인증번호를 입력해주세요.'}
                                     input_type={{
                                         placeholder: '',
@@ -238,7 +238,7 @@ const FindMyInfoCard = () => {
                     <>
                         {isCheckIdAndPhone ?
                             <>
-                                <InputComponet
+                                <InputComponent
                                     label={'비밀번호를 입력해주세요.'}
                                     input_type={{
                                         placeholder: '',
@@ -249,7 +249,7 @@ const FindMyInfoCard = () => {
                                     value={passwordValues?.password}
                                     isSeeButton={true}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'비밀번호를 한번더 입력해주세요.'}
                                     input_type={{
                                         placeholder: '',
@@ -264,7 +264,7 @@ const FindMyInfoCard = () => {
                             </>
                             :
                             <>
-                                <InputComponet
+                                <InputComponent
                                     label={'아이디를 입력해주세요.'}
                                     input_type={{
                                         placeholder: '',
@@ -273,7 +273,7 @@ const FindMyInfoCard = () => {
                                     onChange={(e) => handleChange2(e, 'id')}
                                     value={values2?.id}
                                 />
-                                <InputComponet
+                                <InputComponent
                                     label={'전화번호를 입력해주세요.'}
                                     input_type={{
                                         placeholder: '',
@@ -283,7 +283,7 @@ const FindMyInfoCard = () => {
                                     value={values2?.phone}
                                 />
                                 <Button variant="text" sx={twoOfThreeButtonStyle} onClick={sendSms} disabled={isCheckIdAndPhone}>인증번호 발송</Button>
-                                <InputComponet
+                                <InputComponent
                                     label={'인증번호를 입력해주세요.'}
                                     input_type={{
                                         placeholder: '',
