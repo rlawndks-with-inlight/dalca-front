@@ -15,7 +15,7 @@ import { commarNumber, numberToCategory } from '../../functions/utils'
 import { useEffect } from 'react'
 import { GiCancel } from 'react-icons/gi'
 import $ from 'jquery'
-import {RiMoneyDollarCircleLine} from 'react-icons/ri'
+import { RiMoneyDollarCircleLine } from 'react-icons/ri'
 const Tr = styled.tr`
 box-shadow:1px 1px 1px #00000029;
 font-size:14px;
@@ -118,15 +118,17 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
         if (num == -10) {
             return "불량회원";
         } else if (num == 0) {
-            return "일반유저";
-        } else if (num == 30) {
-            return "전문가";
+            return "임차인";
+        } else if (num == 5) {
+            return "임대인";
+        } else if (num == 10) {
+            return "공인중개사";
         } else if (num == 40) {
             return "관리자";
         } else if (num == 50) {
             return "개발자";
         } else {
-            return "불량회원"
+            return "잘못된레벨"
         }
     }
     const getPostCategoryNameByEng = (str) => {
@@ -149,6 +151,12 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
         } else {
             return "---";
         }
+    }
+    const getIsAppr = (num) => {
+        if (num == 0)
+            return '동의안함'
+        else if (num == 1)
+            return '동의완료'
     }
     return (
         <>
@@ -227,6 +235,15 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             :
                             <>
                             </>}
+                        {col.type == 'is_appr' ?
+                            <>
+                                <Td style={{ width: `${col.width}%` }}>
+                                    {getIsAppr(data[col.column])}
+                                </Td>
+                            </>
+                            :
+                            <>
+                            </>}
                         {col.type == 'period' ?
                             <>
                                 <Td style={{ width: `${col.width}%` }}>
@@ -280,10 +297,11 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             :
                             <>
                             </>}
-                        {col.type == 'academy_list' ?
+
+                        {col.type == 'pay_list' ?
                             <>
                                 <Td style={{ width: `${col.width}%`, fontSize: '20px' }}>
-                                    <AiOutlineUnorderedList style={{ cursor: 'pointer', color: '#546de5' }} onClick={() => navigate(`/manager/list/academy/${data.pk}`, { state: { breadcrumb: data.title + ' 강의 컨텐츠' } })} />
+                                    <AiOutlineUnorderedList style={{ cursor: 'pointer', color: '#546de5' }} onClick={() => navigate(`/manager/list/pay/${data.pk}`, { state: { breadcrumb: data.title + ' 결제 내역' } })} />
                                 </Td>
                             </>
                             :
@@ -307,10 +325,10 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             :
                             <>
                             </>}
-                            {col.type == 'user_pay_list' ?
+                        {col.type == 'user_pay_list' ?
                             <>
                                 <Td style={{ width: `${col.width}%`, fontSize: '20px' }}>
-                                    <RiMoneyDollarCircleLine style={{ cursor: 'pointer', color: '#546de5' }} onClick={() => navigate(`/manager/list/subscribe/${data.pk}`,{state:{breadcrumb:`${data?.id} 회원 결제 내역`}})} />
+                                    <RiMoneyDollarCircleLine style={{ cursor: 'pointer', color: '#546de5' }} onClick={() => navigate(`/manager/list/subscribe/${data.pk}`, { state: { breadcrumb: `${data?.id} 회원 결제 내역` } })} />
                                 </Td>
                             </>
                             :
@@ -368,7 +386,15 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             :
                             <>
                             </>}
-
+                        {!col.type ?
+                            <>
+                                <Td style={{ width: `${col.width}%` }}>
+                                    ---
+                                </Td>
+                            </>
+                            :
+                            <>
+                            </>}
                     </>
                 ))}
 

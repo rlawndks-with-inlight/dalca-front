@@ -3,6 +3,7 @@ import { EditorState } from "draft-js"
 import { columnObjFormat, editColumnObjFormat, editContentFormat, sidebarContentFormat, sidebarObjFormat, sidebarObjListFormat } from "./ManagerContentFormat";
 import { BsPerson, BsCameraVideo, BsAlarm } from 'react-icons/bs'
 import { AiTwotoneSetting, AiOutlineUnorderedList } from 'react-icons/ai'
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
 export const editorState = {
     editorState: EditorState.createEmpty()
 }
@@ -16,12 +17,16 @@ export const needTwoImage = ['issue', 'theme', 'feature'];
 export const zSidebar = [
     sidebarContentFormat('회원관리', [
         sidebarObjListFormat('회원관리', '/manager/list/user', 40, ['/manager/list/user']),//edit
-       // sidebarObjListFormat('회원통계', '/manager/list/user_statistics', 40, ['/manager/list/user_statistics']),//edit
+        // sidebarObjListFormat('회원통계', '/manager/list/user_statistics', 40, ['/manager/list/user_statistics']),//edit
         //sidebarObjListFormat('댓글관리', '/manager/list/comment', 40, ['/manager/list/comment']),//edit
         //sidebarObjListFormat('장바구니관리', '/manager/list/bag', 40, ['/manager/list/bag']),//edit
-       // sidebarObjListFormat('결제내역관리', '/manager/list/subscribe', 40, ['/manager/list/subscribe']),//list
+        // sidebarObjListFormat('결제내역관리', '/manager/list/subscribe', 40, ['/manager/list/subscribe']),//list
         //sidebarObjListFormat('결제엑셀업로드', '/manager/edit/pay_excel', 40, ['/manager/edit/pay_excel']),//list
     ], <BsPerson />),
+    sidebarContentFormat('운영관리', [
+        sidebarObjListFormat('계약관리', '/manager/list/contract', 40, ['/manager/list/contract']),//list
+        sidebarObjListFormat('결제관리', '/manager/list/pay', 40, ['/manager/list/pay']),//list
+    ], <RiMoneyDollarCircleLine />),
     sidebarContentFormat('기본설정', [
         sidebarObjListFormat('메인배너', '/manager/edit/home_setting/1', 40, ['/manager/edit/home_setting/1']),//list
         sidebarObjListFormat('팝업관리', '/manager/list/popup', 40, ['/manager/list/popup']),//list
@@ -62,107 +67,21 @@ export const objManagerListContent = {
         true,
         false,
         '150%'),
-    app: sidebarObjFormat(
-        '앱등록관리',
-        'app',
-        [
-            columnObjFormat('앱아이콘', '', 'img', 'main_img'),
-            columnObjFormat('앱이름', '', 'text', 'name'),
-            columnObjFormat('링크', '', 'text', 'link'),
-            columnObjFormat('노출여부', '', 'status', 'status'),
-            columnObjFormat('맨위로', '', 'top', 'top'),
-            columnObjFormat('수정', '', 'edit', 'edit'),
-            columnObjFormat('삭제', '', 'delete', 'delete'),
-        ],
-        [],
-        true,
-        true),
-    user_statistics: sidebarObjFormat(
-        '회원 통계',
-        'user_statistics',
-        [
-            columnObjFormat('일자', '', 'text', 'date'),
-            columnObjFormat('가입', '', 'number', 'user_count'),
-            columnObjFormat('방문', '', 'number', 'visit_count'),
-            columnObjFormat('새글', '', 'number', 'post_count'),
-            columnObjFormat('댓글', '', 'number', 'comment_count'),
-            columnObjFormat('페이지뷰', '', 'number', 'views_count'),
-        ],
-        ['statistics_type=','statistics_year=','statistics_month='],
-        false,
-        false),
-    master: sidebarObjFormat(
-        '전문가 리스트',
-        'user',
-        [
-            columnObjFormat('프로필이미지', '', 'img', 'profile_img'),
-            columnObjFormat('로그인타입', '', 'login_type', 'type'),
-            columnObjFormat('아이디', '', 'text', 'id'),
-            columnObjFormat('이름', '', 'text', 'name'),
-            columnObjFormat('폰번호', '', 'text', 'phone'),
-            columnObjFormat('접근권한', '', 'level', 'user_level'),
-            columnObjFormat('가입일', '', 'text', 'date'),
-            columnObjFormat('로그인시간', '', 'text', 'last_login'),
-            columnObjFormat('노출여부', '', 'status', 'status'),
-            columnObjFormat('수정', '', 'master_edit', 'master_edit'),
-            columnObjFormat('삭제', '', 'delete', 'delete'),
-        ],
-        ['level=30'],
-        true,
-        true),
-    academy_category: sidebarObjFormat(
-        '강의 관리',
-        'academy_category',
-        [
-            columnObjFormat('메인배너', '', 'img', 'main_img'),
-            columnObjFormat('강사', '', 'text', 'master_nickname'),
-            columnObjFormat('제목', '', 'text', 'title'),
-            columnObjFormat('정가', '', 'number', 'price'),
-            columnObjFormat('할인율', '', 'text', 'discount_percent'),
-            columnObjFormat('등록일', '', 'text', 'date'),
-            columnObjFormat('맨위로', '', 'top', 'top'),
-            columnObjFormat('BEST', '', 'status', 'is_best'),
-            columnObjFormat('노출여부', '', 'status', 'status'),
-            columnObjFormat('컨텐츠추가', '', 'add_academy', 'add_academy'),
-            columnObjFormat('강의컨텐츠리스트', '', 'academy_list', 'academy_list'),
-            columnObjFormat('수정', '', 'edit', 'edit'),
-            columnObjFormat('삭제', '', 'delete', 'delete'),
-        ],
-        [],
-        true,
-        true),
-    main_video: sidebarObjFormat(
-        '메인비디오 관리',
-        'main_video',
-        [
-            columnObjFormat('제목', '', 'text', 'title'),
-            columnObjFormat('유튜브링크', '', 'text', 'video_link'),
-            columnObjFormat('추가일', '', 'text', 'date'),
-            columnObjFormat('맨위로', '', 'top', 'top'),
-            columnObjFormat('노출여부', '', 'status', 'status'),
-            columnObjFormat('수정', '', 'edit', 'edit'),
-            columnObjFormat('삭제', '', 'delete', 'delete'),
-        ],
-        [],
-        true,
-        true),
-    academy: sidebarObjFormat(
-        '강의 컨텐츠 관리',
-        'academy',
-        [
-            columnObjFormat('메인이미지', '', 'img', 'main_img'),
-            columnObjFormat('강의명', '', 'text', 'class_title'),
-            columnObjFormat('제목', '', 'text', 'title'),
-            columnObjFormat('추가일', '', 'text', 'date'),
-            columnObjFormat('맨위로', '', 'top', 'top'),
-            columnObjFormat('수정', '', 'edit', 'edit'),
-            columnObjFormat('삭제', '', 'delete', 'delete'),
-        ],
-        [],
-        false,
-        true,
-        '100%',
-        'category_pk'),
+
+    // user_statistics: sidebarObjFormat(
+    //     '회원 통계',
+    //     'user_statistics',
+    //     [
+    //         columnObjFormat('일자', '', 'text', 'date'),
+    //         columnObjFormat('가입', '', 'number', 'user_count'),
+    //         columnObjFormat('방문', '', 'number', 'visit_count'),
+    //         columnObjFormat('새글', '', 'number', 'post_count'),
+    //         columnObjFormat('댓글', '', 'number', 'comment_count'),
+    //         columnObjFormat('페이지뷰', '', 'number', 'views_count'),
+    //     ],
+    //     ['statistics_type=','statistics_year=','statistics_month='],
+    //     false,
+    //     false),
     comment: sidebarObjFormat(
         '댓글 관리',
         'comment',
@@ -177,23 +96,31 @@ export const objManagerListContent = {
         [],
         false,
         false),
-    bag: sidebarObjFormat(
-        '장바구니 관리',
-        'subscribe',
+    contract: sidebarObjFormat(
+        '계약 관리',
+        'contract',
         [
-            columnObjFormat('유저아이디', '', 'text', 'id'),
-            columnObjFormat('유저명', '', 'text', 'user_name'),
-            columnObjFormat('수강상품', '', 'text', 'title'),
-            columnObjFormat('강사', '', 'text', 'master_nickname'),
-            columnObjFormat('날짜', '', 'text', 'date'),
+            columnObjFormat('주소', '', 'text', 'address'),
+            columnObjFormat('상세주소', '', 'text', 'address_detail'),
+            columnObjFormat('보증금', '', 'number', 'deposit'),
+            columnObjFormat('월세', '', 'number', 'monthly'),
+            columnObjFormat('임차인', '', 'text', 'lessee_name'),
+            columnObjFormat('임차인동의여부', '', 'is_appr', 'lessee_appr'),
+            columnObjFormat('임대인', '', 'text', 'landlord_name'),
+            columnObjFormat('임대인동의여부', '', 'is_appr', 'landlord_appr'),
+            columnObjFormat('공인중개사', '', 'text', 'realtor_name'),
+            columnObjFormat('생성일', '', 'text', 'date'),
+            columnObjFormat('결제내역', '', 'pay_list', 'pay_list'),
+            columnObjFormat('수정', '', 'edit', 'edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
         ],
-        ['status=0', 'master_pk=', 'academy_category_pk='],
+        [],
         false,
-        false),
-    subscribe: sidebarObjFormat(
+        false,
+        '150%'),
+    pay: sidebarObjFormat(
         '결제 내역 관리',
-        'subscribe',
+        'pay',
         [
             columnObjFormat('신청번호', '', 'number', 'pk'),
             columnObjFormat('아이디', '', 'text', 'id'),
@@ -201,21 +128,11 @@ export const objManagerListContent = {
             columnObjFormat('유저명', '', 'text', 'user_name'),
             columnObjFormat('폰번호', '', 'text', 'phone'),
             columnObjFormat('수강강의', '', 'text', 'title'),
-            columnObjFormat('강사', '', 'text', 'master_nickname'),
-            columnObjFormat('승인금액', '', 'text', 'approve_price'),
-            columnObjFormat('취소금액', '', 'text', 'cancel_price'),
-            columnObjFormat('등록일', '', 'text', 'trade_date'),
-            columnObjFormat('이용기간', '', 'text', 'period'),
-            columnObjFormat('예금주', '', 'text', 'account_holder'),
-            columnObjFormat('은행명', '', 'text', 'bank_name'),
-            columnObjFormat('계좌번호', '', 'text', 'account_number'),
-            columnObjFormat('결제타입', '', 'text', 'type'),
-            columnObjFormat('이용가능여부', '', 'status', 'use_status'),
             columnObjFormat('취소', '', 'pay_cancel', 'pay_cancel'),
             columnObjFormat('수정', '', 'pay_edit', 'pay_edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
         ],
-        ['status=1', 'master_pk=', 'academy_category_pk=', 'price_is_minus=', 'start_date=', 'end_date=', 'type='],
+        [],
         true,
         false,
         '150%'),
@@ -292,7 +209,7 @@ export const objManagerListContent = {
             columnObjFormat('자세히보기', '', 'edit', 'edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
         ],
-        [ 'master_pk=', 'academy_category_pk='],
+        ['master_pk=', 'academy_category_pk='],
         false,
         false),
     alarm: sidebarObjFormat(
