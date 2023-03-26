@@ -216,16 +216,21 @@ const ContentTable = (props) => {
                                                     null}
                                                 {column.type == 'go_pay' ?
                                                     <IconButton onClick={() => {
-                                                        if (table == 'pay') {
-                                                            navigate(`/payready/${item?.contract_pk}`)
-
-                                                        }
-                                                        if (table == 'contract') {
                                                             navigate(`/payready/${item?.pk}`)
-
-                                                        }
                                                     }}>
                                                         <Icon icon="ri:money-dollar-circle-line" style={{ color: theme.color.background1 }} />
+                                                    </IconButton>
+                                                    :
+                                                    null}
+                                                {column.type == 'go_pay_list' ?
+                                                    <IconButton onClick={() => {
+                                                            navigate(`/history/pay`,{
+                                                                state:{
+                                                                    contract_pk:item?.pk
+                                                                }
+                                                            })
+                                                    }}>
+                                                        <Icon icon="ic:baseline-format-list-bulleted" style={{ color: theme.color.background1 }} />
                                                     </IconButton>
                                                     :
                                                     null}

@@ -86,19 +86,19 @@ const PayItemCard = (props) => {
         }
 
     }
-    const onPay = (num) => {
+    const onPay = () => {
 
     }
 
     return (
         <>
-            <HalfTitle>계약 상세내용</HalfTitle>
+            <HalfTitle>결제 상세내용</HalfTitle>
             <Container style={{ paddingBottom: `${not_price ? '16px' : ''}` }}>
 
                 <ContentContainer style={{ flexDirection: `${(column && window.innerWidth <= 550) ? 'column' : ''}` }}>
                     <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px', width: 'auto' }}>
-                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>보증금: {commarNumber(item?.deposit)}원</div>
-                        <div style={{ fontSize: theme.size.font4, margin: '0 auto auto 12px' }}>월세: {commarNumber(item?.monthly)}원</div>
+                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {item?.pay_category == 1 ? '보증금' : '월세'}</div>
+                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(item?.price)}원</div>
                     </div>
                 </ContentContainer>
                 {not_price ?
@@ -108,8 +108,7 @@ const PayItemCard = (props) => {
                     <>
                         <PriceContainer>
                             <div style={{ display: "flex", margin: 'auto 0 0 auto' }}>
-                                <Button sx={borderButtonStyle} style={{ margin: '0 4px 0 12px' }} onClick={() => onPay(1)}>보증금결제</Button>
-                                <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={() => onPay(0)}>월세결제</Button>
+                                <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={() => onPay()}>결제하기</Button>
                             </div>
                         </PriceContainer>
                     </>}

@@ -60,11 +60,13 @@ export const objHistoryListContent = {
     pay_0: {
         title: "결제",
         columns: [
+            columnObjFormat('계약고유번호', '74px', 'number', 'contract_pk'),
             columnObjFormat('임대인명', '', 'text', 'landlord_name'),
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
             columnObjFormat('금액', '', 'number', 'price'),
             columnObjFormat('납부예정일', '', 'text', 'day'),
+            columnObjFormat('납부일', '', 'text', 'trade_day'),
             columnObjFormat('납부현황', '', 'pay_status', 'status'),
             columnObjFormat('납부하기', '', 'go_pay', 'go_pay'),
 
@@ -73,39 +75,45 @@ export const objHistoryListContent = {
     pay_5: {
         title: "결제",
         columns: [
+            columnObjFormat('계약고유번호', '74px', 'number', 'contract_pk'),
             columnObjFormat('임차인명', '', 'text', 'lessee_name'),
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
             columnObjFormat('금액', '', 'number', 'price'),
             columnObjFormat('납부예정일', '', 'text', 'day'),
+            columnObjFormat('납부일', '', 'text', 'trade_day'),
             columnObjFormat('납부현황', '', 'pay_status', 'status'),
         ]
     },
     pay_10: {
         title: "결제",
         columns: [
+            columnObjFormat('계약고유번호', '74px', 'number', 'contract_pk'),
             columnObjFormat('임대인명 ', '', 'text', 'landlord_name'),
             columnObjFormat('임차인명', '', 'text', 'lessee_name'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
             columnObjFormat('금액', '', 'number', 'price'),
             columnObjFormat('납부예정일', '', 'text', 'day'),
+            columnObjFormat('납부일', '', 'text', 'trade_day'),
             columnObjFormat('납부현황', '', 'pay_status', 'status'),
         ]
     },
     contract_0: {
         title: "계약",
         columns: [
+            columnObjFormat('계약고유번호', '74px', 'number', 'pk'),
             columnObjFormat('임대인명', '', 'text', 'landlord_name'),
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('등록일', '', 'date', 'date'),
             columnObjFormat('상태', '', 'contract_comment', ''),
             columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
-            columnObjFormat('결제하기', '', 'go_pay', 'go_pay'),
+            columnObjFormat('결제내역', '', 'go_pay_list', 'go_pay_list'),
         ]
     },
     contract_5: {
         title: "계약",
         columns: [
+            columnObjFormat('계약고유번호', '74px', 'number', 'pk'),
             columnObjFormat('임차인명', '', 'text', 'lessee_name'),
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('등록일', '', 'date', 'date'),
@@ -116,6 +124,7 @@ export const objHistoryListContent = {
     contract_10: {
         title: "계약",
         columns: [
+            columnObjFormat('계약고유번호', '74px', 'number', 'pk'),
             columnObjFormat('임대인명 ', '', 'text', 'landlord_name'),
             columnObjFormat('임차인명', '', 'text', 'lessee_name'),
             columnObjFormat('등록일', '', 'date', 'date'),

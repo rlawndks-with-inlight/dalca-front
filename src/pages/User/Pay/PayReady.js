@@ -70,17 +70,16 @@ const PayReady = () => {
             getContract(user_data, true)
         }
     }, [])
+    const getMyPays = async () =>{
+        const {data:response} = await axios.get(`/api/mypays?status=`)
+    }
     const getContract = async (user_data, is_render) => {
         try {
             setLoading(true);
-            const { data: response } = await axios.get(`/api/item?table=contract&pk=${params?.contract_pk}`);
+            const { data: response } = await axios.get(`/api/item?table=pay&pk=${params?.contract_pk}`);
             let obj = response?.data;
             if (user_data?.pk != obj?.lessee_pk && user_data?.pk != obj?.landlord_pk) {
                 toast.error("잘못된 접근입니다.")
-                navigate(-1);
-            }
-            if (obj['landlord_appr'] != 1 || obj['lessee_appr'] != 1) {
-                toast.error("아직 완료되지 않은 계약입니다.")
                 navigate(-1);
             }
             if (obj['document_src']) {
@@ -110,7 +109,6 @@ const PayReady = () => {
             console.log(err);
         }
     }
-    
     return (
         <>
             <Wrappers>

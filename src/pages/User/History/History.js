@@ -6,7 +6,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ContentTable from "../../../components/ContentTable";
 import MBottomContent from "../../../components/elements/MBottomContent";
 import PageButton from "../../../components/elements/pagination/PageButton";
@@ -36,6 +36,7 @@ const History = () => {
 
     const params = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [userData, setUserData] = useState({});
     const [loading, setLoading] = useState(false);
@@ -54,7 +55,6 @@ const History = () => {
         setLoading(true);
         let user_data = getLocalStorage('auth');
         setUserData(user_data);
-
         if (params?.category == 'contract') {
             setSchema(`contract_${user_data?.user_level}`);
         } else if (params?.category == 'pay') {
@@ -65,9 +65,15 @@ const History = () => {
         changePage(1);
     }
     const changePage = async (num) => {
+        let state_query_str = "";
+        if(location.state){
+            for(var i = 0;i<Object.keys(location.state).length;i++){
+                state_query_str += `&${Object.keys(location.state)[i]}=${location.state[Object.keys(location.state)]}`
+            }
+        }
         setLoading(true);
         setPage(num);
-        const { data: response } = await axios.get(`/api/items?table=${params?.category}&page=${num}&order=pk`);
+        const { data: response } = await axios.get(`/api/items?table=${params?.category}&page=${num}&order=pk${state_query_str}`);
         if (response?.result < 0) {
             toast.error(response?.message);
         } else {
