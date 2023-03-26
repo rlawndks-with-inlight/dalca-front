@@ -70,7 +70,7 @@ const Breadcrumb = (props) => {
             window.location.href = '/manager';
         } else {
             let auth = JSON.parse(localStorage.getItem('auth'));
-            setNickname(auth.nickname)
+            setNickname(auth.name)
         }
     }, [location])
     const onLogout = async () => {
