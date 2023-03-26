@@ -55,6 +55,7 @@ const Contract = () => {
         address_detail: '',
         zip_code: '',
         start_date: '',
+        end_date: '',
         pay_day: 1,
     })
 
@@ -202,7 +203,7 @@ const Contract = () => {
                                     icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                 />
                                 <InputComponent
-                                    label={'월세 납부 시작일'}
+                                    label={'계약 시작일'}
                                     input_type={{
                                         placeholder: '',
                                         type: 'date',
@@ -211,6 +212,17 @@ const Contract = () => {
                                     class_name='start_date'
                                     is_divider={true}
                                     value={values.start_date}
+                                />
+                                <InputComponent
+                                    label={'계약 종료일'}
+                                    input_type={{
+                                        placeholder: '',
+                                        type: 'date',
+                                        disabled: "true"
+                                    }}
+                                    class_name='end_date'
+                                    is_divider={true}
+                                    value={values.end_date}
                                 />
                                 <InputComponent
                                     label={'월세 납부일'}

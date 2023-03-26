@@ -175,7 +175,7 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             </>}
                         {col.type == 'number' ?
                             <>
-                                <Td style={{ width: `${col.width}%` }}>{commarNumber(data[`${col.column}`])}</Td>
+                                <Td style={{ width: `${col.width}%`, maxWidth:'120px' }}>{commarNumber(data[`${col.column}`])}</Td>
                             </>
                             :
                             <>

@@ -127,6 +127,7 @@ export const objManagerListContent = {
             columnObjFormat('임차인', '', 'text', 'lessee_name'),
             columnObjFormat('임대인', '', 'text', 'landlord_name'),
             columnObjFormat('공인중개사', '', 'text', 'realtor_name'),
+            columnObjFormat('결제예정일', '', 'text', 'day'),
             columnObjFormat('금액', '', 'number', 'price'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
             columnObjFormat('납부현황', '', 'pay_status', 'pay_status'),

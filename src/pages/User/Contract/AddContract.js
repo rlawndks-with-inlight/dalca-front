@@ -27,7 +27,7 @@ import { backUrl } from "../../../data/Data";
 import Modal from '../../../components/Modal';
 import DaumPostcode from 'react-daum-postcode';
 import Loading from "../../../components/Loading";
-import { range } from "../../../functions/utils";
+import { range, returnMoment } from "../../../functions/utils";
 
 const steps = ['계약서등록', '임대인\n동의구하기', '임차인\n동의구하기', '완료'];
 const stepLabelStyle = {
@@ -62,7 +62,8 @@ const AddContract = () => {
         monthly: 0,
         address: '',
         address_detail: '',
-        start_date: '',
+        start_date: returnMoment().substring(0, 10),
+        end_date: returnMoment().substring(0, 10),
         pay_day: 1,
     })
     useEffect(() => {
@@ -201,6 +202,7 @@ const AddContract = () => {
                 !values?.zip_code ||
                 !values?.address_detail ||
                 !values?.start_date ||
+                !values?.end_date ||
                 !values?.pay_day
             ) {
                 toast.error("필수값이 비어 있습니다.");
@@ -223,6 +225,7 @@ const AddContract = () => {
                 deposit: parseInt(values?.deposit) * 10000,
                 monthly: parseInt(values?.monthly) * 10000,
                 start_date: values?.start_date,
+                end_date: values?.end_date,
                 pay_day: values?.pay_day,
 
             }
@@ -240,7 +243,7 @@ const AddContract = () => {
                 if (!params?.pk) {
                     toast.success('등록되었습니다. 다음 절차를 진행해 주세요.');
                     navigate(`/addcontract/${response?.data?.result_pk}`)
-                }else{
+                } else {
                     setActiveStep(1);
                 }
             } else {
@@ -448,7 +451,7 @@ const AddContract = () => {
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
                                         <InputComponent
-                                            label={'월세 납부 시작일'}
+                                            label={'계약 시작일'}
                                             input_type={{
                                                 placeholder: '',
                                                 type: 'date'
@@ -457,6 +460,17 @@ const AddContract = () => {
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'start_date')}
                                             value={values.start_date}
+                                        />
+                                        <InputComponent
+                                            label={'계약 종료일'}
+                                            input_type={{
+                                                placeholder: '',
+                                                type: 'date'
+                                            }}
+                                            class_name='end_date'
+                                            is_divider={true}
+                                            onChange={(e) => handleChange(e, 'end_date')}
+                                            value={values.end_date}
                                         />
                                         <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
                                             <InputLabel id="demo-select-small">월세 납부일</InputLabel>
@@ -523,7 +537,7 @@ const AddContract = () => {
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'landlord_search')}
                                             value={values.landlord_search}
-                                            autoCompleteList={(values.landlord?.name ? []:landlordList)}
+                                            autoCompleteList={(values.landlord?.name ? [] : landlordList)}
                                             onAutoCompleteClick={onSelectLandlord}
                                             icon_label={!isComplete ? (values.landlord?.name ? <Icon icon="zondicons:reload" /> : '') : ''}
                                             onClickIcon={() => {
@@ -602,7 +616,7 @@ const AddContract = () => {
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'lessee_search')}
                                             value={values.lessee_search}
-                                            autoCompleteList={(values.lessee?.name ?[]:lesseeList)}
+                                            autoCompleteList={(values.lessee?.name ? [] : lesseeList)}
                                             onAutoCompleteClick={onSelectLessee}
                                             icon_label={!isComplete ? (values.landlord?.name ? <Icon icon="zondicons:reload" /> : '') : ''}
                                             onClickIcon={() => {

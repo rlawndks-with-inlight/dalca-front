@@ -23,7 +23,6 @@ margin-left:auto;
 margin-right:auto;
 margin-bottom:6rem;
 min-height:58vh;
-font-family:${props => props.theme.font.normal};
 @media screen and (max-width:1050px) { 
     margin-top:5rem;
 }
@@ -509,13 +508,15 @@ const isSeeIconStyle = {
     position: 'absolute',
     fontSize: theme.size.font3,
     right: '12px',
-    top: '15px'
+    top: '15px',
+    color:'rgba(0, 0, 0, 0.54)'
 }
 const isImgIconStyle = {
     position: 'absolute',
     fontSize: theme.size.font3,
     right: '21px',
-    top: '23px'
+    top: '23px',
+    color:'rgba(0, 0, 0, 0.54)'
 }
 export const TitleInputComponent = (props) => {
     const { label, icon, class_name, input_type, is_blue, onKeyPress } = props;
