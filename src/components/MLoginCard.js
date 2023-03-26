@@ -132,7 +132,7 @@ const MLoginCard = () => {
         <>
             <WrapperForm onSubmit={onLogin} id='login_form'>
                 <Title>
-                    <img src={logo} alt="#" style={{ height: '50px', width: 'auto' }} />
+                    <img src={logo} alt="#" style={{ height: '75px', width: 'auto' }} />
                 </Title>
                 <div style={{ width: '356px', margin: 'auto' }}>
                     <InputComponent
