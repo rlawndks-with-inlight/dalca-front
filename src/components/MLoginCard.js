@@ -23,7 +23,7 @@ color:${(props) => props.theme.color.background1};
 font-size:36px;
 width:100%;
 text-align:center;
-margin:24px 0;
+margin:36px auto auto auto;
 font-weight:bold;
 
 `
@@ -56,7 +56,7 @@ font-size:15px;
 `
 const Button = styled.button`
 width:100px;
-margin:24px 49px auto auto;
+margin:24px 49px 36px auto;
 height:40px;
 border:none;
 background:${(props) => props.theme.color.manager.background1};
@@ -67,7 +67,6 @@ border-radius:0.25rem;
 border: 1px solid transparent;
 @media (max-width: 600px) {
 width:80%;
-margin:auto auto 0 auto;
 }
 `
 const MLoginCard = () => {
