@@ -24,6 +24,7 @@ import SideBar from '../../common/manager/SideBar';
 import ManagerWrappers from '../../components/elements/ManagerWrappers';
 import ManagerContentWrappers from '../../components/elements/ManagerContentWrappers';
 import OptionBox from './OptionBox';
+import { toast } from 'react-hot-toast';
 const OptionCardWrappers = styled.div`
 width:95%;
 margin:0.5rem auto;
@@ -183,10 +184,11 @@ const MItemList = () => {
         const { data: response } = await axios.post(`/api/deleteitem`, obj)
 
         if (response.result > 0) {
-            alert('삭제 되었습니다.');
+            toast.success('삭제 되었습니다.')
             changePage(page)
         } else {
-            alert('error')
+            toast.error(response?.message)
+
         }
     })
     const changeStatus = useCallback(async (num, pk, column) => {

@@ -62,7 +62,7 @@ export const getPayStatus = (data) => {
     if (data?.status == 0)
         return "납부안함"
     else if (data?.status == 1)
-        return "걀제완료"
+        return "납부완료"
     else if (data?.status == -1)
         return "결제취소"
     else

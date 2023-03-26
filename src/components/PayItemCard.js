@@ -94,10 +94,10 @@ const PayItemCard = (props) => {
         <>
             <HalfTitle>결제 상세내용</HalfTitle>
             <Container style={{ paddingBottom: `${not_price ? '16px' : ''}` }}>
-
                 <ContentContainer style={{ flexDirection: `${(column && window.innerWidth <= 550) ? 'column' : ''}` }}>
                     <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px', width: 'auto' }}>
-                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {item?.pay_category == 1 ? '보증금' : '월세'}</div>
+                    <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>계약고유번호: {commarNumber(item?.contract_pk)}</div>
+                    <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {item?.pay_category == 1 ? '보증금' : '월세'}</div>
                         <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(item?.price)}원</div>
                     </div>
                 </ContentContainer>
@@ -112,7 +112,6 @@ const PayItemCard = (props) => {
                             </div>
                         </PriceContainer>
                     </>}
-
             </Container>
         </>
     )

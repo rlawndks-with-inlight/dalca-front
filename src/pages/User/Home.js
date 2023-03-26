@@ -15,6 +15,7 @@ import { getLocalStorage } from '../../functions/LocalStorage';
 import { backUrl } from '../../data/Data';
 import ContentTable from '../../components/ContentTable';
 import { objHistoryListContent } from '../../data/ContentData';
+import { getIsUser } from '../../functions/utils';
 const BorderContainer = styled.div`
 height:220px;
 width:100%;
@@ -140,26 +141,33 @@ const Home = () => {
                     </>
                     :
                     <>
-                        <HalfTitle style={{ maxWidth: '1050px' }}>계약내역</HalfTitle>
-                        <ContentTable
-                            columns={objHistoryListContent[`contract_${userData?.user_level}`] ?? []}
-                            data={post?.contract ?? []}
-                            schema={`contract_${userData?.user_level}`}
-                            pageSetting={getHomeContent}
-                            table={'contract'}
-                        />
-                        <HalfTitle style={{ maxWidth: '1050px' }}>결제내역</HalfTitle>
-                        <ContentTable
-                            columns={objHistoryListContent[`pay_${userData?.user_level}`] ?? []}
-                            data={post?.pay ?? []}
-                            schema={`pay_${userData?.user_level}`}
-                            table={'pay'} />
-                        <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
-                        <ContentTable
-                            columns={objHistoryListContent[`point`] ?? []}
-                            data={post?.point ?? []}
-                            schema={'point'}
-                        />
+                        {getIsUser(userData?.user_level) ?
+                            <>
+                                <HalfTitle style={{ maxWidth: '1050px' }}>계약내역</HalfTitle>
+                                <ContentTable
+                                    columns={objHistoryListContent[`contract_${userData?.user_level}`] ?? []}
+                                    data={post?.contract ?? []}
+                                    schema={`contract_${userData?.user_level}`}
+                                    pageSetting={getHomeContent}
+                                    table={'contract'}
+                                />
+                                <HalfTitle style={{ maxWidth: '1050px' }}>결제내역</HalfTitle>
+                                <ContentTable
+                                    columns={objHistoryListContent[`pay_${userData?.user_level}`] ?? []}
+                                    data={post?.pay ?? []}
+                                    schema={`pay_${userData?.user_level}`}
+                                    table={'pay'} />
+                                <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
+                                <ContentTable
+                                    columns={objHistoryListContent[`point`] ?? []}
+                                    data={post?.point ?? []}
+                                    schema={'point'}
+                                />
+
+                            </>
+                            :
+                            <>
+                            </>}
 
                     </>}
             </Wrappers>

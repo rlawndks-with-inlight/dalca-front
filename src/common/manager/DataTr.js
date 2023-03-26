@@ -17,6 +17,7 @@ import { GiCancel } from 'react-icons/gi'
 import $ from 'jquery'
 import { RiMoneyDollarCircleLine } from 'react-icons/ri'
 import { getPayCategory, getPayStatus } from '../../functions/format'
+import Swal from 'sweetalert2'
 const Tr = styled.tr`
 box-shadow:1px 1px 1px #00000029;
 font-size:14px;
@@ -159,7 +160,7 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
         else if (num == 1)
             return '동의완료'
     }
-   
+
     return (
         <>
             <Tr ref={obj.is_move ? ref : null} data-handler-id={handlerId} className='manager-data-tr'>
@@ -175,7 +176,7 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             </>}
                         {col.type == 'number' ?
                             <>
-                                <Td style={{ width: `${col.width}%`, maxWidth:'120px' }}>{commarNumber(data[`${col.column}`])}</Td>
+                                <Td style={{ width: `120px`}}>{commarNumber(data[`${col.column}`])}</Td>
                             </>
                             :
                             <>
@@ -217,9 +218,9 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             :
                             <>
                             </>}
-                            {col.type == 'pay_category' ?
+                        {col.type == 'pay_category' ?
                             <>
-                                <Td style={{ width: `${col.width}%`}}>
+                                <Td style={{ width: `${col.width}%` }}>
                                     {getPayCategory(data)}
                                 </Td>
                             </>
@@ -228,7 +229,7 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             </>}
                         {col.type == 'pay_status' ?
                             <>
-                                <Td style={{ width: `${col.width}%`}}>
+                                <Td style={{ width: `${col.width}%` }}>
                                     {getPayStatus(data)}
                                 </Td>
                             </>
@@ -317,7 +318,6 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             :
                             <>
                             </>}
-
                         {col.type == 'pay_list' ?
                             <>
                                 <Td style={{ width: `${col.width}%`, fontSize: '20px' }}>
@@ -397,9 +397,17 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             <>
                                 <Td style={{ width: `${col.width}%`, fontSize: '20px' }}>
                                     <RiDeleteBinLine style={{ cursor: 'pointer', color: '#e15f41' }} onClick={() => {
-                                        if (window.confirm("정말로 삭제하시겠습니까?")) {
+                                         Swal.fire({
+                                            title: '정말로 삭제하시겠습니까?',
+                                            showCancelButton: true,
+                                            confirmButtonText: '확인',
+                                            cancelButtonText: '취소'
+                                          }).then(async (result) => {
+                                            if (result.isConfirmed) {
                                             deleteItem(data.pk, schema)
-                                        }
+                                              
+                                            }
+                                          })
                                     }} />
                                 </Td>
                             </>

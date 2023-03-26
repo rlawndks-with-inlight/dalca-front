@@ -165,6 +165,13 @@ export const getEnLevelByNum = (num) => {
     else if (num == 50)
         return 'developer';
 }
+export const getIsUser = (level) =>{
+    let user_level_list = [0, 5, 10];
+    if(user_level_list.includes(level)){
+        return true;
+    }
+    return false;
+}
 export const getKoLevelByNum = (num) => {
     if (num == 0)
         return '임차인';

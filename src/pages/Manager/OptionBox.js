@@ -77,18 +77,18 @@ const ReturnOptionContentBySchema = (props) => {
             setYearList(year_list);
         }
     }
-    const onChangeStatisticsType = (e) =>{
+    const onChangeStatisticsType = (e) => {
         setStatisticsType(e.target.value);
         onChangeType();
     }
-    const onChangeStatisticsYear = (e) =>{
+    const onChangeStatisticsYear = (e) => {
         $('.statistics_month').val(1);
         onChangeType();
     }
     if (schema == 'user') {
         return (
             <>
-            <Select className='level' style={{ margin: '12px 24px 12px 24px' }} onChange={onChangeType}>
+                <Select className='level' style={{ margin: '12px 24px 12px 24px' }} onChange={onChangeType}>
                     <option value={'all'}>전체유저</option>
                     <option value={0}>일반유저</option>
                     <option value={-10}>불량회원</option>
@@ -135,47 +135,7 @@ const ReturnOptionContentBySchema = (props) => {
             </>
         )
     }
-    if (schema == 'subscribe' || schema == 'bag' || schema == 'review') {
 
-        return (
-            <>
-                <Select className='master_pk' style={{ margin: '12px 24px 12px 24px' }} onChange={onChangeType}>
-                    <option value={'all'}>전체강사</option>
-                    {list?.master && list?.master.map((item) => (
-                        <>
-                            <option value={item?.val}>{item?.title}</option>
-                        </>
-                    ))}
-                </Select>
-                <Select className='academy_category_pk' style={{ margin: '12px 24px 12px 24px' }} onChange={onChangeType}>
-                    <option value={'all'}>전체강의</option>
-                    {list?.academy_category && list?.academy_category.map((item) => (
-                        <>
-                            <option value={item?.val}>{item?.title}</option>
-                        </>
-                    ))}
-                </Select>
-                {schema == 'subscribe' ?
-                    <>
-                        <Select className="price_is_minus" onChange={onChangeType}>
-                            <option value={'all'}>전체금액</option>
-                            <option value={0}>승인금액</option>
-                            <option value={1}>취소금액</option>
-                        </Select>
-                        <Select className="type" onChange={onChangeType}>
-                            <option value={'all'}>전체타입</option>
-                            <option value={0}>카드결제</option>
-                            <option value={1}>무통장입금</option>
-                            <option value={2}>기타</option>
-                        </Select>
-                    </>
-                    :
-                    <>
-                    </>}
-
-            </>
-        )
-    }
 }
 const ReturnSecondOptionContentBySchema = (props) => {
     const [startDate, setStartDate] = useState('');
@@ -222,7 +182,7 @@ const ReturnSecondOptionContentBySchema = (props) => {
         }
         onChangeType();
     }
-    if (schema == 'subscribe') {
+    if (schema == 'pay') {
         return (
             <>
                 <OptionCardWrappers>
@@ -239,6 +199,52 @@ const ReturnSecondOptionContentBySchema = (props) => {
                                 ~
                             </div>
                             <Input className="end_date" type={'date'} style={{ margin: '0 0 0 12px' }} onChange={onChangeType} defaultValue={endDate} />
+                        </RowContent>
+                        <RowContent>
+                            <Select className="status" style={{ margin: '0 0 0 0' }} onChange={onChangeType}>
+                                <option value={'all'}>전체납부현황</option>
+                                <option value={0}>납부안함</option>
+                                <option value={1}>납부완료</option>
+                                <option value={-1}>결제취소</option>
+                            </Select>
+                            
+                        </RowContent>
+                        <RowContent>
+                            <Select className="pay_category" style={{ margin: '0 0 0 0' }} onChange={onChangeType}>
+                                <option value={'all'}>전체종류</option>
+                                <option value={0}>월세</option>
+                                <option value={1}>보증금</option>
+                            </Select>
+                        </RowContent>
+                    </Row>
+                </OptionCardWrappers>
+            </>
+        )
+    }
+    if (schema == 'contract') {
+        return (
+            <>
+                <OptionCardWrappers>
+                    <Row>
+                        <RowContent>
+                            <AddButton style={{ margin: '0 0 0 0' }} onClick={() => onClickDate(-1)}>어제</AddButton>
+                            <AddButton style={{ margin: '0 0 0 12px' }} onClick={() => onClickDate(1)}>당일</AddButton>
+                            <AddButton style={{ margin: '0 0 0 12px' }} onClick={() => onClickDate(3)}>3일전</AddButton>
+                            <AddButton style={{ margin: '0 0 0 12px' }} onClick={() => onClickDate(30)}>1개월</AddButton>
+                        </RowContent>
+                        <RowContent>
+                            <Input className="start_date" type={'date'} style={{ margin: '0 0 0 0' }} onChange={onChangeType} defaultValue={startDate} />
+                            <div style={{ margin: '0 0 0 12px', display: 'flex' }}>
+                                ~
+                            </div>
+                            <Input className="end_date" type={'date'} style={{ margin: '0 0 0 12px' }} onChange={onChangeType} defaultValue={endDate} />
+                        </RowContent>
+                        <RowContent>
+                            <Select className="is_contract" style={{ margin: '0 0 0 0' }} onChange={onChangeType}>
+                                <option value={'all'}>전체상태</option>
+                                <option value={1}>계약완료</option>
+                                <option value={0}>완료전</option>
+                            </Select>
                         </RowContent>
                     </Row>
                 </OptionCardWrappers>

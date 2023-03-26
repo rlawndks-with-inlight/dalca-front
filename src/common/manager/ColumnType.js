@@ -1,3 +1,4 @@
+import { getPayStatus } from "../../functions/format";
 import { commarNumber, dateFormat} from "../../functions/utils";
 
 export const returnColumn = (data_, type_, column_, schema) => {
@@ -126,6 +127,8 @@ export const returnColumn = (data_, type_, column_, schema) => {
             result = "---";
         }
 
+    }else if(type == 'pay_status'){
+        result = getPayStatus(data);
     }
     return result;
 }
