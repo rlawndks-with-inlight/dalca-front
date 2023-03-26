@@ -23,7 +23,7 @@ color:${(props) => props.theme.color.background1};
 font-size:36px;
 width:100%;
 text-align:center;
-margin:36px auto auto auto;
+margin:54px auto auto auto;
 font-weight:bold;
 
 `
@@ -56,7 +56,7 @@ font-size:15px;
 `
 const Button = styled.button`
 width:100px;
-margin:24px 49px 36px auto;
+margin:24px 49px 54px auto;
 height:40px;
 border:none;
 background:${(props) => props.theme.color.manager.background1};
