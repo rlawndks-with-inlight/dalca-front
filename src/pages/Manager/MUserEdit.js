@@ -22,6 +22,7 @@ import "react-quill-emoji/dist/quill-emoji.css";
 import DaumPostcode from 'react-daum-postcode';
 import Modal from '../../components/Modal';
 import { toast } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 const Table = styled.table`
 font-size:12px;
@@ -51,7 +52,8 @@ const MUserEdit = () => {
     const [isSelectAddress, setIsSelectAddress] = useState(false);
     const [managerNote, setManagerNote] = useState("");
     const [isSeePostCode, setIsSeePostCode] = useState(false);
-
+    const [userLevel, setUserLevel] = useState(0);
+    const [user, setUser] = useState({});
     useEffect(() => {
 
         async function fetchPost() {
@@ -62,96 +64,72 @@ const MUserEdit = () => {
                 $('.name').val(response.data.name)
                 $('.nickname').val(response.data.nickname)
                 $('.phone').val(response.data.phone)
+                $('.id_number').val(response.data.id_number)
                 $('.level').val(response.data.user_level)
+                setUserLevel(response.data.user_level)
                 $('.address').val(response.data.address)
                 $('.address_detail').val(response.data.address_detail)
                 $('.zip_code').val(response.data.zip_code)
                 $('.account_holder').val(response.data.account_holder)
                 $('.bank_name').val(response.data.bank_name)
                 $('.account_number').val(response.data.account_number)
-                setManagerNote(response?.data?.manager_note);
-
+                setUser(response?.data);
             }
-            settingJquery();
         }
         fetchPost();
     }, [])
-    const settingJquery = () => {
 
-        $('.ql-editor').attr('style', 'max-height:300px !important');
-        $('.ql-editor').attr('style', 'min-height:300px !important');
-    }
-    const modules = useMemo(() => ({
-        toolbar: {
-            container: [
-                [
-                    { header: [1, 2, 3, 4, 5, 6] },
-                    { font: [] }
-                ],
-                [{ size: [] }],
-                [{ color: [] }, { background: [] }],
-                ["bold", "italic", "underline", "strike", "blockquote", "regular"],
-                [{ align: [] }],
-                [{ list: "ordered" }, { list: "bullet" }],
-                ["link", "image", "video"],
-                ["emoji"],
-                ["clean"],
-                ["code-block"]
-            ],
-        },
-        "emoji-toolbar": true,
-        "emoji-textarea": true,
-        "emoji-shortname": true
-    }), [])
-    const formats = [
-        'font',
-        'header',
-        'bold', 'italic', 'underline', 'strike', 'blockquote',
-        'list', 'bullet', 'indent',
-        'link', 'image',
-        'align', 'color', 'background',
-    ]
-    Quill.register("modules/imageResize", ImageResize);
-    Quill.register(
-        {
-            "formats/emoji": quillEmoji.EmojiBlot,
-            "modules/emoji-toolbar": quillEmoji.ToolbarEmoji,
-            "modules/emoji-textarea": quillEmoji.TextAreaEmoji,
-            "modules/emoji-shortname": quillEmoji.ShortNameEmoji
-        },
-        true
-    );
+
     const editUser = async () => {
-        if (!$(`.id`).val() || !$(`.name`).val() ||  !$(`.phone`).val() || (!$(`.pw`).val() && params.pk == 0)) {
-            alert('필요값이 비어있습니다.');
+        if (
+            !$(`.id`).val() ||
+            !$(`.name`).val() ||
+            !$(`.phone`).val() ||
+            (!$(`.pw`).val() && params.pk == 0) ||
+            !$(`.id_number`).val() ||
+            !$(`.level`).val() ||
+            !$(`.address`).val() ||
+            !$(`.address_detail`).val() ||
+            !$(`.zip_code`).val()
+        ) {
+            toast.error('필요값이 비어있습니다.');
         } else {
             let obj = {
                 id: $(`.id`).val(),
                 pw: $(`.pw`).val(),
                 name: $(`.name`).val(),
                 phone: $(`.phone`).val(),
+                id_number: $(`.id_number`).val(),
                 user_level: $(`.level`).val(),
                 address: $(`.address`).val(),
                 address_detail: $(`.address_detail`).val(),
                 zip_code: $(`.zip_code`).val(),
-                account_holder: $(`.account_holder`).val(),
-                bank_name: $(`.bank_name`).val(),
-                account_number: $(`.account_number`).val(),
-                manager_note: managerNote,
+                company_number: $(`.company_number`).val(),
+                office_name: $(`.office_name`).val(),
+                office_number: $(`.office_number`).val(),
+                office_classification: $(`.office_classification`).val(),
+                broker_classification: $(`.broker_classification`).val(),
+                status_classification: $(`.status_classification`).val(),
             }
             if (params?.pk > 0) {
                 obj['pk'] = params.pk;
             }
-            if (window.confirm(`${params.pk == 0 ? '추가하시겠습니까?' : '수정하시겠습니까?'}`)) {
-                const { data: response } = await axios.post(`/api/${params?.pk == 0 ? 'add' : 'update'}user`, obj);
-                if (response?.result > 0) {
-                    toast.success(response.message);
-                    navigate(-1);
-                } else {
-                    toast.error(response.message);
+            Swal.fire({
+                title: `${params.pk == 0 ? '추가하시겠습니까?' : '수정하시겠습니까?'}`,
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                cancelButtonText: '취소'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const { data: response } = await axios.post(`/api/${params?.pk == 0 ? 'add' : 'update'}user`, obj);
+                    if (response?.result > 0) {
+                        toast.success(response.message);
+                        navigate(-1);
+                    } else {
+                        toast.error(response.message);
+                    }
                 }
-            }
-
+            })
         }
 
 
@@ -177,6 +155,9 @@ const MUserEdit = () => {
     const onClickXbutton = () => {
         setIsSeePostCode(false);
     }
+    const onChangeUserLevel = (e) => {
+        setUserLevel(e.target.value)
+    }
     return (
         <>
             <Breadcrumb title={params.pk == 0 ? '회원 추가' : '회원 수정'} nickname={myNick} />
@@ -195,7 +176,12 @@ const MUserEdit = () => {
                         <Input className='name' />
                     </Col>
                 </Row>
-
+                <Row>
+                    <Col>
+                        <Title style={{ margintop: '32px' }}>주민등록번호</Title>
+                        <Input className='id_number' />
+                    </Col>
+                </Row>
                 <Row>
                     <Col>
                         <Title style={{ margintop: '32px' }}>폰번호</Title>
@@ -203,24 +189,59 @@ const MUserEdit = () => {
                     </Col>
                     <Col>
                         <Title style={{ margintop: '32px' }}>유저레벨</Title>
-                        <Select className='level'>
-                            <option value={0}>일반유저</option>
-                            <option value={-10}>불량회원</option>
+                        <Select className='level' onChange={onChangeUserLevel}>
+                            <option value={0}>임차인</option>
+                            <option value={5}>임대인</option>
+                            <option value={10}>공인중개사</option>
                             <option value={40}>관리자</option>
                         </Select>
                     </Col>
                 </Row>
+                {userLevel == 10 ?
+                    <>
+                        <Row>
+                            <Col>
+                                <Title style={{ margintop: '32px' }}>사업자등록번호</Title>
+                                <Input className='company_number' defaultValue={user?.company_number} onChange={(e) => { setUser({ ...user, company_number: e.target.value }) }} />
+                            </Col>
+                            <Col>
+                                <Title style={{ margintop: '32px' }}>사무소명칭</Title>
+                                <Input className='office_name' defaultValue={user?.office_name} onChange={(e) => { setUser({ ...user, office_name: e.target.value }) }} />
+                            </Col>
+                            <Col>
+                                <Title style={{ margintop: '32px' }}>중개업소관리번호</Title>
+                                <Input className='office_number' defaultValue={user?.office_number} onChange={(e) => { setUser({ ...user, office_number: e.target.value }) }} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Title style={{ margintop: '32px' }}>중개업소직위구분</Title>
+                                <Input className='office_classification' defaultValue={user?.office_classification} onChange={(e) => { setUser({ ...user, office_classification: e.target.value }) }} />
+                            </Col>
+                            <Col>
+                                <Title style={{ margintop: '32px' }}>중개인구분</Title>
+                                <Input className='broker_classification' defaultValue={user?.broker_classification} onChange={(e) => { setUser({ ...user, broker_classification: e.target.value }) }} />
+                            </Col>
+                            <Col>
+                                <Title style={{ margintop: '32px' }}>상태구분</Title>
+                                <Input className='status_classification' defaultValue={user?.status_classification} onChange={(e) => { setUser({ ...user, status_classification: e.target.value }) }} />
+                            </Col>
+                        </Row>
+                    </>
+                    :
+                    <>
+                    </>}
                 <Col>
                     <Title>우편번호</Title>
                     <div style={{ display: 'flex' }}>
-                        <Input style={{ margin: '12px 0 6px 24px' }} className='zip_code'  placeholder="예) 12345" />
+                        <Input style={{ margin: '12px 0 6px 24px' }} className='zip_code' placeholder="예) 12345" />
                         <AddButton style={{ margin: '12px auto 6px 12px', width: '104px' }} onClick={() => { setIsSeePostCode(!isSeePostCode) }}>우편번호검색</AddButton>
                     </div>
                 </Col>
                 <Row>
                     <Col>
                         <Title>주소</Title>
-                        <Input className='address'/>
+                        <Input className='address' />
                     </Col>
                     <Col>
                         <Title>상세주소</Title>
@@ -239,57 +260,6 @@ const MUserEdit = () => {
                             :
                             <>
                             </>}
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Title>예금주</Title>
-                        <Input className='account_holder' />
-                    </Col>
-                    <Col>
-                        <Title>은행명</Title>
-                        <Input className='bank_name' />
-                    </Col>
-                    <Col>
-                        <Title>계좌번호</Title>
-                        <Input className='account_number' />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Title>상담내용</Title>
-                        <div id='editor'>
-                            <ReactQuill
-                                modules={modules}
-                                theme="snow"
-                                defaultValue={managerNote}
-                                value={managerNote}
-                                onChange={async (e) => {
-                                    try {
-                                        let note = e;
-                                        console.log(e)
-                                        if (e.includes('<img src="') && e.includes('base64,')) {
-                                            let base64_list = e.split('<img src="');
-                                            for (var i = 0; i < base64_list.length; i++) {
-                                                if (base64_list[i].includes('base64,')) {
-                                                    let img_src = base64_list[i];
-                                                    img_src = await img_src.split(`"></p>`);
-                                                    let base64 = img_src[0];
-                                                    img_src = await base64toFile(img_src[0], 'note.png');
-                                                    let formData = new FormData();
-                                                    await formData.append('note', img_src);
-                                                    const { data: response } = await axios.post('/api/addimageitems', formData);
-                                                    note = await note.replace(base64, `${backUrl + response?.data[0]?.filename}`)
-                                                }
-                                            }
-                                        }
-                                        setManagerNote(note);
-                                    } catch (err) {
-                                        console.log(err);
-                                    }
-                                }}
-                            />
-                        </div>
                     </Col>
                 </Row>
 
