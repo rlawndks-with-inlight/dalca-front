@@ -319,7 +319,7 @@ const Headers = () => {
             <SideBarList className='scroll-table'>
               {zSidebarMenu.map((item, idx) => (
                 <>
-                  {item.level_list.includes(auth.user_level) ?
+                  {auth?.user_level && item.level_list.includes(auth?.user_level) ?
                     <>
                       <SideBarMenu key={idx} onClick={() => { onClickLink(item.link) }} style={{ color: `${item.link == location.pathname ? theme.color.background1 : ''}` }}>{item.name}</SideBarMenu>
                     </>

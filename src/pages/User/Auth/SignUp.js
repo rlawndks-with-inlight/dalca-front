@@ -12,7 +12,7 @@ import Modal from '../../../components/Modal';
 import DaumPostcode from 'react-daum-postcode';
 import $ from 'jquery';
 import axios from "axios";
-import { regExp } from "../../../functions/utils";
+import { formatPhoneNumber, regExp } from "../../../functions/utils";
 import Swal from "sweetalert2";
 const SignUp = () => {
     const params = useParams();
@@ -25,6 +25,8 @@ const SignUp = () => {
     const [isCheckNickname, setIsCheckNickname] = useState(false);
     const [step, setStep] = useState(0);
     const [values, setValues] = useState({});
+    const [isSendSms, setIsSendSms] = useState(false)
+    const [randNum, setRandNum] = useState("")
     const defaultObj = {
         id: '',
         pw: '',
@@ -34,6 +36,7 @@ const SignUp = () => {
         id_number_front: '',
         id_number_back: '',
         phone: '',
+        phoneCheck: '',
         name: '',
         user_level: params?.user_level
     }
@@ -136,10 +139,10 @@ const SignUp = () => {
             toast.error('휴대폰 번호를 입력해 주세요.');
             return;
         }
-        // if (!isCheckPhone) {
-        //     toast.error('휴대폰 번호 인증을 완료해 주세요.');
-        //     return;
-        // }
+         if (!isCheckPhone) {
+             toast.error('휴대폰 번호 인증을 완료해 주세요.');
+             return;
+        }
         if (!values.name) {
             toast.error('이름을 입력해 주세요.');
             return;
@@ -203,6 +206,48 @@ const SignUp = () => {
             setStep(step + 2);
         }
         window.scrollTo(0, 0);
+    }
+    const sendSms = async () => {
+        if (!values.phone) {
+            toast.error("핸드폰 번호를 입력해주세요.")
+            return;
+        }
+
+        setIsCheckPhone(false);
+        let fix_phone = values.phone;
+        for (var i = 0; i < fix_phone.length; i++) {
+            if (isNaN(parseInt(fix_phone[i]))) {
+                alert("전화번호는 숫자만 입력해 주세요.");
+                return;
+            }
+        }
+        fix_phone = fix_phone.replaceAll('-', '');
+        fix_phone = fix_phone.replaceAll(' ', '');
+        setValues({...values, phone:fix_phone});
+        let content = "";
+        for (var i = 0; i < 6; i++) {
+            content += Math.floor(Math.random() * 10).toString();
+        }
+
+        let string = `\n인증번호를 입력해주세요 ${content}.\n\n-달카페이-`;
+        try {
+            const { data: response } = await axios.post(`/api/sendsms`, {
+                receiver: [fix_phone, formatPhoneNumber(fix_phone)],
+                content: string
+            })
+            if (response?.result > 0) {
+                toast.success('인증번호가 발송되었습니다.');
+
+                setIsSendSms(true)
+                setRandNum(content);
+                $('phone-check').focus();
+            } else {
+                setIsSendSms(false)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+        //console.log(response)
     }
     return (
         <>
@@ -320,8 +365,29 @@ const SignUp = () => {
                                 class_name='phone'
                                 button_label={isCheckPhone ? '완료' : '인증'}
                                 isButtonAble={!isCheckPhone}
+                                onClickButton={() => sendSms()}
                                 onChange={(e) => handleChange(e, 'phone')}
                                 value={values.phone}
+                            />
+                            <InputComponent
+                                label={'휴대폰인증번호*'}
+                                input_type={{
+                                    placeholder: '인증번호를 입력해주세요.',
+                                    disabled: isCheckPhone
+                                }}
+                                class_name='phone'
+                                button_label={isCheckPhone ? '완료' : '확인'}
+                                isButtonAble={!isCheckPhone}
+                                onClickButton={() => {
+                                    if(values?.phoneCheck == randNum){
+                                        toast.success("휴대폰인증에 성공하였습니다.");
+                                        setIsCheckPhone(true);
+                                    }else{
+                                        toast.error("인증번호가 일치하지 않습니다.");
+                                    }
+                                }}
+                                onChange={(e) => handleChange(e, 'phoneCheck')}
+                                value={values.phoneCheck}
                             />
                             <InputComponent
                                 label={'성명*'}

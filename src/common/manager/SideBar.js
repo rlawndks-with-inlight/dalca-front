@@ -159,8 +159,8 @@ const SideBar = () => {
                     <GiHamburgerMenu />
                 </HambergurContainer>
                 <LogoWrappers>
-                    <img src={logo} alt="dalca-pay" style={{ height: '40px', width: 'auto', cursor:'pointer' }}  
-                    onClick={()=>navigate('/manager/list/user')}/>
+                    <img src={logo} alt="dalca-pay" style={{ height: '40px', width: 'auto', cursor: 'pointer' }}
+                        onClick={() => navigate('/manager/list/user')} />
                 </LogoWrappers>
                 <div style={{ maxHeight: '80vh', paddingBottom: '32px' }}>
                     {zSidebar.map((list, index) => (
