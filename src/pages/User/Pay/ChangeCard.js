@@ -65,6 +65,7 @@ const ChangeCard = () => {
     const [focus, setFocus] = useState()
     const [expiry, setExpiry] = useState('')
     const [password, setPassword] = useState('')
+    const [birth, setBirth] = useState('');
     const [passwordCheck, setPasswordCheck] = useState('')
 
     useEffect(() => {
@@ -76,6 +77,8 @@ const ChangeCard = () => {
         setCardNumber(response?.data?.card_number ?? "");
         setName(response?.data?.card_name ?? "");
         setExpiry(response?.data?.card_expire ?? "");
+        setBirth(response?.data?.birth ?? "");
+        setPassword(response?.data?.card_password ?? "");
     }
 
 
@@ -102,16 +105,13 @@ const ChangeCard = () => {
             cancelButtonText: '취소'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                console.log(name)
-                console.log(cvc)
-                console.log(cardNumber)
-                console.log(expiry)
                 const { data: response } = await axios.post('/api/change-card', {
                     card_number: cardNumber,
                     card_name: name,
                     card_expire: expiry,
                     card_cvc: cvc,
                     card_password: password,
+                    birth: birth,
                 })
                 if(response?.result>0){
                     toast.success('성공적으로 저장 되었습니다.');
@@ -127,7 +127,7 @@ const ChangeCard = () => {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', margin: 'auto' }}
+                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', margin: 'auto', paddingTop:'4rem' }}
                 >
                     <CardWrapper>
                         <Cards cvc={cvc} focused={focus} expiry={expiry} name={name} number={cardNumber} />
@@ -188,14 +188,28 @@ const ChangeCard = () => {
                         <TextField
                             fullWidth
                             size="small"
+                            name='birth'
+                            className="birth"
+                            label='생년월일 6자리'
+                            value={birth}
+                            autoComplete='off'
+                            onBlur={handleBlur}
+                            type='birth'
+                            inputProps={{ maxLength: '6' }}
+                            onChange={e => setBirth(e.target.value)}
+                            onFocus={e => setFocus(e.target.name)}
+                        />
+                        <TextField
+                            fullWidth
+                            size="small"
                             name='password'
                             className="password"
-                            label='카드 비밀번호'
+                            label='카드 비밀번호 앞 두자리'
                             value={password}
                             autoComplete='off'
                             onBlur={handleBlur}
                             type='password'
-                            inputProps={{ maxLength: '4' }}
+                            inputProps={{ maxLength: '2' }}
                             onChange={e => setPassword(e.target.value)}
                             onFocus={e => setFocus(e.target.name)}
                         />

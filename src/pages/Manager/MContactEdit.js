@@ -72,6 +72,7 @@ const MContactEdit = () => {
                 $('.start_date').val(response.data.start_date)
                 $('.end_date').val(response.data.end_date)
                 $('.pay_day').val(response.data.pay_day)
+                $('.is_auto_pay').val(response.data.is_auto_pay)
             }
         }
         fetchPost();
@@ -107,6 +108,7 @@ const MContactEdit = () => {
                 address: $(`.address`).val(),
                 address_detail: $(`.address_detail`).val(),
                 pay_type: $(`.pay_type`).val(),
+                is_auto_pay: $(`.is_auto_pay`).val(),
                 deposit: $(`.deposit`).val(),
                 monthly: $(`.monthly`).val(),
                 start_date: $(`.start_date`).val(),
@@ -177,6 +179,13 @@ const MContactEdit = () => {
                         <Select className='lessee_appr'>
                             <option value={0}>동의안함</option>
                             <option value={1}>동의완료</option>
+                        </Select>
+                    </Col>
+                    <Col>
+                        <Title style={{ margintop: '32px' }}>자동결제설정</Title>
+                        <Select className='is_auto_pay'>
+                            <option value={0}>자동결제안함</option>
+                            <option value={1}>자동결제설정</option>
                         </Select>
                     </Col>
                 </Row>

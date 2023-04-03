@@ -159,7 +159,7 @@ const ContentTable = (props) => {
             navigate(`/post/faq/${data?.pk}`);
 
     }
-   
+
     const getPayMonth = (data) => {
 
     }
@@ -215,20 +215,21 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'go_pay' ?
+
                                                     <IconButton onClick={() => {
-                                                            navigate(`/payready/${item?.pk}`)
+                                                        navigate(`/payready/${item?.pk}`)
                                                     }}>
-                                                        <Icon icon="ri:money-dollar-circle-line" style={{ color: theme.color.background1 }} />
+                                                        <Icon icon={item?.status == 0 ? `ri:money-dollar-circle-line` : `ph:eye`} style={{ color: `${item?.status == 0 ? theme.color.background1 : ''}` }} />
                                                     </IconButton>
                                                     :
                                                     null}
                                                 {column.type == 'go_pay_list' ?
                                                     <IconButton onClick={() => {
-                                                            navigate(`/history/pay`,{
-                                                                state:{
-                                                                    contract_pk:item?.pk
-                                                                }
-                                                            })
+                                                        navigate(`/history/pay`, {
+                                                            state: {
+                                                                contract_pk: item?.pk
+                                                            }
+                                                        })
                                                     }}>
                                                         <Icon icon="ic:baseline-format-list-bulleted" style={{ color: theme.color.background1 }} />
                                                     </IconButton>

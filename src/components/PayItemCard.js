@@ -7,7 +7,9 @@ import { commarNumber } from "../functions/utils";
 import theme from "../styles/theme";
 import AddButton from "./elements/button/AddButton";
 import { borderButtonStyle, colorButtonStyle, HalfTitle, TextButton, TextFillButton } from "./elements/UserContentTemplete";
-
+import Swal from "sweetalert2";
+import { toast } from "react-hot-toast";
+import $ from 'jquery';
 const Container = styled.div`
 display: flex; 
 padding: 32px 0;
@@ -62,42 +64,87 @@ const PayItemCard = (props) => {
         }
         return result;
     }
-    const onSubscribe = async (num) => {
-        if (num == 1) {
-            window.open('http://pf.kakao.com/_xgKMUb/chat');
-            //navigate(`/payready/${item?.pk}`, { state: { item_pk: item?.pk } })
-        }
-        if (num == 0) {
-            if (window.confirm("장바구니 등록 하시겠습니까?")) {
-                const { data: response } = await axios.post('/api/onsubscribe', {
-                    item_pk: item?.pk,
-                    type_num: num
-                })
-                if (response?.result > 0) {
-                    alert("성공적으로 등록 되었습니다.");
-                } else {
-                    alert(response?.message);
-                    if (response?.result == -150) {
-                        navigate('/login');
+
+    const onPayByDirect = () => {
+        if (item?.status == 0) {
+            Swal.fire({
+                title: '결제 하시겠습니까?',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                cancelButtonText: '취소'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const { data: response } = await axios.post('/api/paydirect', {
+                        item_pk: item?.pk
+                    });
+                    console.log(response);
+                    if (response?.result > 0) {
+                        toast.success("성공적으로 결제 되었습니다.");
+                        navigate(`/history/pay`, {
+                            state: {
+                                contract_pk: item?.contract_pk
+                            }
+                        })
+                    } else {
+                        toast.error(response?.message);
                     }
                 }
-
-            }
+            })
         }
-
     }
-    const onPay = () => {
+    const returnPayStatus = () => {
+        if (item?.status == 1) {
+            return '결제완료'
+        } else if (item?.status == 0) {
+            return '결제하기'
 
+        } else if (item?.status == -1) {
+            return '취소완료'
+        }
     }
-
+    const onPayCancel = () => {
+        if (item?.status == 1) {
+            Swal.fire({
+                title: '결제 취소 하시겠습니까?',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                cancelButtonText: '취소',
+                html: `<input class="swal-input password"  type="password" placeholder="비밀번호를 입력해 주세요." /><br />`,
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const { data: response } = await axios.post('/api/paycanceldirect', {
+                        item_pk: item?.pk,
+                        password: $('.password').val()
+                    });
+                    if (response?.result > 0) {
+                        toast.success("결제가 취소 되었습니다.");
+                        navigate(`/history/pay`, {
+                            state: {
+                                contract_pk: item?.contract_pk
+                            }
+                        })
+                    } else {
+                        toast.error(response?.message);
+                    }
+                }
+            })
+        }
+    }
     return (
         <>
             <HalfTitle>결제 상세내용</HalfTitle>
             <Container style={{ paddingBottom: `${not_price ? '16px' : ''}` }}>
                 <ContentContainer style={{ flexDirection: `${(column && window.innerWidth <= 550) ? 'column' : ''}` }}>
                     <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px', width: 'auto' }}>
-                    <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>계약고유번호: {commarNumber(item?.contract_pk)}</div>
-                    <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {item?.pay_category == 1 ? '보증금' : '월세'}</div>
+                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>계약고유번호: {commarNumber(item?.contract_pk)}</div>
+                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {item?.pay_category == 1 ? '보증금' : '월세'}</div>
+                        {item?.pay_category == 0 ?
+                            <>
+                                <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>결제예정일: {item?.day}</div>
+                            </>
+                            :
+                            <>
+                            </>}
                         <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(item?.price)}원</div>
                     </div>
                 </ContentContainer>
@@ -108,7 +155,22 @@ const PayItemCard = (props) => {
                     <>
                         <PriceContainer>
                             <div style={{ display: "flex", margin: 'auto 0 0 auto' }}>
-                                <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={() => onPay()}>결제하기</Button>
+                                {item?.status == 0 || item?.status == 1 ?
+                                    <>
+                                        <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={() => onPayByDirect()}>{returnPayStatus()}</Button>
+
+                                    </>
+                                    :
+                                    <>
+                                    </>}
+
+                                {item?.status == -1 || item?.status == 1 ?
+                                    <>
+                                        <Button sx={{ ...borderButtonStyle, width: '81px', marginLeft: '1rem' }} onClick={() => onPayCancel()}>{item?.status == 1 ? '결제취소' : '취소완료'}</Button>
+                                    </>
+                                    :
+                                    <>
+                                    </>}
                             </div>
                         </PriceContainer>
                     </>}

@@ -64,7 +64,10 @@ const EditMyInfoCard = () => {
     const [isCoinside, setIsCoinside] = useState(false);
     const [isSendSms, setIsSendSms] = useState(false)
     const [fixPhoneNumber, setFixPhoneNumber] = useState("")
-    const [zType, setZType] = useState([{ title: "닉네임 변경", type: 1 }, { title: "비밀번호 변경", type: 2 }, { title: "전화번호 변경", type: 3 }])
+    const [zType, setZType] = useState([
+        // { title: "닉네임 변경", type: 1 },
+        { title: "비밀번호 변경", type: 2 },
+        { title: "전화번호 변경", type: 3 }])
     const [addressList, setAddressList] = useState([])
     const [isSelectAddress, setIsSelectAddress] = useState(false);
     const [isSeePostCode, setIsSeePostCode] = useState(false);
@@ -286,7 +289,7 @@ const EditMyInfoCard = () => {
                             <>
                                 {typeNum == 0 ?
                                     <>
-                                        <CategoryName>이미지 업로드</CategoryName>
+                                        {/* <CategoryName>이미지 업로드</CategoryName>
                                         <label for="file1" style={{ margin: '0 auto' }}>
                                             {url ?
                                                 <>
@@ -307,7 +310,7 @@ const EditMyInfoCard = () => {
                                         </label>
                                         <div>
                                             <input type="file" id="file1" onChange={addFile} style={{ display: 'none' }} />
-                                        </div>
+                                        </div> */}
                                         <CategoryName style={{ display: 'flex', alignItems: 'center' }}>
                                             <div>우편번호</div>
                                             <div style={{ fontSize: theme.size.font6, color: theme.color.red, marginLeft: '6px' }}>※ 오른쪽 우편번호 검색을 클릭하세요.</div>

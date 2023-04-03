@@ -54,23 +54,37 @@ export const deleteItem = async (type, obj) => {
 
 }
 export const commarNumber = (num) => {
-    let str = "";
-    if (typeof num == "number") {
-        str = num.toString();
-    } else {
-        str = num;
+    if(num > 0 && num < 0.000001){
+        return "0.00";
     }
-    if (!str) {
-        return "---";
+    if (!num && num != 0) {
+        return undefined;
+    }
+    let str = "";
+    if (typeof num == "string") {
+        str = num;
+    } else {
+        str = num.toString();
+    }
+
+    let decimal = "";
+    if (str.includes(".")) {
+        decimal = "." + str.split(".")[1].substring(0, 2);
+        str = str.split(".")[0];
+    } else {
+        decimal = "";
+    }
+    if (str?.length <= 3) {
+        return str + decimal;
     }
     let result = "";
     let count = 0;
-    for (var i = str.length - 1; i >= 0; i--) {
-        if (count % 3 == 0 && count != 0) result = "," + result;
+    for (var i = str?.length - 1; i >= 0; i--) {
+        if (count % 3 == 0 && count != 0 && !isNaN(parseInt(str[i]))) result = "," + result;
         result = str[i] + result;
         count++;
     }
-    return result;
+    return result + decimal;
 }
 export const formatPhoneNumber = (input) => {
     const cleanInput = String(input).replaceAll(/[^0-9]/g, "");

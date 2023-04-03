@@ -71,7 +71,7 @@ const PayReady = () => {
         }
     }, [])
     const getMyPays = async () =>{
-        const {data:response} = await axios.get(`/api/mypays?status=`)
+        
     }
     const getContract = async (user_data, is_render) => {
         try {

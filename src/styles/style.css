@@ -27,6 +27,18 @@
     box-shadow: none !important;
 
 }
+.swal-input{
+    height: auto !important;
+    padding: 6px !important;
+    margin: 0 auto !important;
+    font-size: 17px;
+}
+.swal-input::placeholder{
+    font-size: 17px;
+}
+.swal-input:focus{
+    border: 2px solid var(--background1) !important;
+}
 body {
     -ms-overflow-style: none;
     /* IE and Edge */
