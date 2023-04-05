@@ -60,6 +60,7 @@ const Contract = () => {
     })
 
     useEffect(() => {
+        isAdmin();
         let user_data = getLocalStorage('auth');
         if (!user_data?.pk) {
             toast.error("잘못된 접근입니다.");
@@ -72,7 +73,22 @@ const Contract = () => {
             getContract(user_data, true)
         }
     }, [])
-    const getContract = async (user_data, is_render) => {
+    async function isAdmin() {
+        const { data: response } = await axios.get('/api/auth', {
+            headers: {
+                'Content-type': 'application/json',
+            }
+        },
+            { withCredentials: true });
+        if (response.pk > 0) {
+            localStorage.setItem('auth', JSON.stringify(response))
+        } else {
+            localStorage.removeItem('auth')
+            toast.error('로그인을 해주세요.');
+            navigate('/')
+        }
+    }
+        const getContract = async (user_data, is_render) => {
         try {
             setLoading(true);
             const { data: response } = await axios.get(`/api/item?table=contract&pk=${params?.pk}`);
