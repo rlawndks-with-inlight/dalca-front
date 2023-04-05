@@ -7,7 +7,7 @@ import StepLabel from '@mui/material/StepLabel';
 import { useEffect, useState } from "react";
 import { getLocalStorage } from "../../../functions/LocalStorage";
 import { toast } from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import theme from "../../../styles/theme";
 import { Button } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
@@ -31,6 +31,7 @@ import { getEnLevelByNum, getKoLevelByNum } from "../../../functions/utils";
 
 const Contract = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const params = useParams();
     const [imgUrlObj, setImgUrlObj] = useState({});
     const [imgContentObj, setImgContentObj] = useState({});
@@ -78,7 +79,11 @@ const Contract = () => {
         } else {
             await localStorage.removeItem('auth')
             toast.error('로그인을 해주세요.');
-            navigate('/')
+            navigate('/',{
+                state:{
+                    redirect_url:location.pathname
+                }
+            })
         }
     }
         const getContract = async (user_data, is_render) => {
@@ -88,7 +93,7 @@ const Contract = () => {
             let obj = response?.data;
             if (user_data?.pk != obj?.lessee_pk && user_data?.pk != obj?.landlord_pk) {
                 toast.error("잘못된 접근입니다.")
-                navigate(-1);
+                navigate('/home');
             }
             obj['monthly'] = obj['monthly'] / 10000;
             obj['deposit'] = obj['deposit'] / 10000;

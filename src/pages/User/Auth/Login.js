@@ -10,7 +10,7 @@ import signUpIcon1 from '../../../assets/images/icon/signup-1.svg';
 import signUpIcon2 from '../../../assets/images/icon/signup-2.svg';
 import signUpIcon3 from '../../../assets/images/icon/signup-3.svg';
 import theme from "../../../styles/theme";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import { toast } from "react-hot-toast";
 import axios from "axios";
@@ -33,8 +33,11 @@ const SignUpCategoryButton = (props) => {
 }
 const Login = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [signUpCount, setSignUpCount] = useState(0);
+    const [state, setState] = useState({});
     useEffect(() => {
+        setState(location.state)
     }, []);
     const defaultObj = {
         id: '',
@@ -73,7 +76,7 @@ const Login = () => {
                 });
             }
             await setLocalStorage('auth', JSON.stringify(response.data));
-            window.location.href = '/home';
+            window.location.href = state?.redirect_url??'/home';
 
         }
     }
