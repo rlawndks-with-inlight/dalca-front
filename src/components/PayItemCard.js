@@ -164,13 +164,13 @@ const PayItemCard = (props) => {
                                     <>
                                     </>}
 
-                                {item?.status == -1 || item?.status == 1 ?
+                                {/* {item?.status == -1 || item?.status == 1 ?
                                     <>
                                         <Button sx={{ ...borderButtonStyle, width: '81px', marginLeft: '1rem' }} onClick={() => onPayCancel()}>{item?.status == 1 ? '결제취소' : '취소완료'}</Button>
                                     </>
                                     :
                                     <>
-                                    </>}
+                                    </>} */}
                             </div>
                         </PriceContainer>
                     </>}
