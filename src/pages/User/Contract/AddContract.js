@@ -282,8 +282,8 @@ const AddContract = () => {
                 isConfirm();
                 setLandlordList([]);
                 setLesseeList([]);
+                getCheckContractAppr();
             }
-            getCheckContractAppr();
 
         }
         if (activeStep == 1) {
