@@ -18,6 +18,8 @@ import $ from 'jquery'
 import { RiMoneyDollarCircleLine } from 'react-icons/ri'
 import { getPayCategory, getPayStatus } from '../../functions/format'
 import Swal from 'sweetalert2'
+import { returnColumn } from './ColumnType'
+import { toast } from 'react-hot-toast'
 const Tr = styled.tr`
 box-shadow:1px 1px 1px #00000029;
 font-size:14px;
@@ -33,7 +35,7 @@ max-width:200px;
 `
 const ItemTypes = { CARD: 'card' }
 
-const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, opTheTopItem, changeItemSequence, deleteItem, changeStatus }) => {
+const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, opTheTopItem, changeItemSequence, deleteItem, changeStatus, onPayCancel }) => {
     const notUseCard = ['all', 'user_statistics'];
     const navigate = useNavigate();
     const ref = useRef(null)
@@ -105,34 +107,7 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
     drag(drop(ref))
 
 
-    const getLoginTypeByNumber = (num) => {
-        if (num == 0) {
-            return "일반";
-        } else if (num == 1) {
-            return "카카오";
-        } else if (num == 2) {
-            return "네이버";
-        } else if (num == 3) {
-            return "애플";
-        }
-    }
-    const getUserLevelByNumber = (num) => {
-        if (num == -10) {
-            return "불량회원";
-        } else if (num == 0) {
-            return "임차인";
-        } else if (num == 5) {
-            return "임대인";
-        } else if (num == 10) {
-            return "공인중개사";
-        } else if (num == 40) {
-            return "관리자";
-        } else if (num == 50) {
-            return "개발자";
-        } else {
-            return "잘못된레벨"
-        }
-    }
+    
     const getPostCategoryNameByEng = (str) => {
         if (str == 'oneword') {
             return "하루1단어";
@@ -160,14 +135,29 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
         else if (num == 1)
             return '동의완료'
     }
-
+    
     return (
         <>
             <Tr ref={obj.is_move ? ref : null} data-handler-id={handlerId} className='manager-data-tr'>
                 {column.map((col, index) => (
                     <>
-
-                        {col.type == 'text' ?
+                        <Td style={{ width: `${col.width}%` }}>
+                            {returnColumn(
+                                data, 
+                                col.type, 
+                                col.column, 
+                                schema, 
+                                true,
+                                {
+                                    navigate,
+                                    deleteItem,
+                                    changeStatus,
+                                    opTheTopItem,
+                                    onPayCancel
+                                },
+                                )}
+                        </Td>
+                        {/* {col.type == 'text' ?
                             <>
                                 <Td style={{ width: `${col.width}%` }}>{data[`${col.column}`] ?? "---"}</Td>
                             </>
@@ -422,7 +412,7 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                             </>
                             :
                             <>
-                            </>}
+                            </>} */}
                     </>
                 ))}
 

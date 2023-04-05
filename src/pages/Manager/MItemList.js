@@ -25,6 +25,7 @@ import ManagerWrappers from '../../components/elements/ManagerWrappers';
 import ManagerContentWrappers from '../../components/elements/ManagerContentWrappers';
 import OptionBox from './OptionBox';
 import { toast } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 const OptionCardWrappers = styled.div`
 width:95%;
 margin:0.5rem auto;
@@ -210,6 +211,29 @@ const MItemList = () => {
     const onSearch = () =>{
 
     }
+    const onPayCancel = (item) => {
+        if (item?.status == 1) {
+            Swal.fire({
+                title: '결제 취소 하시겠습니까?',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                cancelButtonText: '취소',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const { data: response } = await axios.post('/api/paycanceldirect', {
+                        item_pk: item?.pk,
+                        password: $('.password').val()
+                    });
+                    if (response?.result > 0) {
+                        toast.success("결제가 취소 되었습니다.");
+                        changePage(page)
+                    } else {
+                        toast.error(response?.message);
+                    }
+                }
+            })
+        }
+    }
     return (
         <>
             <Breadcrumb title={breadcrumbText} nickname={``} />
@@ -254,7 +278,9 @@ const MItemList = () => {
                     deleteItem={deleteItem} 
                     changeStatus={changeStatus} 
                     changePage={changePage} 
-                    page={page} />
+                    page={page}
+                    onPayCancel={onPayCancel}
+                    />
                 </>}
 
             <MBottomContent>

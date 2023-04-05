@@ -31,7 +31,7 @@ padding:14px 0;
 margin-bottom:6px;
 `
 const DataTable = (props) => {
-    const { column, data, schema, opTheTopItem, changeItemSequence, deleteItem, changeStatus, width } = props;
+    const { column, data, schema, opTheTopItem, changeItemSequence, deleteItem, changeStatus, width, onPayCancel } = props;
     const navigate = useNavigate();
     const [zStatus, setZStatus] = useState([]);
     const [posts, setPosts] = useState([]);
@@ -75,6 +75,7 @@ const DataTable = (props) => {
                 deleteItem={deleteItem}
                 changeItemSequence={changeItemSequence}
                 changeStatus={changeStatus}
+                onPayCancel={onPayCancel}
                 obj={objManagerListContent[`${schema}`]}
             />
         )

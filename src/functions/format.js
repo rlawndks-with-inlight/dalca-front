@@ -68,3 +68,31 @@ export const getPayStatus = (data) => {
     else
         return "---"
 }
+export const getLoginTypeByNumber = (num) => {
+  if (num == 0) {
+      return "일반";
+  } else if (num == 1) {
+      return "카카오";
+  } else if (num == 2) {
+      return "네이버";
+  } else if (num == 3) {
+      return "애플";
+  }
+}
+export const getUserLevelByNumber = (num) => {
+  if (num == -10) {
+      return "불량회원";
+  } else if (num == 0) {
+      return "임차인";
+  } else if (num == 5) {
+      return "임대인";
+  } else if (num == 10) {
+      return "공인중개사";
+  } else if (num == 40) {
+      return "관리자";
+  } else if (num == 50) {
+      return "개발자";
+  } else {
+      return "잘못된레벨"
+  }
+}
