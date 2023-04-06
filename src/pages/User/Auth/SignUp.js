@@ -264,7 +264,7 @@ const SignUp = () => {
                                     disabled: isCheckId
                                 }}
                                 class_name='id'
-                                button_label={isCheckId ? '완료' : '확인'}
+                                button_label={isCheckId ? '완료' : '중복확인'}
                                 isButtonAble={!isCheckId}
                                 is_divider={true}
                                 onKeyPress={() => onCheckId()}

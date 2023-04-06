@@ -66,7 +66,7 @@ const MContactEdit = () => {
                 $('.address').val(response.data.address)
                 $('.address_detail').val(response.data.address_detail)
                 $('.zip_code').val(response.data.zip_code)
-                $('.pay_type').val(response.data.pay_type)
+                //$('.pay_type').val(response.data.pay_type)
                 $('.deposit').val(response.data.deposit)
                 $('.monthly').val(response.data.monthly)
                 $('.start_date').val(response.data.start_date)
@@ -89,7 +89,7 @@ const MContactEdit = () => {
             !$(`.zip_code`).val() || 
             !$(`.address`).val() || 
             !$(`.address_detail`).val() || 
-            !$(`.pay_type`).val() || 
+            //!$(`.pay_type`).val() || 
             !$(`.deposit`).val() || 
             !$(`.monthly`).val() || 
             !$(`.start_date`).val() || 
@@ -107,7 +107,7 @@ const MContactEdit = () => {
                 zip_code: $(`.zip_code`).val(),
                 address: $(`.address`).val(),
                 address_detail: $(`.address_detail`).val(),
-                pay_type: $(`.pay_type`).val(),
+                //pay_type: $(`.pay_type`).val(),
                 is_auto_pay: $(`.is_auto_pay`).val(),
                 deposit: $(`.deposit`).val(),
                 monthly: $(`.monthly`).val(),
@@ -229,13 +229,13 @@ const MContactEdit = () => {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    {/* <Col>
                         <Title>전/월세</Title>
                         <Select className='pay_type'>
                             <option value={0}>월세</option>
                             <option value={1}>전세</option>
                         </Select>
-                    </Col>
+                    </Col> */}
                     <Col>
                         <Title>보증금</Title>
                         <Input className='deposit' placeholder='숫자를 입력해 주세요.' />

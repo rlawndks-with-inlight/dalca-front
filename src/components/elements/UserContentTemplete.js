@@ -168,7 +168,7 @@ export const smallButtonStyle = {
     right: '2px',
     minWidth: '12px',
     height: '45px',
-    width: '55px',
+    width: '72px',
     top: '10px',
     borderTopRightRadius: '4px',
     borderBottomRightRadius: '4px',
@@ -393,7 +393,7 @@ export const InputComponent = (props) => {
                                 || icon_label
                             )
                                 ?
-                                '14px 60px 14px 2%' : ''}`,
+                                '14px 82px 14px 2%' : ''}`,
                         }}
                         onKeyPress={(e) => {
                             if (e.key == 'Enter' && onKeyPress) {

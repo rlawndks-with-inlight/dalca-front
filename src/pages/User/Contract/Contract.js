@@ -184,7 +184,7 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.address_detail}
                                 />
-                                <InputComponent
+                                {/* <InputComponent
                                     label={'전/월세'}
                                     input_type={{
                                         placeholder: '',
@@ -193,7 +193,7 @@ const Contract = () => {
                                     class_name='pay_type'
                                     is_divider={true}
                                     value={values.pay_type == 0 ? '월세' : '전세'}
-                                />
+                                /> */}
                                 <InputComponent
                                     label={'보증금'}
                                     input_type={{

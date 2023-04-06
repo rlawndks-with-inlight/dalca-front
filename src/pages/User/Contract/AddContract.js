@@ -57,7 +57,6 @@ const AddContract = () => {
         lessee_appr: 0,
         lessee: {},
         realtor_pk: 0,
-        pay_type: 0,
         deposit: 0,
         monthly: 0,
         address: '',
@@ -218,7 +217,6 @@ const AddContract = () => {
             }
 
             let obj = {
-                pay_type: values?.pay_type,
                 address: values?.address,
                 zip_code: values?.zip_code,
                 address_detail: values?.address_detail,
@@ -414,7 +412,7 @@ const AddContract = () => {
                                             onChange={(e) => handleChange(e, 'address_detail')}
                                             value={values.address_detail}
                                         />
-                                        <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
+                                        {/* <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
                                             <InputLabel id="demo-select-small">전/월세</InputLabel>
                                             <CustomSelect
                                                 labelId="demo-select-small"
@@ -427,7 +425,7 @@ const AddContract = () => {
                                                 <MenuItem value={0}>월세</MenuItem>
                                                 <MenuItem value={1}>전세</MenuItem>
                                             </CustomSelect>
-                                        </FormControl>
+                                        </FormControl> */}
                                         <InputComponent
                                             label={'보증금'}
                                             input_type={{
