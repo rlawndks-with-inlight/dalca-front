@@ -61,7 +61,7 @@ const Footer = () => {
                             <Img src={logoSrc} alt="footer" />
                             <Post>주식회사 오앤유페이먼츠</Post>
                             <Post>대표자 조웅형</Post>
-                            <Post style={{ borderRight: 'none' }}>사업자등록번호</Post>
+                            <Post style={{ borderRight: 'none' }}>사업자등록번호 568-87-02806</Post>
                         </div>
                         <div style={{ marginTop: '8px' }}>경기도 김포시 태장로789, 611호(장기동, 금광하이테크)</div>
                         <Flex>
