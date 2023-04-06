@@ -227,7 +227,7 @@ const AddContract = () => {
                 start_date: values?.start_date,
                 end_date: values?.end_date,
                 pay_day: values?.pay_day,
-
+                is_user: true,
             }
             if (response_img) {
                 obj['document_src'] = response_img?.filename;

@@ -59,6 +59,7 @@ export const objManagerListContent = {
             columnObjFormat('우편번호', '', 'text', 'zip_code'),
             columnObjFormat('가입일', '', 'text', 'date'),
             columnObjFormat('로그인시간', '', 'text', 'last_login'),
+            columnObjFormat('승인여부', '', 'status', 'status'),
             columnObjFormat('결제내역', '', 'user_pay_list', 'user_pay_list'),
             columnObjFormat('수정', '', 'edit', 'edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),

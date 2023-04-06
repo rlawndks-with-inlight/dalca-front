@@ -183,7 +183,7 @@ const SignUp = () => {
         obj = { ...obj, ['id_number']: obj?.id_number_front + '-' + obj?.id_number_back }
         const { data: response } = await axios.post('/api/adduser', obj);
         if (response?.result > 0) {
-            toast.success('성공적으로 회원가입 되었습니다.');
+            toast.success(response?.message);
             navigate('/login');
         } else {
             toast.error(response?.message);
@@ -360,13 +360,15 @@ const SignUp = () => {
                                 label={'휴대폰번호*'}
                                 input_type={{
                                     placeholder: '-없이 숫자만 입력',
-                                    disabled: isCheckPhone
                                 }}
                                 class_name='phone'
                                 button_label={isCheckPhone ? '완료' : '인증'}
                                 isButtonAble={!isCheckPhone}
                                 onClickButton={() => sendSms()}
-                                onChange={(e) => handleChange(e, 'phone')}
+                                onChange={(e) => {
+                                    handleChange(e, 'phone');
+                                    setIsCheckPhone(false);
+                                }}
                                 value={values.phone}
                             />
                             <InputComponent
