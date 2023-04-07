@@ -21,6 +21,7 @@ import { Icon } from '@iconify/react';
 import { IconButton } from '@mui/material';
 import Swal from 'sweetalert2';
 import { toast } from 'react-hot-toast';
+import { getUserLevelByNumber } from '../functions/format';
 const Header = styled.header`
 position:fixed;
 height:6rem;
@@ -285,12 +286,10 @@ const Headers = () => {
                   </>
                 ))}
               </PopupContainer>
-
             </>
             :
             <>
             </>}
-
           <LeftNoneIcon />
           <HeaderLogo src={logoSrc} alt="홈으로" onClick={() => { navigate('/home') }} />
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -308,10 +307,11 @@ const Headers = () => {
             <div style={{ width: '100%', background: theme.color.background1, margin: '0', height: '18vh', color: '#fff', display: 'flex' }}>
               <Row style={{ justifyContent: 'flex-start', margin: 'auto' }}>
                 {/* <img src={auth?.profile_img ? backUrl + auth?.profile_img : defaultProfile} style={{ width: '34px', height: '34px', borderRadius: '50%' }} /> */}
-                <Col style={{ marginLeft: '8px', textAlign: 'left', height: '34px' }}>
+                <Col style={{ marginLeft: '8px', textAlign: 'left', height: '72px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <img src={logoSrc} style={{ height: '24px', width: 'auto', margin: '0 auto 6px 0' }} />
                     <div style={{ fontSize: theme.size.font3, fontWeight: 'bold', margin: '0 auto 6px 0' }}>{auth?.name} 님 환영합니다</div>
+                    <div style={{ fontSize: theme.size.font5, fontWeight: 'bold', margin: '0 auto 6px 0' }}>{getUserLevelByNumber(auth?.user_level)}</div>
                   </div>
                 </Col>
               </Row>

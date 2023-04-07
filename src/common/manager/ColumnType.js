@@ -2,7 +2,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { getPayCategory, getPayStatus, getUserLevelByNumber } from "../../functions/format";
 import { commarNumber, dateFormat } from "../../functions/utils";
 import theme from "../../styles/theme";
-import { AiOutlineUnorderedList } from "react-icons/ai";
+import { AiFillCreditCard, AiOutlineUnorderedList } from "react-icons/ai";
 import { RiDeleteBinLine, RiMoneyDollarCircleLine } from "react-icons/ri";
 import Swal from "sweetalert2";
 import { backUrl } from "../../data/Data";
@@ -166,6 +166,13 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         if (is_list) {
             result = <>
                 <RiMoneyDollarCircleLine style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() => navigate(`/manager/list/pay/${data.pk}`, { state: { breadcrumb: `${data?.id} 회원 결제 내역` } })} />
+            </>
+        }
+    }else if (type == 'pay_card') {
+        result = "---";
+        if (is_list) {
+            result = <>
+                <AiFillCreditCard style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() => navigate(`/manager/edit/user_card/${data.pk}`, { state: { breadcrumb: `${data?.id} 회원 결제 카드` } })} />
             </>
         }
     } else if (type == 'user_money_edit') {

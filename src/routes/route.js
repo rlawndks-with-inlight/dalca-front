@@ -38,6 +38,7 @@ import Request from '../pages/User/Auth/Request';
 import PayReady from '../pages/User/Pay/PayReady';
 import ChangeCard from '../pages/User/Pay/ChangeCard';
 import MContactEdit from '../pages/Manager/MContactEdit';
+import MUserCardEdit from '../pages/Manager/MUserCardEdit';
 
 const zManagerRoute = [
     { link: '/manager', element: <MLogin />, title: "관리자로그인" },
@@ -49,8 +50,8 @@ const zManagerRoute = [
     { link: '/manager/edit/contract/:pk', element: <MContactEdit />, title: "계약 관리" },
     { link: '/manager/edit/pay_edit/:pk', element: <MPayEdit />, title: "결제 내역 관리" },
     { link: '/manager/edit/pay_cancel/:pk', element: <MPayCancelEdit />, title: "결제 내역 취소 관리" },
-    { link: '/manager/edit/issue_category/:pk', element: <MIssueCategoryEdit />, title: "핵심이슈카테고리관리" },
-    { link: '/manager/edit/feature_category/:pk', element: <MFeatureCategoryEdit />, title: "특징주카테고리관리" },
+    { link: '/manager/edit/user_card/:pk', element: <MUserCardEdit />, title: "결제 카드 관리" },
+    
     { link: '/manager/edit/setting', element: <MSettingEdit />, title: "환경설정" },
     { link: '/manager/edit/pay_excel', element: <MPayExcelEdit />, title: "" },
     

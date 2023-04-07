@@ -10,6 +10,7 @@ import { MdEdit } from 'react-icons/md';
 import theme from "../../../styles/theme";
 import ContentTable from "../../../components/ContentTable";
 import { Button } from "@mui/material";
+import { getUserLevelByNumber } from "../../../functions/format";
 
 const MyCard = styled.div`
 display:flex;
@@ -87,7 +88,6 @@ const MyPage = () => {
             }
         }
         isAdmin();
-        getMyContent();
         if (window && window.flutter_inappwebview) {
             setIsWebView(true)
         }
@@ -164,6 +164,10 @@ const MyPage = () => {
                             </Result>
                         </Content>
                         <Content>
+                            <Category>유저권한</Category>
+                            <Result>{getUserLevelByNumber(auth?.user_level)}</Result>
+                        </Content>
+                        <Content>
                             <Category>전화번호</Category>
                             <Result>{auth?.phone ?? "---"}</Result>
                         </Content>
@@ -179,10 +183,7 @@ const MyPage = () => {
                             <Category>상세주소</Category>
                             <Result>{auth?.address_detail}</Result>
                         </Content>
-                        <Content>
-                            <Category>개인정보동의</Category>
-                            <Result>{'동의'}</Result>
-                        </Content>
+                       
 
                     </Container>
                 </MyCard>
