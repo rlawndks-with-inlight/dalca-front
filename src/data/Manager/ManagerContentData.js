@@ -338,22 +338,6 @@ export const objManagerEditContent = {
             ],
         ],
     },
-    main_video: {
-        schema: 'main_video',
-        breadcrumb: '메인비디오',
-        add_list: [],
-        columns: [//img, select, input, 
-            [
-                editColumnObjFormat('제목', 'input', { placeholder: '제목을 입력해 주세요.' }, 'title'),
-                editColumnObjFormat('부제목', 'input', { placeholder: '부제목을 입력해 주세요.' }, 'sub_title'),
-            ],
-            [
-                editColumnObjFormat('자세히보기링크', 'input', { placeholder: '' }, 'link'),
-                editColumnObjFormat('유튜브링크', 'input', { placeholder: 'https://www.youtube.com/watch?v=9kaCAbIXuyg&list=RDVWbYRiF44Dc&index=2' }, 'video_link'),
-                editColumnObjFormat('더많은 영상보기 링크', 'input', { placeholder: '' }, 'more_link'),
-            ],
-        ],
-    },
     request: {
         schema: 'request',
         breadcrumb: '문의',

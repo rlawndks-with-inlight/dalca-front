@@ -90,7 +90,9 @@ const ReturnOptionContentBySchema = (props) => {
             <>
                 <Select className='level' style={{ margin: '12px 24px 12px 24px' }} onChange={onChangeType}>
                     <option value={'all'}>전체유저</option>
-                    <option value={0}>일반유저</option>
+                    <option value={0}>임차인</option>
+                    <option value={5}>임대인</option>
+                    <option value={10}>공인중개사</option>
                     <option value={-10}>불량회원</option>
                     <option value={40}>관리자</option>
                 </Select>

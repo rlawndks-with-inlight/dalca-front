@@ -106,7 +106,7 @@ export const objHistoryListContent = {
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('등록일', '', 'date', 'date'),
             columnObjFormat('상태', '', 'contract_comment', ''),
-            columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
+            columnObjFormat('계약서보기', '', 'contract_detail', 'contract_detail'),
             columnObjFormat('결제내역', '', 'go_pay_list', 'go_pay_list'),
         ]
     },
@@ -118,7 +118,7 @@ export const objHistoryListContent = {
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('등록일', '', 'date', 'date'),
             columnObjFormat('상태', '', 'contract_comment', ''),
-            columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
+            columnObjFormat('계약서보기', '', 'contract_detail', 'contract_detail'),
         ]
     },
     contract_10: {
@@ -129,7 +129,7 @@ export const objHistoryListContent = {
             columnObjFormat('임차인명', '', 'text', 'lessee_name'),
             columnObjFormat('등록일', '', 'date', 'date'),
             columnObjFormat('상태', '', 'contract_comment', ''),
-            columnObjFormat('자세히보기', '', 'contract_detail', 'contract_detail'),
+            columnObjFormat('계약서보기', '', 'contract_detail', 'contract_detail'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
         ]
     },
@@ -138,7 +138,7 @@ export const objHistoryListContent = {
         columns: [
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('자세히보기', '', 'link', ''),
+            columnObjFormat('계약서보기', '', 'link', ''),
             columnObjFormat('답변상태', '', 'is_request_com', ''),
         ]
     },
@@ -147,7 +147,7 @@ export const objHistoryListContent = {
         columns: [
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('자세히보기', '', 'link', ''),
+            columnObjFormat('계약서보기', '', 'link', ''),
         ]
     },
     faq: {
@@ -155,7 +155,7 @@ export const objHistoryListContent = {
         columns: [
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('자세히보기', '', 'link', ''),
+            columnObjFormat('계약서보기', '', 'link', ''),
         ]
     },
 };
