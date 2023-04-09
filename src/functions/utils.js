@@ -86,6 +86,13 @@ export const commarNumber = (num) => {
     }
     return result + decimal;
 }
+export const makeMaxPage = (num, page_cut) => {
+    if (num % page_cut == 0) {
+        return num / page_cut;
+    } else {
+        return parseInt(num / page_cut) + 1;
+    }
+}
 export const formatPhoneNumber = (input) => {
     const cleanInput = String(input).replaceAll(/[^0-9]/g, "");
     let result = "";

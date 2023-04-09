@@ -38,6 +38,7 @@ export const zBottomMenu = [
 ];
 export const zManagerLevel = [40, 50];
 export const zSidebarMenu = [
+    { name: '주변 부동산', link: '/around-realestate', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '결제카드변경', link: '/change-card', level_list: [0, ...zManagerLevel] },
     { name: '계약내역', link: '/history/contract', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '포인트내역', link: '/history/point', level_list: [0, 5, 10, ...zManagerLevel] },
@@ -156,6 +157,16 @@ export const objHistoryListContent = {
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
             columnObjFormat('계약서보기', '', 'link', ''),
+        ]
+    },
+    real_estate: {
+        title: "부동산",
+        columns: [
+            columnObjFormat('부동산명', '', 'text', 'name'),
+            columnObjFormat('주소', '', 'text', 'address'),
+            columnObjFormat('상세주소', '', 'text', 'address_detail'),
+            columnObjFormat('전화번호', '', 'text', 'phone'),
+            columnObjFormat('거리', '', 'text', 'distance'),
         ]
     },
 };

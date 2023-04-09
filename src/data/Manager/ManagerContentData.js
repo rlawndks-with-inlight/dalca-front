@@ -26,6 +26,7 @@ export const zSidebar = [
     sidebarContentFormat('운영관리', [
         sidebarObjListFormat('계약관리', '/manager/list/contract', 40, ['/manager/list/contract']),//list
         sidebarObjListFormat('결제관리', '/manager/list/pay', 40, ['/manager/list/pay']),//list
+        sidebarObjListFormat('부동산관리', '/manager/list/real_estate', 40, ['/manager/list/real_estate']),//list
     ], <RiMoneyDollarCircleLine />),
     sidebarContentFormat('기본설정', [
         sidebarObjListFormat('메인배너', '/manager/edit/home_setting/1', 40, ['/manager/edit/home_setting/1']),//list
@@ -69,7 +70,21 @@ export const objManagerListContent = {
         true,
         false,
         '150%'),
-
+    real_estate: sidebarObjFormat(
+        '부동산 관리',
+        'real_estate',
+        [
+            columnObjFormat('부동산명', '', 'text', 'name'),
+            columnObjFormat('전화번호', '', 'text', 'phone'),
+            columnObjFormat('주소', '', 'text', 'address'),
+            columnObjFormat('우편번호', '', 'text', 'zip_code'),
+            columnObjFormat('생성일', '', 'text', 'date'),
+            columnObjFormat('수정', '', 'edit', 'edit'),
+            columnObjFormat('삭제', '', 'delete', 'delete'),
+        ],
+        ['order=pk'],
+        true,
+        false),
     // user_statistics: sidebarObjFormat(
     //     '회원 통계',
     //     'user_statistics',
@@ -120,7 +135,7 @@ export const objManagerListContent = {
             columnObjFormat('수정', '', 'edit', 'edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
         ],
-        ['order=pk','start_date=', 'end_date=', 'is_contract='],
+        ['order=pk', 'start_date=', 'end_date=', 'is_contract='],
         true,
         false,
         '150%'),
@@ -144,7 +159,7 @@ export const objManagerListContent = {
             columnObjFormat('수정', '', 'pay_edit', 'pay_edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
         ],
-        ['status=','order=pk','start_date=', 'end_date=', 'pay_category='],
+        ['status=', 'order=pk', 'start_date=', 'end_date=', 'pay_category='],
         true,
         false,
         '150%'),
