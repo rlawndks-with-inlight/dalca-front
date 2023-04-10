@@ -124,7 +124,7 @@ const PayReady = () => {
                                 animate={{ opacity: 1 }}
                                 style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                             >
-                            <PayItemCard item={values} />
+                            <PayItemCard item={values} user={userData} />
                             </motion.div>
                         </ContentWrappers>
                     </>}

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { backUrl } from "../data/Data";
-import { commarNumber } from "../functions/utils";
+import { commarNumber, makeQueryObj } from "../functions/utils";
 import theme from "../styles/theme";
 import AddButton from "./elements/button/AddButton";
 import { borderButtonStyle, colorButtonStyle, HalfTitle, TextButton, TextFillButton } from "./elements/UserContentTemplete";
@@ -40,7 +40,7 @@ height:120px;
 }
 `
 const PayItemCard = (props) => {
-    let { item, is_detail, not_price, column } = props;
+    let { item, is_detail, not_price, column, user } = props;
 
     const navigate = useNavigate();
     const getPeriodByNumber = (num) => {
@@ -74,20 +74,31 @@ const PayItemCard = (props) => {
                 cancelButtonText: '취소'
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    const { data: response } = await axios.post('/api/paydirect', {
-                        item_pk: item?.pk
-                    });
-                    console.log(response);
-                    if (response?.result > 0) {
-                        toast.success("성공적으로 결제 되었습니다.");
-                        navigate(`/history/pay`, {
-                            state: {
-                                contract_pk: item?.contract_pk
-                            }
-                        })
-                    } else {
-                        toast.error(response?.message);
+                    let obj = {
+                        mid: 'welcometst',
+                        temp: item?.pk,
+                        ord_nm: `${user?.pk}${item?.pk}${new Date().getTime()}`,
+                        name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} 일자 월세` : '보증금'}`,
+                        price: item?.price,
+                        buyer: user?.name,
+                        tel: user?.phone,
                     }
+                    let query = Object.entries(obj).map(e => e.join('=')).join('&');
+                    window.location.href = `https://worker1.payvery.kr/payment/welcome/auth?${query}`;
+                    // const { data: response } = await axios.post('/api/paydirect', {
+                    //     item_pk: item?.pk
+                    // });
+                    // console.log(response);
+                    // if (response?.result > 0) {
+                    //     toast.success("성공적으로 결제 되었습니다.");
+                    //     navigate(`/history/pay`, {
+                    //         state: {
+                    //             contract_pk: item?.contract_pk
+                    //         }
+                    //     })
+                    // } else {
+                    //     toast.error(response?.message);
+                    // }
                 }
             })
         }
