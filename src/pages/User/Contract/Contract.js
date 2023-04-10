@@ -31,6 +31,7 @@ import { getEnLevelByNum, getKoLevelByNum } from "../../../functions/utils";
 import Slider from 'react-slick'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { CategoryName } from "../../../components/elements/AuthContentTemplete";
 
 const Contract = () => {
     const navigate = useNavigate();
@@ -42,6 +43,7 @@ const Contract = () => {
     const [userData, setUserData] = useState({});
     const [loading, setLoading] = useState(false);
     const [imgList, setImgList] = useState([]);
+    const [pdfList, setPdfList] = useState([]);
     const [wantSeeImg, setWantSeeImg] = useState("");
     const [values, setValues] = useState({
         landlord_pk: 0,
@@ -107,6 +109,11 @@ const Contract = () => {
                 img_list[i]['url'] = backUrl + img_list[i]['url'];
             }
             setImgList(img_list);
+            let pdf_list = JSON.parse(obj['pdf_list']);
+            for (var i = 0; i < pdf_list.length; i++) {
+                pdf_list[i]['url'] = backUrl + pdf_list[i]['url'];
+            }
+            setPdfList(pdf_list);
             if (obj['landlord_pk'] > 0) {
                 const { data: response_landlord } = await axios.get(`/api/item?table=user&pk=${obj['landlord_pk']}`);
                 obj['landlord'] = response_landlord?.data;
@@ -323,30 +330,64 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.realtor?.phone}
                                 />
-                                 
-                                <div style={{ display: 'flex', overflowX:'auto' }}>
-                                {imgList.map((item, idx) => (
-                                        <>
-                                            <div style={{
-                                                margin: 'auto 0',
-                                                position: 'relative'
-                                            }}
-
-                                            >
-                                                <img src={item?.url} alt="#"
-                                                    style={{
-                                                        height: '8rem', width: 'auto',
-                                                        cursor: 'pointer'
+                                {imgList.length > 0 ?
+                                    <>
+                                        <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서이미지</CategoryName>
+                                        <div style={{ display: 'flex', overflowX: 'auto' }}>
+                                            {imgList.map((item, idx) => (
+                                                <>
+                                                    <div style={{
+                                                        margin: 'auto 0',
+                                                        position: 'relative'
                                                     }}
-                                                    onClick={() => {
-                                                        setWantSeeImg(item?.url)
-                                                    }}
-                                                />
-                                            </div>
 
-                                        </>
-                                    ))}
-                                </div>
+                                                    >
+                                                        <img src={item?.url} alt="#"
+                                                            style={{
+                                                                height: '8rem', width: 'auto',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                            onClick={() => {
+                                                                setWantSeeImg(item?.url)
+                                                            }}
+                                                        />
+                                                    </div>
+
+                                                </>
+                                            ))}
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                    </>}
+
+                                {pdfList.length > 0 ?
+                                    <>
+                                        <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF 파일</CategoryName>
+                                        <div style={{ display: 'flex', flexDirection:'column' }}>
+                                            {pdfList.map((item, idx) => (
+                                                <>
+                                                    <div style={{
+                                                        margin: 'auto 0.25rem',
+                                                        position: 'relative',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        cursor: 'pointer',
+                                                        color: theme.color.background1,
+                                                    }}
+                                                    >
+                                                        <a href={item?.url} download={item?.content?.name || item?.name} style={{ textDecoration: 'none', color: theme.color.background1 }}>
+                                                            {item?.content?.name || item?.name}
+                                                        </a>
+                                                    </div>
+
+                                                </>
+                                            ))}
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                    </>}
 
                                 <div style={{
                                     display: 'flex',

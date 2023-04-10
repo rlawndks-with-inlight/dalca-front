@@ -106,11 +106,17 @@ const AddContract = () => {
         obj['monthly'] = obj['monthly'] / 10000;
         obj['deposit'] = obj['deposit'] / 10000;
 
-        let img_list = JSON.parse(obj['document_src']);
+        let img_list = JSON.parse(obj['document_src']??'[]');
         for (var i = 0; i < img_list.length; i++) {
             img_list[i]['url'] = backUrl + img_list[i]['url'];
         }
         setImgList(img_list);
+        let pdf_list = JSON.parse(obj['pdf_list']);
+        for (var i = 0; i < pdf_list.length; i++) {
+            pdf_list[i]['url'] = backUrl + pdf_list[i]['url'];
+        }
+        setPdfList(pdf_list);
+        console.log(obj)
 
         if (obj['landlord_pk'] > 0) {
             const { data: response_landlord } = await axios.get(`/api/item?table=user&pk=${obj['landlord_pk']}`);
@@ -213,7 +219,6 @@ const AddContract = () => {
                 setActiveStep(0);
                 return;
             }
-            let response_img = undefined;
             let img_list = [...imgList];
             for (var i = 0; i < img_list.length; i++) {
                 if (img_list[i].content) {
@@ -225,9 +230,25 @@ const AddContract = () => {
                 }
                 img_list[i]['url'] = img_list[i]['url'].replaceAll(backUrl, "");
             }
-            console.log(img_list);
+            let pdf_list = [...pdfList];
+            for (var i = 0; i < pdf_list.length; i++) {
+                if (pdf_list[i].content) {
+                    let formData = new FormData();
+                    formData.append('pdf', pdf_list[i].content);
+                    const { data: response_image } = await axios.post('/api/addimageitems', formData);
+                    console.log(response_image)
+                    if(!pdf_list[i]['name']){
+                        pdf_list[i]['name'] = pdf_list[i]['content']['name'];
+                    }
+                    pdf_list[i]['content'] = "";
+                    pdf_list[i]['url'] = response_image?.data[0]?.filename;
+                }
+                pdf_list[i]['url'] = pdf_list[i]['url'].replaceAll(backUrl, "");
+            }
+          
             let obj = {
                 address: values?.address,
+                pdf_list: JSON.stringify(pdf_list),
                 zip_code: values?.zip_code,
                 address_detail: values?.address_detail,
                 deposit: parseInt(values?.deposit) * 10000,
@@ -265,6 +286,12 @@ const AddContract = () => {
             img_list[i]['url'] = backUrl + img_list[i]['url'];
         }
         setImgList(img_list);
+        let pdf_list = JSON.parse(obj['pdf_list']);
+        for (var i = 0; i < pdf_list.length; i++) {
+            pdf_list[i]['url'] = backUrl + pdf_list[i]['url'];
+        }
+        setPdfList(pdf_list);
+        console.log(pdf_list)
         setValues({ ...values, landlord_appr: obj?.landlord_appr, lessee_appr: obj?.lessee_appr });
         if (obj['landlord_appr'] == 1 && obj['lessee_appr'] == 1) {
             setIsComplete(true);
@@ -348,9 +375,7 @@ const AddContract = () => {
     const addContract = async () => {
 
     }
-    const updateContract = async () => {
-
-    }
+   
     const addFile = (e) => {
         let { id, files } = e.target;
         if (e.target.files[0]) {
@@ -372,10 +397,11 @@ const AddContract = () => {
                 content: e.target.files[0]
             })
             setPdfList(pdf_list);
+            console.log(pdf_list)
         }
         $(`#${id}`).val("");
     };
-   
+
 
     return (
         <>
@@ -559,6 +585,56 @@ const AddContract = () => {
                                             <input type="file" id={`document_src`} onChange={addFile} style={{ display: 'none' }} />
                                         </div>
                                         <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF업로드</CategoryName>
+                                        <div style={{ display: 'flex', flexDirection:'column' }}>
+                                            {pdfList.map((item, idx) => (
+                                                <>
+                                                    <div style={{
+                                                        margin: 'auto 0.25rem',
+                                                        position: 'relative',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        cursor: 'pointer',
+                                                        color: theme.color.background1,
+                                                    }}
+                                                        onMouseOver={() => {
+                                                            let pdf_list = [...pdfList];
+                                                            pdf_list[idx]['hover'] = true;
+                                                            setPdfList([...pdf_list]);
+                                                        }}
+                                                        onMouseLeave={() => {
+                                                            let pdf_list = [...pdfList];
+                                                            pdf_list[idx]['hover'] = false;
+                                                            setPdfList([...pdf_list]);
+                                                        }}
+                                                    >
+                                                        <a href={item?.url} download={item?.content?.name || item?.name} style={{ textDecoration: 'none', color: theme.color.background1 }}>
+                                                            {item?.content?.name || item?.name}
+                                                        </a>
+                                                        {item.hover ?
+                                                            <>
+                                                                <Icon icon="material-symbols:cancel" style={{
+                                                                    position: 'absolute',
+                                                                    top: '-0.5rem',
+                                                                    left: '-0.5rem',
+                                                                    color: theme.color.red,
+                                                                    fontSize: theme.size.font2,
+                                                                    cursor: 'pointer'
+                                                                }}
+                                                                    onClick={() => {
+                                                                        let pdf_list = [...pdfList];
+                                                                        pdf_list.splice(idx, 1);
+                                                                        setPdfList([...pdf_list]);
+                                                                    }}
+                                                                />
+                                                            </>
+                                                            :
+                                                            <>
+                                                            </>}
+                                                    </div>
+
+                                                </>
+                                            ))}
+                                        </div>
                                         <div style={{ margin: '8px auto 0px 0px' }} for={`pdf_src`}>
                                             <label style={{ ...colorButtonStyle, cursor: 'pointer', padding: '8px 16px', borderRadius: '4px' }} for={`pdf_src`}>
                                                 업로드
