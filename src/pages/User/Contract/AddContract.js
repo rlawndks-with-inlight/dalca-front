@@ -1,6 +1,6 @@
 //계약생성
 
-import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, postCodeStyle, smallButtonStyle, Title, Wrappers } from "../../../components/elements/UserContentTemplete";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -28,6 +28,8 @@ import Modal from '../../../components/Modal';
 import DaumPostcode from 'react-daum-postcode';
 import Loading from "../../../components/Loading";
 import { range, returnMoment } from "../../../functions/utils";
+import { CategoryName } from "../../../components/elements/AuthContentTemplete";
+import AddButton from "../../../components/elements/button/AddButton";
 
 const steps = ['계약서등록', '임대인\n동의구하기', '임차인\n동의구하기', '완료'];
 const stepLabelStyle = {
@@ -41,8 +43,8 @@ const AddContract = () => {
     const [skipped, setSkipped] = useState(new Set());
     const [landlordList, setLandlordList] = useState([]);
     const [lesseeList, setLesseeList] = useState([]);
-    const [imgUrlObj, setImgUrlObj] = useState({});
-    const [imgContentObj, setImgContentObj] = useState({});
+    const [imgList, setImgList] = useState([]);
+    const [pdfList, setPdfList] = useState([]);
     const [isSeePostCode, setIsSeePostCode] = useState(false);
     const [userData, setUserData] = useState({});
     const [isComplete, setIsComplete] = useState(false);
@@ -103,9 +105,12 @@ const AddContract = () => {
         let obj = response?.data;
         obj['monthly'] = obj['monthly'] / 10000;
         obj['deposit'] = obj['deposit'] / 10000;
-        if (obj['document_src']) {
-            setImgUrlObj({ ...imgUrlObj, ['document_src']: backUrl + obj['document_src'] })
+
+        let img_list = JSON.parse(obj['document_src']);
+        for (var i = 0; i < img_list.length; i++) {
+            img_list[i]['url'] = backUrl + img_list[i]['url'];
         }
+        setImgList(img_list);
 
         if (obj['landlord_pk'] > 0) {
             const { data: response_landlord } = await axios.get(`/api/item?table=user&pk=${obj['landlord_pk']}`);
@@ -209,13 +214,18 @@ const AddContract = () => {
                 return;
             }
             let response_img = undefined;
-            if (imgContentObj?.document_src && imgUrlObj?.document_src != -1) {
-                let formData = new FormData();
-                formData.append('document_src', imgContentObj?.document_src);
-                const { data: response_image } = await axios.post('/api/addimageitems', formData);
-                response_img = response_image?.data[0];
+            let img_list = [...imgList];
+            for (var i = 0; i < img_list.length; i++) {
+                if (img_list[i].content) {
+                    let formData = new FormData();
+                    formData.append('document_src', img_list[i].content);
+                    const { data: response_image } = await axios.post('/api/addimageitems', formData);
+                    img_list[i]['content'] = "";
+                    img_list[i]['url'] = response_image?.data[0]?.filename;
+                }
+                img_list[i]['url'] = img_list[i]['url'].replaceAll(backUrl, "");
             }
-
+            console.log(img_list);
             let obj = {
                 address: values?.address,
                 zip_code: values?.zip_code,
@@ -226,12 +236,7 @@ const AddContract = () => {
                 end_date: values?.end_date,
                 pay_day: values?.pay_day,
                 is_user: true,
-            }
-            if (response_img) {
-                obj['document_src'] = response_img?.filename;
-            }
-            if (imgUrlObj?.document_src == -1) {
-                obj['document_src'] = -1;
+                document_src: JSON.stringify(img_list)
             }
             if (params?.pk) {
                 obj['pk'] = params?.pk;
@@ -255,6 +260,11 @@ const AddContract = () => {
     const getCheckContractAppr = async () => {
         const { data: response } = await axios.get(`/api/item?table=contract&pk=${params?.pk}`);
         let obj = response?.data;
+        let img_list = JSON.parse(obj['document_src']);
+        for (var i = 0; i < img_list.length; i++) {
+            img_list[i]['url'] = backUrl + img_list[i]['url'];
+        }
+        setImgList(img_list);
         setValues({ ...values, landlord_appr: obj?.landlord_appr, lessee_appr: obj?.lessee_appr });
         if (obj['landlord_appr'] == 1 && obj['lessee_appr'] == 1) {
             setIsComplete(true);
@@ -344,20 +354,28 @@ const AddContract = () => {
     const addFile = (e) => {
         let { id, files } = e.target;
         if (e.target.files[0]) {
-            let img_content_obj = { ...imgContentObj };
-            let img_url_obj = { ...imgUrlObj };
-            img_content_obj[`${id}`] = e.target.files[0];
-            img_url_obj[`${id}`] = URL.createObjectURL(e.target.files[0]);
-            setImgContentObj({ ...img_content_obj });
-            setImgUrlObj({ ...img_url_obj });
+            let img_list = [...imgList];
+            img_list.push({
+                url: URL.createObjectURL(e.target.files[0]),
+                content: e.target.files[0]
+            })
+            setImgList(img_list);
         }
         $(`#${id}`).val("");
     };
-    const imgReset = (column) => {
-        let img_url_obj = { ...imgUrlObj };
-        img_url_obj[column] = -1;
-        setImgUrlObj({ ...img_url_obj });
-    }
+    const addPdf = (e) => {
+        let { id, files } = e.target;
+        if (e.target.files[0]) {
+            let pdf_list = [...pdfList];
+            pdf_list.push({
+                url: URL.createObjectURL(e.target.files[0]),
+                content: e.target.files[0]
+            })
+            setPdfList(pdf_list);
+        }
+        $(`#${id}`).val("");
+    };
+   
 
     return (
         <>
@@ -484,34 +502,71 @@ const AddContract = () => {
                                                 })}
                                             </CustomSelect>
                                         </FormControl>
-                                        <ImageContainer for={`document_src`} style={{ margin: '0', width: '100%' }}>
+                                        <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>이미지업로드</CategoryName>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                            {imgList.map((item, idx) => (
+                                                <>
+                                                    <div style={{
+                                                        margin: 'auto 0.25rem',
+                                                        position: 'relative'
+                                                    }}
+                                                        onMouseOver={() => {
+                                                            let img_list = [...imgList];
+                                                            img_list[idx]['hover'] = true;
+                                                            setImgList([...img_list]);
+                                                        }}
+                                                        onMouseLeave={() => {
+                                                            let img_list = [...imgList];
+                                                            img_list[idx]['hover'] = false;
+                                                            setImgList([...img_list]);
+                                                        }}
+                                                    >
+                                                        {item.hover ?
+                                                            <>
+                                                                <Icon icon="material-symbols:cancel" style={{
+                                                                    position: 'absolute',
+                                                                    top: '-0.5rem',
+                                                                    right: '-0.5rem',
+                                                                    color: theme.color.red,
+                                                                    fontSize: theme.size.font2,
+                                                                    cursor: 'pointer'
+                                                                }}
+                                                                    onClick={() => {
+                                                                        let img_list = [...imgList];
+                                                                        img_list.splice(idx, 1);
+                                                                        setImgList([...img_list]);
+                                                                    }}
+                                                                />
+                                                            </>
+                                                            :
+                                                            <>
+                                                            </>}
+                                                        <img src={item?.url} alt="#"
+                                                            style={{
+                                                                height: '8rem', width: 'auto'
+                                                            }} />
+                                                    </div>
 
-                                            {imgUrlObj[`document_src`] && imgUrlObj[`document_src`] != -1 ?
-                                                <>
-                                                    <img src={imgUrlObj[`document_src`]} alt="#"
-                                                        style={{
-                                                            width: 'auto', maxHeight: '8rem',
-                                                            maxWidth: '80%',
-                                                            margin: 'auto'
-                                                        }} />
                                                 </>
-                                                :
-                                                <>
-                                                    <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
-                                                </>}
-                                        </ImageContainer>
+                                            ))}
+                                        </div>
+                                        <div style={{ margin: '8px auto 0px 0px' }} for={`document_src`}>
+                                            <label style={{ ...colorButtonStyle, cursor: 'pointer', padding: '8px 16px', borderRadius: '4px' }} for={`document_src`}>
+                                                업로드
+                                            </label>
+                                        </div>
                                         <div>
                                             <input type="file" id={`document_src`} onChange={addFile} style={{ display: 'none' }} />
                                         </div>
-                                        {imgUrlObj[`document_src`] && imgUrlObj[`document_src`] != -1 ?
-                                            <>
-                                                <Explain style={{ margin: '8px auto 0px 0px' }}>
-                                                    <Button onClick={() => imgReset('document_src')}>초기화</Button>
-                                                </Explain>
-                                            </>
-                                            :
-                                            <>
-                                            </>}
+                                        <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF업로드</CategoryName>
+                                        <div style={{ margin: '8px auto 0px 0px' }} for={`pdf_src`}>
+                                            <label style={{ ...colorButtonStyle, cursor: 'pointer', padding: '8px 16px', borderRadius: '4px' }} for={`pdf_src`}>
+                                                업로드
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <input type="file" id={`pdf_src`} onChange={addPdf} style={{ display: 'none' }} />
+                                        </div>
                                     </motion.div>
 
                                 </>

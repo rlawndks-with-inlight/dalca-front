@@ -28,6 +28,9 @@ import Modal from '../../../components/Modal';
 import DaumPostcode from 'react-daum-postcode';
 import Loading from "../../../components/Loading";
 import { getEnLevelByNum, getKoLevelByNum } from "../../../functions/utils";
+import Slider from 'react-slick'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const Contract = () => {
     const navigate = useNavigate();
@@ -38,7 +41,8 @@ const Contract = () => {
     const [isSeePostCode, setIsSeePostCode] = useState(false);
     const [userData, setUserData] = useState({});
     const [loading, setLoading] = useState(false);
-
+    const [imgList, setImgList] = useState([]);
+    const [wantSeeImg, setWantSeeImg] = useState("");
     const [values, setValues] = useState({
         landlord_pk: 0,
         landlord_search: '',
@@ -79,14 +83,14 @@ const Contract = () => {
         } else {
             await localStorage.removeItem('auth')
             toast.error('로그인을 해주세요.');
-            navigate('/',{
-                state:{
-                    redirect_url:location.pathname
+            navigate('/', {
+                state: {
+                    redirect_url: location.pathname
                 }
             })
         }
     }
-        const getContract = async (user_data, is_render) => {
+    const getContract = async (user_data, is_render) => {
         try {
             setLoading(true);
             const { data: response } = await axios.get(`/api/item?table=contract&pk=${params?.pk}`);
@@ -98,9 +102,11 @@ const Contract = () => {
             obj['monthly'] = obj['monthly'] / 10000;
             obj['deposit'] = obj['deposit'] / 10000;
 
-            if (obj['document_src']) {
-                setImgUrlObj({ ...imgUrlObj, ['document_src']: backUrl + obj['document_src'] })
+            let img_list = JSON.parse(obj['document_src']);
+            for (var i = 0; i < img_list.length; i++) {
+                img_list[i]['url'] = backUrl + img_list[i]['url'];
             }
+            setImgList(img_list);
             if (obj['landlord_pk'] > 0) {
                 const { data: response_landlord } = await axios.get(`/api/item?table=user&pk=${obj['landlord_pk']}`);
                 obj['landlord'] = response_landlord?.data;
@@ -145,6 +151,14 @@ const Contract = () => {
             }
         })
     }
+    const settings = {
+        infinite: false,
+        speed: 500,
+        autoplay: false,
+        autoplaySpeed: 2500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+    };
     return (
         <>
             <Wrappers>
@@ -309,20 +323,30 @@ const Contract = () => {
                                     is_divider={true}
                                     value={values.realtor?.phone}
                                 />
-                                {imgUrlObj[`document_src`] ?
-                                    <>
-                                        <ImageContainer for={`document_src`} style={{ margin: '0', width: '100%' }}>
-                                            <img src={imgUrlObj[`document_src`]} alt="#"
-                                                style={{
-                                                    width: 'auto', maxHeight: '8rem',
-                                                    maxWidth: '80%',
-                                                    margin: 'auto'
-                                                }} />
-                                        </ImageContainer>
-                                    </>
-                                    :
-                                    <>
-                                    </>}
+                                 
+                                <div style={{ display: 'flex', overflowX:'auto' }}>
+                                {imgList.map((item, idx) => (
+                                        <>
+                                            <div style={{
+                                                margin: 'auto 0',
+                                                position: 'relative'
+                                            }}
+
+                                            >
+                                                <img src={item?.url} alt="#"
+                                                    style={{
+                                                        height: '8rem', width: 'auto',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => {
+                                                        setWantSeeImg(item?.url)
+                                                    }}
+                                                />
+                                            </div>
+
+                                        </>
+                                    ))}
+                                </div>
 
                                 <div style={{
                                     display: 'flex',
@@ -343,11 +367,20 @@ const Contract = () => {
                                     >{values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? '수락완료' : `${getKoLevelByNum(userData?.user_level)} 수락`}</Button>
                                 </div>
                             </motion.div>
+                            {wantSeeImg ?
+                                <>
+                                    <Modal onClickXbutton={() => { setWantSeeImg("") }}>
+                                        <img src={wantSeeImg} style={{ width: '80%', maxHeight: '90vh' }} />
+                                    </Modal>
+                                </>
+                                :
+                                <>
+                                </>}
                         </ContentWrappers>
                     </>}
-
             </Wrappers>
         </>
     )
 }
+
 export default Contract;

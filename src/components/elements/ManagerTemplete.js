@@ -69,7 +69,7 @@ export const ImageContainer = styled.label`
 border: 1px dashed ${props=>props.theme.color.font4};
 margin:12px auto 6px 24px;
 width:100%;
-height:12rem;
+min-height:12rem;
 border-radius:4px;
 text-align:center;
 display:flex;

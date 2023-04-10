@@ -19,7 +19,7 @@ display:flex;
 const ModalOverlay = styled.div`
 background-color: black;
 width:100%;
-height: 100vw;
+height: 100vh;
 position: absolute;
 opacity: 0.4;
 `
