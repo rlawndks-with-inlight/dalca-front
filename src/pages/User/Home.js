@@ -157,12 +157,20 @@ const Home = () => {
                                     data={post?.pay ?? []}
                                     schema={`pay_${userData?.user_level}`}
                                     table={'pay'} />
-                                <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
-                                <ContentTable
-                                    columns={objHistoryListContent[`point`] ?? []}
-                                    data={post?.point ?? []}
-                                    schema={'point'}
-                                />
+                                {userData?.user_level != 5 ?
+                                    <>
+                                        <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
+                                        <ContentTable
+                                            columns={objHistoryListContent[`point`] ?? []}
+                                            data={post?.point ?? []}
+                                            schema={'point'}
+                                        />
+                                    </>
+                                    :
+                                    <>
+                                    </>
+                                }
+
 
                             </>
                             :

@@ -167,7 +167,7 @@ export const smallButtonStyle = {
     position: 'absolute',
     right: '2px',
     minWidth: '12px',
-    height: '45px',
+    height: '46px',
     width: '72px',
     top: '10px',
     borderTopRightRadius: '4px',
@@ -177,12 +177,13 @@ export const smallButtonStyle = {
     fontSize: `${theme.size.font5}`,
     fontWeight: 'bold',
     ml: 'auto',
-    background: `${theme.color.background3}`,
+    color:'#fff',
+    background: `${theme.color.background1}`,
     '&:hover': {
-        background: `${theme.color.font4_5}`,
+        background: `${theme.color.background1}`,
     },
     '&:active': {
-        background: `${theme.color.background3}`,
+        background: `${theme.color.background1}`,
     },
 }
 export const colorButtonStyle = {

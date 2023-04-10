@@ -179,6 +179,7 @@ const ChangeCard = () => {
                             className="cvc"
                             label='CVC 번호'
                             value={cvc}
+                            type='password'
                             autoComplete='off'
                             onBlur={handleBlur}
                             onChange={handleInputChange}

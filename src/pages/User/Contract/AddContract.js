@@ -30,7 +30,9 @@ import Loading from "../../../components/Loading";
 import { range, returnMoment } from "../../../functions/utils";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
 import AddButton from "../../../components/elements/button/AddButton";
-
+//./component/socket.js
+import React from 'react';
+import io from "socket.io-client";
 const steps = ['계약서등록', '임대인\n동의구하기', '임차인\n동의구하기', '완료'];
 const stepLabelStyle = {
     whiteSpace: 'pre'
@@ -433,7 +435,7 @@ const AddContract = () => {
                                         <div onClick={() => {
                                         }}>
                                             <InputComponent
-                                                label={'주소* '}
+                                                label={'계약주소* '}
                                                 input_type={{
                                                     placeholder: '',
                                                     disabled: "true"

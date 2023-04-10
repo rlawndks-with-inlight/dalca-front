@@ -35,7 +35,7 @@ white-space:pre;
 `
 const ContentTable = (props) => {
     const navigate = useNavigate();
-    const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting } = props;
+    const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting, onClickList } = props;
     const [columns, setColumns] = useState([]);
     const [loading, setLoading] = useState(false);
     const onClickEvent = (str) => {
@@ -52,8 +52,7 @@ const ContentTable = (props) => {
             setLoading(false);
         }
     }, [columns])
-    useEffect(() => {
-    }, [data])
+    
     const deleteItem = async (pk, table, cha) => {
         Swal.fire({
             title: `정말로 ${cha ?? '삭제'}하시겠습니까?`,
@@ -76,6 +75,7 @@ const ContentTable = (props) => {
             }
         })
     }
+   
     const getStarBynum = (num) => {
         let str = '';
         for (var i = 0; i < num; i++) {
@@ -180,7 +180,7 @@ const ContentTable = (props) => {
                                 ))}
                             </Tr>
                             {data && data.map((item, idx) => (
-                                <Tr onClick={() => { click ? onClickEvent(`${click + '/' + item.pk}`) : onClickEvent(``) }}>
+                                <Tr onClick={() => onClickList(item, idx)} style={{ cursor: `${onClickList ? 'pointer' : ''}` }}>
                                     {columns && columns.map((column, idx) => (
                                         <>
                                             <Td style={{ width: column.width, color: `${column.color ? column.color : ''}`, cursor: `${isPointer ? 'pointer' : ''}`, fontWeight: `${column.bold ? 'bold' : ''}` }}>

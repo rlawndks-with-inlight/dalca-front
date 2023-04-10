@@ -14,6 +14,9 @@ import $ from 'jquery';
 import axios from "axios";
 import { formatPhoneNumber, regExp } from "../../../functions/utils";
 import Swal from "sweetalert2";
+import { ImageContainer } from "../../../components/elements/ManagerTemplete";
+import { AiFillFileImage } from "react-icons/ai";
+import { CategoryName } from "../../../components/elements/AuthContentTemplete";
 const SignUp = () => {
     const params = useParams();
     const navigate = useNavigate();
@@ -41,12 +44,14 @@ const SignUp = () => {
         user_level: params?.user_level
     }
     const realtorObj = {
-        company_number: '',
-        office_name: '',
-        office_number: '',
-        office_classification: '',
-        broker_classification: '',
-        status_classification: '',
+        office_name: '',//중개업소명칭
+        company_number: '',//사업자등록번호
+        office_address: '',//사무실주소
+        office_phone: '',//사무실연락처
+        company_number_src: '',// 파일 -> 사업자등록증
+        office_src: '',// 파일 -> 중개업소등록증
+        bank_book_src: '',// 파일 -> 통장사본
+        id_number_src: '',// 파일 -> 신분증
     }
     const handleChange = (value, key) => {
         setValues({ ...values, [key]: value });
@@ -101,34 +106,42 @@ const SignUp = () => {
     const onSignUp = () => {
         if (!values.id) {
             toast.error('아이디를 입력해주세요.');
+            setStep(0);
             return;
         }
         if (values.id.includes(' ')) {
             toast.error('아이디의 공백을 제거해 주세요.');
+            setStep(0);
             return;
         }
         if (!regExp('id', values.id)) {
             toast.error('아이디 정규식에 맞지 않습니다.');
+            setStep(0);
             return;
         }
         if (!isCheckId) {
             toast.error('아이디 중복확인을 완료해 주세요.');
+            setStep(0);
             return;
         }
         if (!values.pw) {
             toast.error('비밀번호를 입력해주세요.');
+            setStep(0);
             return;
         }
         if (!regExp('pw', values.pw)) {
             toast.error('비밀번호 정규식을 지켜주세요.');
+            setStep(0);
             return;
         }
         if (values.pw !== values.pw_check) {
             toast.error('비밀번호가 일치하지 않습니다.');
+            setStep(0);
             return;
         }
         if (!values.address) {
             toast.error('주소를 입력해 주세요.');
+            setStep(0);
             return;
         }
         // if (!$('.id_number').val()) {
@@ -137,25 +150,30 @@ const SignUp = () => {
         // }
         if (!values.phone) {
             toast.error('휴대폰 번호를 입력해 주세요.');
+            setStep(0);
             return;
         }
-         if (!isCheckPhone) {
-             toast.error('휴대폰 번호 인증을 완료해 주세요.');
-             return;
+        if (values.phoneCheck != randNum) {
+            toast.error('휴대폰 인증번호가 일치하지 않습니다.');
+            setStep(0);
+            return;
         }
         if (!values.name) {
             toast.error('이름을 입력해 주세요.');
+            setStep(0);
             return;
         }
-        if (!regExp('name', values.name)) {
-            toast.error('이름 정규식을 지켜주세요.');
-            return;
-        }
+        // if (!regExp('name', values.name)) {
+        //     toast.error('이름 정규식을 지켜주세요.');
+        //     setStep(0);
+        //     return;
+        // }
         if (params.user_level == 10) {
-            for(var i = 0;i<Object.keys(realtorObj).length;i++){
+            for (var i = 0; i < Object.keys(realtorObj).length; i++) {
                 let key = Object.keys(realtorObj)[i];
-                if(!values[key]){
+                if (!values[key]) {
                     toast.error('중개업 확인 내용을 채워주세요.');
+                    setStep(1);
                     return;
                 }
             }
@@ -178,7 +196,24 @@ const SignUp = () => {
             let add_obj = {
 
             }
-            obj = { ...obj, add_obj };
+            let num = 1;
+            for(var i = 0;i<Object.keys(realtorObj).length;i++){
+                let key = Object.keys(realtorObj)[i];
+                if(key.includes('_src')){
+                    let formData = new FormData();
+                    formData.append(`content${num}`, values[key]);
+                    const {data:add_image} = await axios.post('/api/addimageitems',formData);
+                    if(add_image.result<0){
+                        toast.error(add_image?.message);
+                        return;
+                    }
+                    num++;
+                    add_obj[key] = add_image?.data[0]?.filename;
+                }else{
+                    add_obj[key] = values[key];
+                }
+            }
+            obj = { ...obj, ...add_obj };
         }
         obj = { ...obj, ['id_number']: obj?.id_number_front + '-' + obj?.id_number_back }
         const { data: response } = await axios.post('/api/adduser', obj);
@@ -223,7 +258,7 @@ const SignUp = () => {
         }
         fix_phone = fix_phone.replaceAll('-', '');
         fix_phone = fix_phone.replaceAll(' ', '');
-        setValues({...values, phone:fix_phone});
+        setValues({ ...values, phone: fix_phone });
         let content = "";
         for (var i = 0; i < 6; i++) {
             content += Math.floor(Math.random() * 10).toString();
@@ -249,6 +284,13 @@ const SignUp = () => {
         }
         //console.log(response)
     }
+    const addFile = (e) => {
+        let { name, files } = e.target;
+        if (files[0]) {
+            setValues({ ...values, [name]: files[0] });
+            $(`.${name}`).val("");
+        }
+    };
     return (
         <>
             <FakeHeaders label='회원가입' />
@@ -362,7 +404,7 @@ const SignUp = () => {
                                     placeholder: '-없이 숫자만 입력',
                                 }}
                                 class_name='phone'
-                                button_label={isCheckPhone ? '완료' : '인증'}
+                                button_label={isCheckPhone ? '완료' : '인증하기'}
                                 isButtonAble={!isCheckPhone}
                                 onClickButton={() => sendSms()}
                                 onChange={(e) => {
@@ -375,19 +417,8 @@ const SignUp = () => {
                                 label={'휴대폰인증번호*'}
                                 input_type={{
                                     placeholder: '인증번호를 입력해주세요.',
-                                    disabled: isCheckPhone
                                 }}
                                 class_name='phone'
-                                button_label={isCheckPhone ? '완료' : '확인'}
-                                isButtonAble={!isCheckPhone}
-                                onClickButton={() => {
-                                    if(values?.phoneCheck == randNum){
-                                        toast.success("휴대폰인증에 성공하였습니다.");
-                                        setIsCheckPhone(true);
-                                    }else{
-                                        toast.error("인증번호가 일치하지 않습니다.");
-                                    }
-                                }}
                                 onChange={(e) => handleChange(e, 'phoneCheck')}
                                 value={values.phoneCheck}
                             />
@@ -409,17 +440,7 @@ const SignUp = () => {
                         <>
                             <HalfTitle>{'중개업확인'}</HalfTitle>
                             <InputComponent
-                                label={'사업자등록번호'}
-                                input_type={{
-                                    placeholder: '대표자 필수입력'
-                                }}
-                                class_name='company_number'
-                                is_divider={true}
-                                onChange={(e) => handleChange(e, 'company_number')}
-                                value={values.company_number}
-                            />
-                            <InputComponent
-                                label={'사무소명칭'}
+                                label={'중개업소명칭'}
                                 input_type={{
                                     placeholder: ''
                                 }}
@@ -429,45 +450,115 @@ const SignUp = () => {
                                 value={values.office_name}
                             />
                             <InputComponent
-                                label={'중개업소관리번호'}
+                                label={'사업자등록번호'}
                                 input_type={{
-                                    placeholder: ''
+                                    placeholder: '필수입력'
                                 }}
-                                class_name='office_number'
+                                class_name='company_number'
                                 is_divider={true}
-                                onChange={(e) => handleChange(e, 'office_number')}
-                                value={values.office_number}
+                                onChange={(e) => handleChange(e, 'company_number')}
+                                value={values.company_number}
                             />
                             <InputComponent
-                                label={'중개업소직위구분'}
+                                label={'사무실주소'}
                                 input_type={{
-                                    placeholder: ''
+                                    placeholder: '필수입력'
                                 }}
-                                class_name='office_classification'
+                                class_name='office_address'
                                 is_divider={true}
-                                onChange={(e) => handleChange(e, 'office_classification')}
-                                value={values.office_classification}
+                                onChange={(e) => handleChange(e, 'office_address')}
+                                value={values.office_address}
                             />
                             <InputComponent
-                                label={'중개인구분'}
+                                label={'사무실연락처'}
                                 input_type={{
                                     placeholder: ''
                                 }}
-                                class_name='broker_classification'
+                                class_name='office_phone'
                                 is_divider={true}
-                                onChange={(e) => handleChange(e, 'broker_classification')}
-                                value={values.broker_classification}
+                                onChange={(e) => handleChange(e, 'office_phone')}
+                                value={values.office_phone}
                             />
-                            <InputComponent
-                                label={'상태구분'}
-                                input_type={{
-                                    placeholder: ''
-                                }}
-                                class_name='status_classification'
-                                is_divider={true}
-                                onChange={(e) => handleChange(e, 'status_classification')}
-                                value={values.status_classification}
-                            />
+                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>사업자등록증사진</CategoryName>
+                            <ImageContainer for={`company_number_src`} style={{margin:'auto'}}>
+
+                                {values?.company_number_src ?
+                                    <>
+                                        <img src={URL.createObjectURL(values?.company_number_src)} alt="#"
+                                            style={{
+                                                width: 'auto', maxHeight: '8rem',
+                                                maxWidth: '80%',
+                                                margin: 'auto'
+                                            }} />
+                                    </>
+                                    :
+                                    <>
+                                        <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                    </>}
+                            </ImageContainer>
+                            <div>
+                                <input type="file" id={`company_number_src`} name={'company_number_src'} onChange={addFile} style={{ display: 'none' }} />
+                            </div>
+                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>중개업소등록증사진</CategoryName>
+                            <ImageContainer for={`office_src`} style={{margin:'auto'}}>
+
+                                {values?.office_src ?
+                                    <>
+                                        <img src={URL.createObjectURL(values?.office_src)} alt="#"
+                                            style={{
+                                                width: 'auto', maxHeight: '8rem',
+                                                maxWidth: '80%',
+                                                margin: 'auto'
+                                            }} />
+                                    </>
+                                    :
+                                    <>
+                                        <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                    </>}
+                            </ImageContainer>
+                            <div>
+                                <input type="file" id={`office_src`} name={'office_src'} onChange={addFile} style={{ display: 'none' }} />
+                            </div>
+                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>통장사본사진</CategoryName>
+                            <ImageContainer for={`bank_book_src`} style={{margin:'auto'}}>
+
+                                {values?.bank_book_src ?
+                                    <>
+                                        <img src={URL.createObjectURL(values?.bank_book_src)} alt="#"
+                                            style={{
+                                                width: 'auto', maxHeight: '8rem',
+                                                maxWidth: '80%',
+                                                margin: 'auto'
+                                            }} />
+                                    </>
+                                    :
+                                    <>
+                                        <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                    </>}
+                            </ImageContainer>
+                            <div>
+                                <input type="file" id={`bank_book_src`} name={'bank_book_src'} onChange={addFile} style={{ display: 'none' }} />
+                            </div>
+                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>신분증사진</CategoryName>
+                            <ImageContainer for={`id_number_src`} style={{margin:'auto'}}>
+
+                                {values?.id_number_src ?
+                                    <>
+                                        <img src={URL.createObjectURL(values?.id_number_src)} alt="#"
+                                            style={{
+                                                width: 'auto', maxHeight: '8rem',
+                                                maxWidth: '80%',
+                                                margin: 'auto'
+                                            }} />
+                                    </>
+                                    :
+                                    <>
+                                        <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                    </>}
+                            </ImageContainer>
+                            <div>
+                                <input type="file" id={`id_number_src`} name={'id_number_src'} onChange={addFile} style={{ display: 'none' }} />
+                            </div>
                         </>
                         :
                         <>

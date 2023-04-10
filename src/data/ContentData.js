@@ -39,9 +39,9 @@ export const zBottomMenu = [
 export const zManagerLevel = [40, 50];
 export const zSidebarMenu = [
     { name: '주변 부동산', link: '/around-realestate', level_list: [0, 5, 10, ...zManagerLevel] },
-    { name: '결제카드변경', link: '/change-card', level_list: [0, ...zManagerLevel] },
+    { name: '결제카드등록 및 변경', link: '/change-card', level_list: [0, ...zManagerLevel] },
     { name: '계약내역', link: '/history/contract', level_list: [0, 5, 10, ...zManagerLevel] },
-    { name: '포인트내역', link: '/history/point', level_list: [0, 5, 10, ...zManagerLevel] },
+    { name: '포인트내역', link: '/history/point', level_list: [0, 10, ...zManagerLevel] },
     { name: '고객정보조회', link: '/customer-info', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '결제내역', link: '/history/pay', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '공지사항', link: '/list/notice', level_list: [0, 5, 10, ...zManagerLevel] },

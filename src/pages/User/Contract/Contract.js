@@ -185,7 +185,7 @@ const Contract = () => {
                                 <div onClick={() => {
                                 }}>
                                     <InputComponent
-                                        label={'주소* '}
+                                        label={'계약주소* '}
                                         input_type={{
                                             placeholder: '',
                                             disabled: "true"

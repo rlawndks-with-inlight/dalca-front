@@ -23,6 +23,8 @@ import DaumPostcode from 'react-daum-postcode';
 import Modal from '../../components/Modal';
 import { toast } from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import { AiFillFileImage } from 'react-icons/ai';
+import theme from '../../styles/theme';
 
 const Table = styled.table`
 font-size:12px;
@@ -104,12 +106,10 @@ const MUserEdit = () => {
                 address: $(`.address`).val(),
                 address_detail: $(`.address_detail`).val(),
                 zip_code: $(`.zip_code`).val(),
-                company_number: $(`.company_number`).val(),
-                office_name: $(`.office_name`).val(),
-                office_number: $(`.office_number`).val(),
-                office_classification: $(`.office_classification`).val(),
-                broker_classification: $(`.broker_classification`).val(),
-                status_classification: $(`.status_classification`).val(),
+                office_name: user?.office_name,
+                company_number: user?.company_number,
+                office_address: user?.office_address,
+                office_phone: user?.office_phone,
             }
             if (params?.pk > 0) {
                 obj['pk'] = params.pk;
@@ -121,6 +121,33 @@ const MUserEdit = () => {
                 cancelButtonText: '취소'
             }).then(async (result) => {
                 if (result.isConfirmed) {
+                    let realtor_src_list = [
+                        'company_number_src',
+                        'office_src',
+                        'bank_book_src',
+                        'id_number_src',
+                    ];
+                    let realtor_src_obj = {};
+                    if ($(`.level`).val() == 10) {
+
+                        let num = 1;
+                        for (var i = 0; i<realtor_src_list.length; i++) {
+                            if (typeof user[realtor_src_list[i]] == 'string') {
+                                realtor_src_obj[realtor_src_list[i]] = user[realtor_src_list[i]]
+                            } else {
+                                let formData = new FormData();
+                                formData.append(`content${num}`, user[realtor_src_list[i]]);
+                                const { data: add_image } = await axios.post('/api/addimageitems', formData);
+                                if (add_image.result < 0) {
+                                    toast.error(add_image?.message);
+                                    return;
+                                }
+                                num++;
+                                realtor_src_obj[realtor_src_list[i]] = add_image?.data[0]?.filename;
+                            }
+                        }
+                    }
+                    obj = { ...obj, ...realtor_src_obj };
                     const { data: response } = await axios.post(`/api/${params?.pk == 0 ? 'add' : 'update'}user`, obj);
                     if (response?.result > 0) {
                         toast.success(response.message);
@@ -158,6 +185,13 @@ const MUserEdit = () => {
     const onChangeUserLevel = (e) => {
         setUserLevel(e.target.value)
     }
+    const addFile = (e) => {
+        let { name, files } = e.target;
+        if (files[0]) {
+            setUser({ ...user, [name]: files[0] });
+            $(`.${name}`).val("");
+        }
+    };
     return (
         <>
             <Breadcrumb title={params.pk == 0 ? '회원 추가' : '회원 수정'} nickname={myNick} />
@@ -201,31 +235,118 @@ const MUserEdit = () => {
                     <>
                         <Row>
                             <Col>
+                                <Title style={{ margintop: '32px' }}>중개업소명칭</Title>
+                                <Input className='office_name' defaultValue={user?.office_name} onChange={(e) => { setUser({ ...user, office_name: e.target.value }) }} />
+                            </Col>
+                            <Col>
                                 <Title style={{ margintop: '32px' }}>사업자등록번호</Title>
                                 <Input className='company_number' defaultValue={user?.company_number} onChange={(e) => { setUser({ ...user, company_number: e.target.value }) }} />
                             </Col>
                             <Col>
-                                <Title style={{ margintop: '32px' }}>사무소명칭</Title>
-                                <Input className='office_name' defaultValue={user?.office_name} onChange={(e) => { setUser({ ...user, office_name: e.target.value }) }} />
+                                <Title style={{ margintop: '32px' }}>사무실주소</Title>
+                                <Input className='office_address' defaultValue={user?.office_address} onChange={(e) => { setUser({ ...user, office_address: e.target.value }) }} />
                             </Col>
                             <Col>
-                                <Title style={{ margintop: '32px' }}>중개업소관리번호</Title>
-                                <Input className='office_number' defaultValue={user?.office_number} onChange={(e) => { setUser({ ...user, office_number: e.target.value }) }} />
+                                <Title style={{ margintop: '32px' }}>사무실연락처</Title>
+                                <Input className='office_phone' defaultValue={user?.office_phone} onChange={(e) => { setUser({ ...user, office_phone: e.target.value }) }} />
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <Title style={{ margintop: '32px' }}>중개업소직위구분</Title>
-                                <Input className='office_classification' defaultValue={user?.office_classification} onChange={(e) => { setUser({ ...user, office_classification: e.target.value }) }} />
+                                <Title>사업자등록증사진</Title>
+                                <ImageContainer for="company_number_src">
+
+                                    {user?.company_number_src ?
+                                        <>
+                                            <img src={(typeof user?.company_number_src == 'string') ? (backUrl + user?.company_number_src) : URL.createObjectURL(user?.company_number_src)} alt="#"
+                                                style={{
+                                                    height: '150px',
+                                                    width: 'auto',
+                                                    margin: 'auto'
+                                                }} />
+                                        </>
+                                        :
+                                        <>
+                                            <AiFillFileImage style={{ margin: '4rem', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                        </>}
+                                </ImageContainer>
+                                <div>
+                                    <input type="file" id="company_number_src" name={'company_number_src'} onChange={addFile} style={{ display: 'none' }} />
+                                </div>
                             </Col>
+                        </Row>
+                        <Row>
                             <Col>
-                                <Title style={{ margintop: '32px' }}>중개인구분</Title>
-                                <Input className='broker_classification' defaultValue={user?.broker_classification} onChange={(e) => { setUser({ ...user, broker_classification: e.target.value }) }} />
+                                <Title>중개업소등록증사진</Title>
+                                <ImageContainer for="office_src">
+
+                                    {user?.office_src ?
+                                        <>
+                                            <img src={(typeof user?.office_src == 'string') ? (backUrl + user?.office_src) : URL.createObjectURL(user?.office_src)} alt="#"
+                                                style={{
+                                                    height: '150px',
+                                                    width: 'auto',
+                                                    margin: 'auto'
+                                                }} />
+                                        </>
+                                        :
+                                        <>
+                                            <AiFillFileImage style={{ margin: '4rem', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                        </>}
+                                </ImageContainer>
+                                <div>
+                                    <input type="file" id="office_src" name={'office_src'} onChange={addFile} style={{ display: 'none' }} />
+                                </div>
                             </Col>
+                        </Row>
+                        <Row>
                             <Col>
-                                <Title style={{ margintop: '32px' }}>상태구분</Title>
-                                <Input className='status_classification' defaultValue={user?.status_classification} onChange={(e) => { setUser({ ...user, status_classification: e.target.value }) }} />
+                                <Title>통장사본사진</Title>
+                                <ImageContainer for="bank_book_src">
+
+                                    {user?.bank_book_src ?
+                                        <>
+                                            <img src={(typeof user?.bank_book_src == 'string') ? (backUrl + user?.bank_book_src) : URL.createObjectURL(user?.bank_book_src)} alt="#"
+                                                style={{
+                                                    height: '150px',
+                                                    width: 'auto',
+                                                    margin: 'auto'
+                                                }} />
+                                        </>
+                                        :
+                                        <>
+                                            <AiFillFileImage style={{ margin: '4rem', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                        </>}
+                                </ImageContainer>
+                                <div>
+                                    <input type="file" id="bank_book_src" name={'bank_book_src'} onChange={addFile} style={{ display: 'none' }} />
+                                </div>
                             </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Title>신분증사진</Title>
+                                <ImageContainer for="id_number_src">
+
+                                    {user?.id_number_src ?
+                                        <>
+                                            <img src={(typeof user?.id_number_src == 'string') ? (backUrl + user?.id_number_src) : URL.createObjectURL(user?.id_number_src)} alt="#"
+                                                style={{
+                                                    height: '150px',
+                                                    width: 'auto',
+                                                    margin: 'auto'
+                                                }} />
+                                        </>
+                                        :
+                                        <>
+                                            <AiFillFileImage style={{ margin: '4rem', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                        </>}
+                                </ImageContainer>
+                                <div>
+                                    <input type="file" id="id_number_src" name={'id_number_src'} onChange={addFile} style={{ display: 'none' }} />
+                                </div>
+                            </Col>
+
                         </Row>
                     </>
                     :

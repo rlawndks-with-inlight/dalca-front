@@ -108,6 +108,11 @@ const AroundRealEstate = () => {
         setPosts(items);
         setLoading(false);
     }
+    const onClickList = (item, idx) =>{
+        setLat(item?.lat);
+        setLng(item?.lng);
+        getRealEstate(page)
+    }
     return (
         <>
             <Wrappers>
@@ -150,7 +155,6 @@ const AroundRealEstate = () => {
                                                 color={"red"}
                                                 animation={2}
                                                 title={item?.name}
-                                                content={'asd'}
                                             />
                                         ))}
                                     </NaverMap>
@@ -160,6 +164,7 @@ const AroundRealEstate = () => {
                                     data={posts.splice((page - 1) * 10, page * 10)}
                                     schema={'real_estate'}
                                     table={'real_estate'}
+                                    onClickList={onClickList}
                                 />
                                 <MBottomContent>
                                     <div />

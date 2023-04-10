@@ -26,6 +26,15 @@ font-size:${theme.size.font4};
     font-size:${theme.size.font5};
 }
 `
+const getUserInfoByLevel = (level, data) =>{
+    if(level==10){
+        return <>
+        <div style={{ marginBottom: '8px' }}>부동산명: {data?.office_name}</div>
+        </>
+    }
+
+    return "";
+}
 const UserCard = (props) => {
     const { data } = props;
     return (
@@ -37,7 +46,8 @@ const UserCard = (props) => {
                 <InfoContainer>
                     <div style={{ marginBottom: '8px' }}>이름: {data?.name}</div>
                     <div style={{ marginBottom: '8px' }}>전화번호: {data?.phone}</div>
-                    <div>주민등록번호: {data?.id_number.substring(0, 7)}*******</div>
+                    <div style={{ marginBottom: '8px' }}>주민등록번호: {data?.id_number.substring(0, 7)}*******</div>
+                    {getUserInfoByLevel(data?.user_level, data)}
                 </InfoContainer>
             </ShadowContainer>
         </>
