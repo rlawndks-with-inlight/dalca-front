@@ -75,7 +75,7 @@ const zUserRoute = [
     { link: '/request', element: <Request />, title: "" },
     { link: '/request/:pk', element: <Request />, title: "" },
     { link: '/payready/:contract_pk', element: <PayReady />, title: "" },
-    { link: '/change-card', element: <ChangeCard />, title: "" },
+    { link: '/card/:category', element: <ChangeCard />, title: "" },
     { link: '/around-realestate', element: <AroundRealEstate />, title: "" },
     
     //{ link: '/payready/:pk', element: <PayReady />, title: "결제준비" },

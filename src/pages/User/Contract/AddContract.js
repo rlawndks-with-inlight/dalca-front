@@ -118,7 +118,6 @@ const AddContract = () => {
             pdf_list[i]['url'] = backUrl + pdf_list[i]['url'];
         }
         setPdfList(pdf_list);
-        console.log(obj)
 
         if (obj['landlord_pk'] > 0) {
             const { data: response_landlord } = await axios.get(`/api/item?table=user&pk=${obj['landlord_pk']}`);
@@ -238,7 +237,6 @@ const AddContract = () => {
                     let formData = new FormData();
                     formData.append('pdf', pdf_list[i].content);
                     const { data: response_image } = await axios.post('/api/addimageitems', formData);
-                    console.log(response_image)
                     if(!pdf_list[i]['name']){
                         pdf_list[i]['name'] = pdf_list[i]['content']['name'];
                     }
@@ -293,7 +291,6 @@ const AddContract = () => {
             pdf_list[i]['url'] = backUrl + pdf_list[i]['url'];
         }
         setPdfList(pdf_list);
-        console.log(pdf_list)
         setValues({ ...values, landlord_appr: obj?.landlord_appr, lessee_appr: obj?.lessee_appr });
         if (obj['landlord_appr'] == 1 && obj['lessee_appr'] == 1) {
             setIsComplete(true);
@@ -399,7 +396,6 @@ const AddContract = () => {
                 content: e.target.files[0]
             })
             setPdfList(pdf_list);
-            console.log(pdf_list)
         }
         $(`#${id}`).val("");
     };

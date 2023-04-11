@@ -46,7 +46,6 @@ const CustomerInfo = () => {
     }, [])
     const setting = async () => {
         let user_data = getLocalStorage('auth');
-        console.log(user_data);
         let level_list = [];
         for (var i = 0; i < default_level_list.length; i++) {
             if (default_level_list[i].level != user_data?.user_level) {
@@ -61,7 +60,6 @@ const CustomerInfo = () => {
         setCurrentLevel(level);
         setPage(page);
         const { data: response } = await axios.get(`/api/customer-info?level=${level}&page=${page}`);
-        console.log(response)
         if (response?.result < 0) {
             toast.error(response?.message);
             return;

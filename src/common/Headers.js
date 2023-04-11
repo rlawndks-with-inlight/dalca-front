@@ -166,7 +166,6 @@ const Headers = () => {
 
     function isAuth() {
       let user_auth = getLocalStorage('auth');
-      console.log(user_auth)
       setAuth(user_auth);
     }
     if (!location.pathname.includes('/manager')) {

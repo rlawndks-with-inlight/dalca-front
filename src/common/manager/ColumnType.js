@@ -93,7 +93,6 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
             </>
         }
     } else if (type == 'request_status') {
-        console.log(data[`${column}`])
         if (data[`status`] == 1) {
             result = "답변완료";
         } else {

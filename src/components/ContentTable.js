@@ -35,7 +35,7 @@ white-space:pre;
 `
 const ContentTable = (props) => {
     const navigate = useNavigate();
-    const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting, onClickList } = props;
+    const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting, onClickList, onClickEditButton } = props;
     const [columns, setColumns] = useState([]);
     const [loading, setLoading] = useState(false);
     const onClickEvent = (str) => {
@@ -52,7 +52,7 @@ const ContentTable = (props) => {
             setLoading(false);
         }
     }, [columns])
-    
+
     const deleteItem = async (pk, table, cha) => {
         Swal.fire({
             title: `정말로 ${cha ?? '삭제'}하시겠습니까?`,
@@ -75,7 +75,7 @@ const ContentTable = (props) => {
             }
         })
     }
-   
+
     const getStarBynum = (num) => {
         let str = '';
         for (var i = 0; i < num; i++) {
@@ -179,8 +179,12 @@ const ContentTable = (props) => {
                                     </>
                                 ))}
                             </Tr>
-                            {data && data.map((item, idx) => (
-                                <Tr onClick={() => onClickList(item, idx)} style={{ cursor: `${onClickList ? 'pointer' : ''}` }}>
+                            {data && data.map((item, index) => (
+                                <Tr onClick={() => { 
+                                    if(onClickList){
+                                        onClickList(item, index) 
+                                    }
+                                    }} style={{ cursor: `${onClickList ? 'pointer' : ''}` }}>
                                     {columns && columns.map((column, idx) => (
                                         <>
                                             <Td style={{ width: column.width, color: `${column.color ? column.color : ''}`, cursor: `${isPointer ? 'pointer' : ''}`, fontWeight: `${column.bold ? 'bold' : ''}` }}>
@@ -276,6 +280,16 @@ const ContentTable = (props) => {
                                                     commarNumber(item[column.column]) ?? "---"
                                                     :
                                                     null}
+                                                {column.type == 'edit' ?
+                                                    <IconButton onClick={() => {
+                                                        if(onClickEditButton){
+                                                            onClickEditButton(item, index) 
+                                                        }
+                                                    }}>
+                                                        <Icon icon="material-symbols:edit-outline-rounded" />
+                                                    </IconButton>
+                                                    :
+                                                    null}
                                                 {column.type == 'won' ?
                                                     `${commarNumber(item[column.column])}원` ?? "---"
                                                     :
@@ -305,7 +319,9 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'delete' ?
-                                                    <RiDeleteBinLine style={{ cursor: 'pointer', fontSize: theme.size.font4 }} onClick={() => deleteItem(item.pk, table, column.name)} />
+                                                    <IconButton onClick={() => deleteItem(item.pk, table, column.name)}>
+                                                        <Icon icon="material-symbols:delete-outline-sharp" />
+                                                    </IconButton>
                                                     :
                                                     null}
                                             </Td>

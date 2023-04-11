@@ -116,7 +116,6 @@ const MRealEstateEdit = () => {
 
     const onSelectAddress = async (data) => {
         setIsSeePostCode(false);
-        console.log(data)
         const { data: response } = await axios.post('/api/getaddressbytext', {
             text: data?.jibunAddress
         })
