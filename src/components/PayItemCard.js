@@ -82,6 +82,7 @@ const PayItemCard = (props) => {
                         price: item?.price,
                         buyer: user?.name,
                         tel: user?.phone,
+                        is_mobile:false
                     }
                     let query = Object.entries(obj).map(e => e.join('=')).join('&');
                     window.location.href = `https://worker1.payvery.kr/payment/welcome/auth?${query}`;
