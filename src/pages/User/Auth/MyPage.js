@@ -164,7 +164,7 @@ const MyPage = () => {
                         </Content>
                         <Content>
                             <Category>유저권한</Category>
-                            <Result>{getUserLevelByNumber(auth?.user_level)}</Result>
+                            <Result>{getUserLevelByNumber(auth?.user_level, true)}</Result>
                         </Content>
                         <Content>
                             <Category>전화번호</Category>

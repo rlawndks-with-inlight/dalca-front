@@ -17,6 +17,7 @@ import Swal from "sweetalert2";
 import { ImageContainer } from "../../../components/elements/ManagerTemplete";
 import { AiFillFileImage } from "react-icons/ai";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
+import Policy from "../Policy/Policy";
 const SignUp = () => {
     const params = useParams();
     const navigate = useNavigate();
@@ -47,6 +48,9 @@ const SignUp = () => {
         office_name: '',//중개업소명칭
         company_number: '',//사업자등록번호
         office_address: '',//사무실주소
+        office_zip_code: '',//사무실우편번호
+        office_lng: '',//사무실우편번호
+        office_lat: '',//사무실우편번호
         office_phone: '',//사무실연락처
         company_number_src: '',// 파일 -> 사업자등록증
         office_src: '',// 파일 -> 중개업소등록증
@@ -75,10 +79,33 @@ const SignUp = () => {
             navigate(-1);
         }
     }, []);
-    const onSelectAddress = (data) => {
-        setIsSeePostCode(false);
-        setValues({ ...values, ['address']: data?.address, ['zip_code']: data?.zonecode, ['address_detail']: '' });
-        $('.address_detail').focus();
+    const onSelectAddress = async (data) => {
+        console.log(data)
+        if(step==0){
+            setIsSeePostCode(false);
+            setValues({ ...values, ['address']: data?.autoJibunAddress || data?.jibunAddress, ['zip_code']: data?.zonecode, ['address_detail']: '' });
+            $('.address_detail').focus();
+        }
+        if(step==1){
+            setIsSeePostCode(false);
+            const response = await axios.post('/api/getaddressbytext', {
+                text: data?.jibunAddress
+            })
+            if (response?.data?.data?.length > 0) {
+                setValues({ 
+                    ...values, 
+                    ['office_address']: data?.jibunAddress, 
+                    ['office_zip_code']: data?.zonecode, 
+                    ['office_lat']: response?.data?.data[0]?.lat, 
+                    ['office_lng']: response?.data?.data[0]?.lng, 
+                });
+                $('.office_phone').focus();
+            } else {
+                toast.error("위치추적 할 수 없는 주소입니다.");
+            }
+            
+        }
+       
     }
     const onCheckId = async () => {
         if (!values.id) {
@@ -178,7 +205,10 @@ const SignUp = () => {
                 }
             }
         }
-
+        if (!$('input[id=term-of-use-1]:checked').val()) {
+            toast.error('이용약관을 동의해 주세요.');
+            return;
+        }
         Swal.fire({
             title: '회원가입 하시겠습니까?',
             showCancelButton: true,
@@ -197,19 +227,19 @@ const SignUp = () => {
 
             }
             let num = 1;
-            for(var i = 0;i<Object.keys(realtorObj).length;i++){
+            for (var i = 0; i < Object.keys(realtorObj).length; i++) {
                 let key = Object.keys(realtorObj)[i];
-                if(key.includes('_src')){
+                if (key.includes('_src')) {
                     let formData = new FormData();
                     formData.append(`content${num}`, values[key]);
-                    const {data:add_image} = await axios.post('/api/addimageitems',formData);
-                    if(add_image.result<0){
+                    const { data: add_image } = await axios.post('/api/addimageitems', formData);
+                    if (add_image.result < 0) {
                         toast.error(add_image?.message);
                         return;
                     }
                     num++;
                     add_obj[key] = add_image?.data[0]?.filename;
-                }else{
+                } else {
                     add_obj[key] = values[key];
                 }
             }
@@ -343,7 +373,7 @@ const SignUp = () => {
                             <div onClick={() => {
                             }}>
                                 <InputComponent
-                                    label={'주소* '}
+                                    label={'집주소* '}
                                     input_type={{
                                         placeholder: '',
                                         disabled: "true"
@@ -459,16 +489,23 @@ const SignUp = () => {
                                 onChange={(e) => handleChange(e, 'company_number')}
                                 value={values.company_number}
                             />
-                            <InputComponent
-                                label={'사무실주소'}
-                                input_type={{
-                                    placeholder: '필수입력'
-                                }}
-                                class_name='office_address'
-                                is_divider={true}
-                                onChange={(e) => handleChange(e, 'office_address')}
-                                value={values.office_address}
-                            />
+                            <div onClick={() => {
+                            }}>
+                                <InputComponent
+                                    label={'사무실주소'}
+                                    input_type={{
+                                        placeholder: '',
+                                        disabled: "true"
+                                    }}
+                                    class_name='office_address'
+                                    is_divider={true}
+                                    onClick={() => {
+                                        setIsSeePostCode(!isSeePostCode)
+                                    }}
+                                    value={values.office_address}
+                                />
+                            </div>
+                           
                             <InputComponent
                                 label={'사무실연락처'}
                                 input_type={{
@@ -480,7 +517,7 @@ const SignUp = () => {
                                 value={values.office_phone}
                             />
                             <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>사업자등록증사진</CategoryName>
-                            <ImageContainer for={`company_number_src`} style={{margin:'auto'}}>
+                            <ImageContainer for={`company_number_src`} style={{ margin: 'auto' }}>
 
                                 {values?.company_number_src ?
                                     <>
@@ -500,7 +537,7 @@ const SignUp = () => {
                                 <input type="file" id={`company_number_src`} name={'company_number_src'} onChange={addFile} style={{ display: 'none' }} />
                             </div>
                             <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>중개업소등록증사진</CategoryName>
-                            <ImageContainer for={`office_src`} style={{margin:'auto'}}>
+                            <ImageContainer for={`office_src`} style={{ margin: 'auto' }}>
 
                                 {values?.office_src ?
                                     <>
@@ -520,7 +557,7 @@ const SignUp = () => {
                                 <input type="file" id={`office_src`} name={'office_src'} onChange={addFile} style={{ display: 'none' }} />
                             </div>
                             <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>통장사본사진</CategoryName>
-                            <ImageContainer for={`bank_book_src`} style={{margin:'auto'}}>
+                            <ImageContainer for={`bank_book_src`} style={{ margin: 'auto' }}>
 
                                 {values?.bank_book_src ?
                                     <>
@@ -540,7 +577,7 @@ const SignUp = () => {
                                 <input type="file" id={`bank_book_src`} name={'bank_book_src'} onChange={addFile} style={{ display: 'none' }} />
                             </div>
                             <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>신분증사진</CategoryName>
-                            <ImageContainer for={`id_number_src`} style={{margin:'auto'}}>
+                            <ImageContainer for={`id_number_src`} style={{ margin: 'auto' }}>
 
                                 {values?.id_number_src ?
                                     <>
@@ -566,7 +603,23 @@ const SignUp = () => {
                     {step == 2 ?
                         <>
                             <HalfTitle style={{ textAlign: 'left' }}>{'약관동의'}</HalfTitle>
-
+                            <div style={{ width: '94%', height: '150px', overflowY: 'scroll', border: `1px solid ${theme.color.font3}`, padding: '3%' }}>
+                                <Policy pk={0} />
+                            </div>
+                            <RowContent style={{ alignItems: 'center', marginTop: '8px' }}>
+                                <input type={'radio'} id="term-of-use-1" name="term-of-use" style={{ margin: '0 4px 0 auto' }}
+                                    onChange={(e) => {
+                                        if ($('input[id=privacy-policy-1]:checked').val()) {
+                                            $('#all-allow').prop('checked', true);
+                                        }
+                                    }} />
+                                <label for={'term-of-use-1'} style={{ margin: '0 4px 0 0', fontSize: theme.size.font5 }}>동의함</label>
+                                <input type={'radio'} id="term-of-use-2" name="term-of-use" style={{ margin: '0 4px 0 0' }}
+                                    onChange={(e) => {
+                                        $('#all-allow').prop('checked', false);
+                                    }} />
+                                <label for={'term-of-use-2'} style={{ margin: '0', fontSize: theme.size.font5 }}>동의안함</label>
+                            </RowContent>
                         </>
                         :
                         <>

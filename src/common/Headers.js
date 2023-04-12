@@ -340,7 +340,7 @@ const Headers = () => {
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <img src={logoSrc} style={{ height: '24px', width: 'auto', margin: '0 auto 6px 0' }} />
                     <div style={{ fontSize: theme.size.font3, fontWeight: 'bold', margin: '0 auto 6px 0' }}>{auth?.name} 님 환영합니다</div>
-                    <div style={{ fontSize: theme.size.font5, fontWeight: 'bold', margin: '0 auto 6px 0' }}>{getUserLevelByNumber(auth?.user_level)}</div>
+                    <div style={{ fontSize: theme.size.font5, fontWeight: 'bold', margin: '0 auto 6px 0' }}>{getUserLevelByNumber(auth?.user_level, true)}</div>
                   </div>
                 </Col>
               </Row>

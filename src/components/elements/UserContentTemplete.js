@@ -333,6 +333,11 @@ export const InputComponent = (props) => {
             setIsValue(true);
         }
     }, [$(`.${class_name}`).val()])
+    useEffect(()=>{
+        if (value) {
+            setIsValue(true);
+        }
+    },[value])
 
     const getInputType = () =>{
         if((input_type?.type == 'password' && !isSeePassword)){

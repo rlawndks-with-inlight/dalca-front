@@ -460,6 +460,8 @@ const ChangeCard = () => {
                                                         <MenuItem value={2}>모</MenuItem>
                                                         <MenuItem value={3}>형제</MenuItem>
                                                         <MenuItem value={4}>자매</MenuItem>
+                                                        <MenuItem value={5}>배우자</MenuItem>
+                                                        <MenuItem value={6}>자녀</MenuItem>
                                                     </CustomSelect>
                                                 </FormControl>
                                                 <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>카드 일부분 사진</CategoryName>
