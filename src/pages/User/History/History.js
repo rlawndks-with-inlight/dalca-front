@@ -13,7 +13,7 @@ import PageButton from "../../../components/elements/pagination/PageButton";
 import PageContainer from "../../../components/elements/pagination/PageContainer";
 import { colorButtonStyle, HalfTitle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import Loading from "../../../components/Loading";
-import { objHistoryListContent } from "../../../data/ContentData";
+import { mainPhone, objHistoryListContent } from "../../../data/ContentData";
 import { getLocalStorage } from "../../../functions/LocalStorage";
 import { range } from "../../../functions/utils";
 import theme from "../../../styles/theme";
@@ -22,7 +22,7 @@ const getTitle = (param_category) => {
     if (param_category == 'contract')
         return '계약내역'
     else if (param_category == 'point')
-        return '포인트내역'
+        return '포인트 적립내역 및 사용'
     else if (param_category == 'pay')
         return '결제내역'
     else if (param_category == 'request')
@@ -66,8 +66,8 @@ const History = () => {
     }
     const changePage = async (num) => {
         let state_query_str = "";
-        if(location.state){
-            for(var i = 0;i<Object.keys(location.state).length;i++){
+        if (location.state) {
+            for (var i = 0; i < Object.keys(location.state).length; i++) {
                 state_query_str += `&${Object.keys(location.state)[i]}=${location.state[Object.keys(location.state)]}`
             }
         }
@@ -85,21 +85,40 @@ const History = () => {
     const returnRightButton = () => {
         if (params?.category == 'contract') {
             if (userData?.user_level == 10) {
-                return <Button sx={colorButtonStyle} onClick={() => {
-                    navigate('/addcontract');
-                }}
-                    startIcon={<Icon icon="material-symbols:add" />}
-                >계약생성</Button>
+                return {
+                    item: <Button sx={colorButtonStyle} onClick={() => {
+                        navigate('/addcontract');
+                    }}
+                        startIcon={<Icon icon="material-symbols:add" />}
+                    >계약생성</Button>,
+                    width: '89px'
+                }
             }
         }
         if (params?.category == 'request') {
-            return <Button sx={colorButtonStyle} onClick={() => {
-                navigate('/request');
-            }}
-                startIcon={<Icon icon="carbon:request-quote" />}
-            >문의하기</Button>
+            return {
+                item: <Button sx={colorButtonStyle} onClick={() => {
+                    navigate('/request');
+                }}
+                    startIcon={<Icon icon="carbon:request-quote" />}
+                >문의하기</Button>,
+                width: '89px'
+            }
         }
-        return <div />
+        if (params?.category == 'point') {
+            return {
+                item: <a href={`tel:${mainPhone}`} style={{ textDecoration: 'none' }}>
+                    <Button sx={colorButtonStyle} onClick={() => {
+                    }}
+                    >사용하기</Button>
+                </a>,
+                width: '65px'
+            }
+        }
+        return {
+            item: <div />,
+            width: ''
+        }
     }
 
     return (
@@ -126,8 +145,8 @@ const History = () => {
                             />
                         </motion.div>
                     </>}
-                <MBottomContent>
-                    <div />
+                <MBottomContent style={{ width: '100%' }}>
+                    <div style={{ width: returnRightButton().width }} />
                     <PageContainer>
                         <PageButton onClick={() => changePage(1)}>
                             처음
@@ -143,7 +162,7 @@ const History = () => {
                             마지막
                         </PageButton>
                     </PageContainer>
-                    {returnRightButton()}
+                    {returnRightButton().item}
                 </MBottomContent>
             </Wrappers>
         </>

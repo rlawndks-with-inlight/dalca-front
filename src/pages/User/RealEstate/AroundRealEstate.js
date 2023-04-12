@@ -128,7 +128,7 @@ const AroundRealEstate = () => {
                                 animate={{ opacity: 1 }}
                                 style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                             >
-                                <HalfTitle>주변 부동산</HalfTitle>
+                                <HalfTitle>달카페이 회원부동산</HalfTitle>
 
                                 {/* 네이버 지도 */}
 

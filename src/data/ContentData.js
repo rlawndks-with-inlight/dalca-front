@@ -36,13 +36,14 @@ export const zBottomMenu = [
     { name: '개인정보수정', link: '/editmyinfo', icon: <GrEdit src={localStorage.getItem('dark_mode') ? albumWhiteImg : albumImg} className='menu-icon' alt="#" />, activeIcon: <GrEdit src={albumActiveImg} className='menu-icon' alt="#" />, allowList: ['/editmyinfo'] },
     { name: '마이페이지', link: '/mypage', icon: <AiOutlineGift src={localStorage.getItem('dark_mode') ? talkWhiteImg : talkImg} className='menu-icon' alt="#" />, activeIcon: <AiOutlineGift src={talkActiveImg} className='menu-icon' alt="#" />, allowList: [] }
 ];
+export const mainPhone = "1533-8643";
 export const zManagerLevel = [40, 50];
 export const zSidebarMenu = [
-    { name: '주변 부동산', link: '/around-realestate', level_list: [0, 5, 10, ...zManagerLevel] },
+    { name: '달카페이 회원부동산', link: '/around-realestate', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '결제카드등록 및 변경', link: '/card/change', level_list: [0, ...zManagerLevel] },
     { name: '타인카드등록 및 변경', link: '/card/family', level_list: [0, ...zManagerLevel] },
     { name: '계약내역', link: '/history/contract', level_list: [0, 5, 10, ...zManagerLevel] },
-    { name: '포인트내역', link: '/history/point', level_list: [0, 10, ...zManagerLevel] },
+    { name: '포인트 적립내역 및 사용', link: '/history/point', level_list: [0, 10, ...zManagerLevel] },
     { name: '고객정보조회', link: '/customer-info', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '결제내역', link: '/history/pay', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '공지사항', link: '/list/notice', level_list: [0, 5, 10, ...zManagerLevel] },
