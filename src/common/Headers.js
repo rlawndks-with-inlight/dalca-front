@@ -10,7 +10,7 @@ import $ from 'jquery';
 import share from '../assets/images/icon/home/share.svg';
 import hamburger from '../assets/images/icon/home/hamburger.svg';
 import axios from 'axios';
-import { returnMoment } from '../functions/utils';
+import { formatPhoneNumber, returnMoment } from '../functions/utils';
 import logoutIcon from '../assets/images/icon/logout.svg'
 import { Viewer } from '@toast-ui/react-editor';
 import { IoMdClose } from 'react-icons/io'
@@ -213,8 +213,38 @@ const Headers = () => {
     setMenuDisplay(menuDisplay == 'flex' ? 'none' : 'flex');
 
   }
+  const sendMessage = async () =>{
+    let string = `
+    \n
+    1) 부  2) 모  3) 형제  4) 자매\n
+    ※ 가족 외에 타인카드는 등록불가합니다.\n\n
 
+    1. 본인은 이 임대 계약한 월세 또는 보증금 카드결제 사실을 알고 있습니다.\n
+    2. 송금이 정상 완료된 후, 첫 결제월(달)에는 결제취소 또는 카드정보변경이 되지 않습니다.\n
+    3. 휴대폰번호, 성명 등의 개인정보를 수집합니다. \n
+    4. 경우에 따라 본인(카드주)에게 전화를 드릴 수 있습니다.\n\n
+    동의하시면 아래 링크를 클릭해 주세요.\n\n
+    https://dalcapay.com/card/family\n\n
+    -달카페이-`;
+    try {
+        const { data: response } = await axios.post(`/api/sendsms`, {
+            receiver: [auth?.phone, formatPhoneNumber(auth?.phone)],
+            content: string
+        })
+        if (response?.result > 0) {
+        } else {
+            toast.error(response?.message);
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
   const onClickLink = (link) => {
+    if(link=='/card/family'){
+      toast.success("문자 및 알림을 확인해 주세요.")
+      sendMessage();
+      return;
+    }
     navigate(link);
     onChangeMenuDisplay();
   }

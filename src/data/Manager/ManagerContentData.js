@@ -69,7 +69,7 @@ export const objManagerListContent = {
         ['level='],
         true,
         false,
-        '150%'),
+        '100%'),
     real_estate: sidebarObjFormat(
         '부동산 관리',
         'real_estate',

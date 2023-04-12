@@ -27,7 +27,7 @@ import axios from "axios";
 import { Icon } from "@iconify/react";
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getLocalStorage } from "../../../functions/LocalStorage";
 import { formatPhoneNumber, range } from "../../../functions/utils";
 import ContentTable from "../../../components/ContentTable";
@@ -74,8 +74,11 @@ const CardWrapper = styled('div')({
 
 const ChangeCard = () => {
 
+    const location = useLocation();
     const params = useParams();
     const navigate = useNavigate();
+
+    const [user, setUser] = useState({});
 
     const [name, setName] = useState('')
     const [cvc, setCvc] = useState('')
@@ -105,6 +108,7 @@ const ChangeCard = () => {
         setEditPk(0);
         setPage(num);
         let user_data = getLocalStorage('auth');
+        setUser(user_data)
         let api_str = "";
         if (params?.category == 'change') {
             api_str = '/api/getmyinfo';
@@ -115,7 +119,11 @@ const ChangeCard = () => {
         const { data: response } = await axios.get(api_str);
         if (response?.result == -150) {
             toast.error('로그인을 해주세요.');
-            navigate('/login');
+            navigate('/', {
+                state: {
+                    redirect_url: location.pathname
+                }
+            })
             return;
         }
         let data = response?.data || response?.data?.data;
@@ -148,6 +156,7 @@ const ChangeCard = () => {
             setPosts(response?.data?.data);
         }
         setLoading(false);
+
     }
 
 
@@ -167,14 +176,14 @@ const ChangeCard = () => {
     }
 
     const onChangeMyCard = (pk) => {
-        if(
-            !cardNumber || 
-            !name || 
-            !expiry || 
-            !cvc || 
-            !birth || 
+        if (
+            !cardNumber ||
+            !name ||
+            !expiry ||
+            !cvc ||
+            !birth ||
             !password
-        ){
+        ) {
             toast.error("필수값이 비어 있습니다.");
             return;
         }
