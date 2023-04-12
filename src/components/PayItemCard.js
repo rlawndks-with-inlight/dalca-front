@@ -43,7 +43,7 @@ const PayItemCard = (props) => {
     let { item, is_detail, not_price, column, user } = props;
 
     const navigate = useNavigate();
-    
+
     const onPayByDirect = () => {
         if (item?.status == 0) {
             Swal.fire({
@@ -61,7 +61,7 @@ const PayItemCard = (props) => {
                         price: item?.price,
                         buyer: user?.name,
                         tel: user?.phone,
-                        is_mobile:false
+                        is_mobile: window.innerWidth >= 700 ? false : true
                     }
                     let query = Object.entries(obj).map(e => e.join('=')).join('&');
                     window.location.href = `https://worker1.payvery.kr/payment/welcome/auth?${query}`;
