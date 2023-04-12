@@ -29,7 +29,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLocalStorage } from "../../../functions/LocalStorage";
-import { range } from "../../../functions/utils";
+import { formatPhoneNumber, range } from "../../../functions/utils";
 import ContentTable from "../../../components/ContentTable";
 import MBottomContent from "../../../components/elements/MBottomContent";
 import PageButton from "../../../components/elements/pagination/PageButton";
@@ -93,6 +93,10 @@ const ChangeCard = () => {
     const [editPk, setEditPk] = useState(0);
     const [familyType, setFamilyType] = useState(1);
     const [cardSrc, setCardSrc] = useState(undefined);
+    const [phone, setPhone] = useState("");
+    const [phoneCheck, setPhoneCheck] = useState("")
+    const [isSendSms, setIsSendSms] = useState(false);
+    const [randNum, setRandNum] = useState("");
     useEffect(() => {
         setLoading(true);
         getCard(1);
@@ -163,6 +167,27 @@ const ChangeCard = () => {
     }
 
     const onChangeMyCard = (pk) => {
+        if(
+            !cardNumber || 
+            !name || 
+            !expiry || 
+            !cvc || 
+            !birth || 
+            !password
+        ){
+            toast.error("필수값이 비어 있습니다.");
+            return;
+        }
+        if (params?.category == 'family') {
+            if (!isSendSms) {
+                toast.error("휴대폰 인증을 완료해 주세요.");
+                return;
+            }
+            if (randNum != phoneCheck) {
+                toast.error("인증번호가 일치하지 않습니다.");
+                return;
+            }
+        }
         Swal.fire({
             title: `저장 하시겠습니까?`,
             showCancelButton: true,
@@ -179,14 +204,15 @@ const ChangeCard = () => {
                     birth: birth,
                 }
                 let family_obj = {
-                    family_type: familyType
+                    family_type: familyType,
+                    phone: phone
                 }
                 let api_str = "";
                 if (params?.category == 'change') {
                     api_str = '/api/change-card';
                 } else if (params?.category == 'family') {
                     if (typeof cardSrc == 'string') {
-                        family_obj['card_src'] = family_obj['card_src'].replaceAll(backUrl, '');
+                        family_obj['card_src'] = cardSrc.replaceAll(backUrl, '');
                     } else {
                         let formData = new FormData();
                         formData.append(`card`, cardSrc);
@@ -234,12 +260,57 @@ const ChangeCard = () => {
         setPassword(data?.card_password ?? "");
         setFamilyType(data?.family_type);
         setCardSrc(backUrl + data?.card_src);
+        setPhone(data?.phone ?? "");
+        setPhoneCheck("");
         setEditPk(data?.pk)
         setIsSeeCard(true);
+        setIsSendSms(false);
+    }
+    const sendSms = async () => {
+        if (!phone) {
+            toast.error("핸드폰 번호를 입력해주세요.")
+            return;
+        }
+
+        let fix_phone = phone;
+        for (var i = 0; i < fix_phone.length; i++) {
+            if (isNaN(parseInt(fix_phone[i]))) {
+                toast.error("전화번호는 숫자만 입력해 주세요.");
+                return;
+            }
+        }
+        fix_phone = fix_phone.replaceAll('-', '');
+        fix_phone = fix_phone.replaceAll(' ', '');
+        setPhone(fix_phone)
+        let content = "";
+        for (var i = 0; i < 6; i++) {
+            content += Math.floor(Math.random() * 10).toString();
+        }
+
+        let string = `\n타인카드등록\n인증번호를 입력해주세요 ${content}.\n\n-달카페이-`;
+        try {
+            const { data: response } = await axios.post(`/api/sendsms`, {
+                receiver: [fix_phone, formatPhoneNumber(fix_phone)],
+                content: string
+            })
+            if (response?.result > 0) {
+                toast.success('인증번호가 발송되었습니다.');
+
+                setIsSendSms(true)
+                setRandNum(content);
+                $('phone-check').focus();
+            } else {
+                toast.error(response?.message);
+                setIsSendSms(false)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+        //console.log(response)
     }
     return (
         <>
-            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff", height: '100vh' }}>
+            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff" }}>
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -402,6 +473,30 @@ const ChangeCard = () => {
                                                 <div>
                                                     <input type="file" id={`card_src`} name={'card_src'} onChange={addFile} style={{ display: 'none' }} />
                                                 </div>
+
+                                                <InputComponent
+                                                    label={'휴대폰번호*'}
+                                                    input_type={{
+                                                        placeholder: '-없이 숫자만 입력',
+                                                    }}
+                                                    class_name='phone'
+                                                    button_label={'인증하기'}
+                                                    isButtonAble={true}
+                                                    onClickButton={() => sendSms()}
+                                                    onChange={(e) => {
+                                                        setPhone(e)
+                                                    }}
+                                                    value={phone}
+                                                />
+                                                <InputComponent
+                                                    label={'휴대폰인증번호*'}
+                                                    input_type={{
+                                                        placeholder: '인증번호를 입력해주세요.',
+                                                    }}
+                                                    class_name='phoneCheck'
+                                                    onChange={(e) => setPhoneCheck(e)}
+                                                    value={phoneCheck}
+                                                />
                                             </>
                                             :
                                             <>
@@ -411,7 +506,7 @@ const ChangeCard = () => {
                                             display: 'flex',
                                             justifyContent: 'space-between',
                                             width: '100%',
-                                            marginTop: '1rem',
+                                            margin: '1rem 0',
                                         }}>
                                             <div />
                                             <Button
@@ -437,7 +532,7 @@ const ChangeCard = () => {
                                                 getCard(page);
                                             }}
                                         />
-                                        <MBottomContent>
+                                        <MBottomContent style={{ width: '100%' }}>
                                             <div style={{ width: '64px' }} />
                                             <PageContainer>
                                                 <PageButton onClick={() => getCard(1)}>
@@ -461,7 +556,10 @@ const ChangeCard = () => {
                                                 setCvc("");
                                                 setBirth("");
                                                 setPassword("");
+                                                setPhone("");
+                                                setPhoneCheck("");
                                                 setIsSeeCard(true);
+                                                setIsSendSms(false);
                                             }}>추가</Button>
                                         </MBottomContent>
                                     </>

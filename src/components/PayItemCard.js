@@ -43,28 +43,7 @@ const PayItemCard = (props) => {
     let { item, is_detail, not_price, column, user } = props;
 
     const navigate = useNavigate();
-    const getPeriodByNumber = (num) => {
-        let result = "";
-        let period_list = [
-            { name: '1일', val: 1 },
-            { name: '3일', val: 3 },
-            { name: '1주일', val: 7 },
-            { name: '2주일', val: 14 },
-            { name: '3주일', val: 21 },
-            { name: '1개월', val: 30 },
-            { name: '2개월', val: 60 },
-            { name: '3개월', val: 90 },
-            { name: '6개월', val: 180 },
-            { name: '1년', val: 365 },
-        ]
-        for (var i = 0; i < period_list.length; i++) {
-            if (num == period_list[i]?.val) {
-                result = period_list[i]?.name;
-            }
-        }
-        return result;
-    }
-
+    
     const onPayByDirect = () => {
         if (item?.status == 0) {
             Swal.fire({
