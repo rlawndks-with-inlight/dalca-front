@@ -213,6 +213,7 @@ export const getKoPayCategoryByNum = (num) => {
     else if (num == 2)
         return '계약금';
 }
+
 export const regExp = (type, str) => {//id,pw,nickname,name
     let reg = undefined;
     if (type == 'id') {
