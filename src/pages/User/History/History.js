@@ -18,6 +18,20 @@ import { getLocalStorage } from "../../../functions/LocalStorage";
 import { range } from "../../../functions/utils";
 import theme from "../../../styles/theme";
 import { motion } from "framer-motion";
+import styled from "styled-components";
+
+const Post = styled.div`
+padding:0 8px;
+transition: 0.3s;
+font-size:${props => props.theme.size.font5};
+// &:hover{  
+//     color : ${props => props.theme.color.background1};
+//   }
+//   @media screen and (max-width:400px) {
+//     font-size:${props => props.theme.size.font5};
+//     padding:2px;
+// }
+`
 const getTitle = (param_category) => {
     if (param_category == 'contract')
         return '계약내역'
@@ -30,8 +44,9 @@ const getTitle = (param_category) => {
     else if (param_category == 'notice')
         return '공지사항'
     else if (param_category == 'faq')
-        return 'FAQ'
+        return '자주 하는 질문'
 }
+
 const History = () => {
 
     const params = useParams();
@@ -124,6 +139,19 @@ const History = () => {
     return (
         <>
             <Wrappers>
+                {location?.pathname.includes('/list/') ?
+                    <>
+                        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                            <Post>대표번호  1533-8643</Post>
+                            <Post>팩스번호  031) 624-4396</Post>
+                            <Post style={{ borderRight: 'none' }}>
+                                상담시간 오전 11시~오후 5시 / 점심시간 오후 12시~1시 / 휴무일: 주말 및 공휴일
+                            </Post>
+                        </div>
+                    </>
+                    :
+                    <>
+                    </>}
                 <HalfTitle style={{ maxWidth: '1050px' }}>{getTitle(params?.category)}</HalfTitle>
                 {loading ?
                     <>

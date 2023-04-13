@@ -61,7 +61,10 @@ const Footer = () => {
                             <Img src={logoSrc} alt="footer" />
                             <Post>주식회사 오앤유페이먼츠</Post>
                             <Post>대표자 조웅형</Post>
-                            <Post style={{ borderRight: 'none' }}>사업자등록번호 568-87-02806</Post>
+                            <Post>사업자등록번호 568-87-02806</Post>
+                            <Post style={{ borderRight: 'none' }}>
+                                상담시간 오전 11시~오후 5시 / 점심시간 오후 12시~1시 / 휴무일: 주말 및 공휴일
+                            </Post>
                         </div>
                         <div style={{ marginTop: '8px' }}>경기도 김포시 태장로789, 611호(장기동, 금광하이테크)</div>
                         <Flex>

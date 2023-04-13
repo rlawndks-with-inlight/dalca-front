@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { backUrl } from "../data/Data";
-import { commarNumber, makeQueryObj } from "../functions/utils";
+import { commarNumber, getKoPayCategoryByNum, makeQueryObj } from "../functions/utils";
 import theme from "../styles/theme";
 import AddButton from "./elements/button/AddButton";
 import { borderButtonStyle, colorButtonStyle, HalfTitle, TextButton, TextFillButton } from "./elements/UserContentTemplete";
@@ -57,7 +57,7 @@ const PayItemCard = (props) => {
                         mid: 'welcometst',
                         temp: item?.pk,
                         ord_nm: `${user?.pk}${item?.pk}${new Date().getTime()}`,
-                        name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} 일자 월세` : '보증금'}`,
+                        name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} 일자` : ''} ${getKoPayCategoryByNum(item?.pay_category)}`,
                         price: item?.price,
                         buyer: user?.name,
                         tel: user?.phone,
@@ -128,7 +128,7 @@ const PayItemCard = (props) => {
                 <ContentContainer style={{ flexDirection: `${(column && window.innerWidth <= 550) ? 'column' : ''}` }}>
                     <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px', width: 'auto' }}>
                         <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>계약고유번호: {commarNumber(item?.contract_pk)}</div>
-                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {item?.pay_category == 1 ? '보증금' : '월세'}</div>
+                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {getKoPayCategoryByNum(item?.pay_category)}</div>
                         {item?.pay_category == 0 ?
                             <>
                                 <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>결제예정일: {item?.day}</div>

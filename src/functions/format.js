@@ -49,15 +49,7 @@ export const formatCVC = (value, cardNumber, Payment) => {
 
   return clearValue.slice(0, maxLength)
 }
-export const getPayCategory = (data) => {
-  if (data?.pay_category == 0) {
-    return "월세";
-  }
-  if (data?.pay_category == 1) {
-    return "보증금";
-  }
-  return "---";
-}
+
 export const getPayStatus = (data) => {
   if (data?.status == 0)
     return "납부안함"

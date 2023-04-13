@@ -33,6 +33,8 @@ import AddButton from "../../../components/elements/button/AddButton";
 //./component/socket.js
 import React from 'react';
 import io from "socket.io-client";
+import { useRef } from "react";
+import useInterval from "../../../components/useInterval";
 const steps = ['계약서등록', '임대인\n동의구하기', '임차인\n동의구하기', '완료'];
 const stepLabelStyle = {
     whiteSpace: 'pre'
@@ -69,6 +71,11 @@ const AddContract = () => {
         end_date: returnMoment().substring(0, 10),
         pay_day: 1,
     })
+    useInterval(async ()=>{
+        if(activeStep==1 || activeStep ==2){
+            getCheckContractAppr();
+        }
+    }, 5*1000);
     useEffect(() => {
         let user_data = getLocalStorage('auth');
         if (user_data?.user_level < 10 || !user_data?.pk) {

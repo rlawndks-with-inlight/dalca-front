@@ -32,14 +32,14 @@ export const addItem = async (type, obj) => {
         window.history.back();
     }
 }
-export const overString = (str_, cut_count) =>{
+export const overString = (str_, cut_count) => {
     let str = str_;
-    if(!str){
+    if (!str) {
         return "";
     }
-    if(str.length<=cut_count){
+    if (str.length <= cut_count) {
         return str;
-    }else{
+    } else {
         return str.substring(0, cut_count) + '...'
     }
 }
@@ -54,7 +54,7 @@ export const deleteItem = async (type, obj) => {
 
 }
 export const commarNumber = (num) => {
-    if(num > 0 && num < 0.000001){
+    if (num > 0 && num < 0.000001) {
         return "0.00";
     }
     if (!num && num != 0) {
@@ -109,14 +109,14 @@ export const formatPhoneNumber = (input) => {
     return result;
 }
 export const returnMoment = (num, date) => {//num 0: 오늘, num -1: 어제 , date->new Date() 인자로 받음
-    try{
+    try {
         var today = new Date();
         if (num) {
             let new_date = new Date(today.setDate(today.getDate() + num));
             today = new_date;
         }
-        if(date){
-            today = date; 
+        if (date) {
+            today = date;
         }
         var year = today.getFullYear();
         var month = ('0' + (today.getMonth() + 1)).slice(-2);
@@ -128,11 +128,11 @@ export const returnMoment = (num, date) => {//num 0: 오늘, num -1: 어제 , da
         var timeString = hours + ':' + minutes + ':' + seconds;
         let moment = dateString + ' ' + timeString;
         return moment;
-    }catch(err){
+    } catch (err) {
         console.log(err);
         return false;
     }
-    
+
 }
 export const getIframeLinkByLink = (str) => {
     let ans = "";
@@ -186,9 +186,9 @@ export const getEnLevelByNum = (num) => {
     else if (num == 50)
         return 'developer';
 }
-export const getIsUser = (level) =>{
+export const getIsUser = (level) => {
     let user_level_list = [0, 5, 10];
-    if(user_level_list.includes(level)){
+    if (user_level_list.includes(level)) {
         return true;
     }
     return false;
@@ -204,6 +204,14 @@ export const getKoLevelByNum = (num) => {
         return '관리자';
     else if (num == 50)
         return '개발자';
+}
+export const getKoPayCategoryByNum = (num) => {
+    if (num == 0)
+        return '월세';
+    else if (num == 1)
+        return '보증금';
+    else if (num == 2)
+        return '계약금';
 }
 export const regExp = (type, str) => {//id,pw,nickname,name
     let reg = undefined;
@@ -255,14 +263,14 @@ export const makeDiscountPrice = (num, percent) => {
     let result = num * (100 - percent) / 100;
     return result;
 }
-export const makeQueryObj = (query_) =>{
+export const makeQueryObj = (query_) => {
     let obj = {};
-    if(!query_ || query_[0] != '?'){
+    if (!query_ || query_[0] != '?') {
         return obj;
     }
     let query = query_.substring(1, query_.length);
     query = query.split('&');
-    for(var i = 0;i<query.length;i++){
+    for (var i = 0; i < query.length; i++) {
         let content = query[i].split('=');
         obj[content[0]] = content[1];
     }

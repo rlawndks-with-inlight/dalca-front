@@ -47,8 +47,8 @@ export const zSidebarMenu = [
     { name: '고객정보조회', link: '/customer-info', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '결제내역', link: '/history/pay', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '공지사항', link: '/list/notice', level_list: [0, 5, 10, ...zManagerLevel] },
-    { name: 'FAQ', link: '/list/faq', level_list: [0, 5, 10, ...zManagerLevel] },
-    { name: '문의하기', link: '/history/request', level_list: [0, 5, 10, ...zManagerLevel] },
+    { name: '자주 하는 질문', link: '/list/faq', level_list: [0, 5, 10, ...zManagerLevel] },
+    { name: '문의하기', link: '/list/request', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '마이페이지', link: '/mypage', level_list: [0, 5, 10, ...zManagerLevel] },
 ]
 export const objHistoryListContent = {
@@ -99,6 +99,7 @@ export const objHistoryListContent = {
             columnObjFormat('납부예정일', '', 'text', 'day'),
             columnObjFormat('납부일', '', 'text', 'trade_day'),
             columnObjFormat('납부현황', '', 'pay_status', 'status'),
+            columnObjFormat('미납문자발송', '', 'send_miss_pay', 'send_miss_pay'),
         ]
     },
     contract_0: {
@@ -141,7 +142,7 @@ export const objHistoryListContent = {
         columns: [
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('계약서보기', '', 'link', ''),
+            columnObjFormat('자세히보기', '', 'link', ''),
             columnObjFormat('답변상태', '', 'is_request_com', ''),
         ]
     },
@@ -150,15 +151,15 @@ export const objHistoryListContent = {
         columns: [
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('계약서보기', '', 'link', ''),
+            columnObjFormat('자세히보기', '', 'link', ''),
         ]
     },
     faq: {
-        title: "FAQ",
+        title: "자주 하는 질문",
         columns: [
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('계약서보기', '', 'link', ''),
+            columnObjFormat('자세히보기', '', 'link', ''),
         ]
     },
     real_estate: {

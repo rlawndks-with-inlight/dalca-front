@@ -452,7 +452,7 @@ const ChangeCard = () => {
                                                         labelId="demo-select-small"
                                                         id="demo-select-small"
                                                         value={familyType}
-                                                        label="전/월세"
+                                                        label="가족관계"
 
                                                         onChange={(e) => setFamilyType(e.target.value)}
                                                     >

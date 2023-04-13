@@ -264,7 +264,6 @@ const MContactEdit = () => {
                             ))}
                         </Select>
                     </Col>
-
                 </Row>
             </Card>
             <ButtonContainer>

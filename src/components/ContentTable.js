@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { commarNumber } from "../functions/utils";
+import { commarNumber, formatPhoneNumber, getKoLevelByNum, getKoPayCategoryByNum } from "../functions/utils";
 import { RiDeleteBinLine } from 'react-icons/ri'
 import axios from "axios";
 import { backUrl } from "../data/Data";
@@ -163,6 +163,41 @@ const ContentTable = (props) => {
     const getPayMonth = (data) => {
 
     }
+    const sendSmsOnMissPay = async (data) =>{
+        Swal.fire({
+            title: `미납문자 발송 하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+               
+                let fix_phone = data?.lessee_phone;
+                for (var i = 0; i < fix_phone.length; i++) {
+                    if (isNaN(parseInt(fix_phone[i]))) {
+                        alert("전화번호는 숫자만 입력해 주세요.");
+                        return;
+                    }
+                }
+                fix_phone = fix_phone.replaceAll('-', '');
+                fix_phone = fix_phone.replaceAll(' ', '');
+                let string = `\n${data?.pay_category==0?`${data?.day} 일자 `:``}${getKoLevelByNum(data?.pay_category)} 미납문자 알림 드립니다.\n\n-달카페이-`;
+                try {
+                    const { data: response } = await axios.post(`/api/sendsms`, {
+                        receiver: [fix_phone, formatPhoneNumber(fix_phone)],
+                        content: string
+                    })
+                    if (response?.result > 0) {
+                        toast.success('성공적으로 발송되었습니다.');
+        
+                    } else {
+                    }
+                } catch (e) {
+                    console.log(e)
+                }
+            }
+        })
+    }
     return (
         <>
             {loading ?
@@ -180,11 +215,11 @@ const ContentTable = (props) => {
                                 ))}
                             </Tr>
                             {data && data.map((item, index) => (
-                                <Tr onClick={() => { 
-                                    if(onClickList){
-                                        onClickList(item, index) 
+                                <Tr onClick={() => {
+                                    if (onClickList) {
+                                        onClickList(item, index)
                                     }
-                                    }} style={{ cursor: `${onClickList ? 'pointer' : ''}` }}>
+                                }} style={{ cursor: `${onClickList ? 'pointer' : ''}` }}>
                                     {columns && columns.map((column, idx) => (
                                         <>
                                             <Td style={{ width: column.width, color: `${column.color ? column.color : ''}`, cursor: `${isPointer ? 'pointer' : ''}`, fontWeight: `${column.bold ? 'bold' : ''}` }}>
@@ -219,7 +254,6 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'go_pay' ?
-
                                                     <IconButton onClick={() => {
                                                         navigate(`/payready/${item?.pk}`)
                                                     }}>
@@ -239,6 +273,26 @@ const ContentTable = (props) => {
                                                     </IconButton>
                                                     :
                                                     null}
+
+                                                {column.type == 'send_miss_pay' ?
+                                                    <>
+                                                        {item?.status == 0 ?
+                                                            <>
+                                                                <IconButton onClick={() => {
+                                                                    sendSmsOnMissPay(item)
+                                                                }}>
+                                                                    <Icon icon="ic:outline-sms" style={{ color: theme.color.background1 }} />
+                                                                </IconButton>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                ---
+                                                            </>}
+                                                    </>
+
+
+                                                    :
+                                                    null}
                                                 {column.type == 'contract_comment' ?
                                                     getContactComment(item) ?? "---"
                                                     :
@@ -252,7 +306,7 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'pay_category' ?
-                                                    getPayCategory(item) ?? "---"
+                                                    getKoPayCategoryByNum(item?.pay_category) ?? "---"
                                                     :
                                                     null}
                                                 {column.type == 'date' ?
@@ -282,8 +336,8 @@ const ContentTable = (props) => {
                                                     null}
                                                 {column.type == 'edit' ?
                                                     <IconButton onClick={() => {
-                                                        if(onClickEditButton){
-                                                            onClickEditButton(item, index) 
+                                                        if (onClickEditButton) {
+                                                            onClickEditButton(item, index)
                                                         }
                                                     }}>
                                                         <Icon icon="material-symbols:edit-outline-rounded" />

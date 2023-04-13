@@ -28,10 +28,13 @@ const AroundRealEstate = () => {
     const [pageList, setPageList] = useState([])
     const [page, setPage] = useState(1);
     const [allPosts, setAllPosts] = useState([]);
-
-    function getLocation() {
+    const [centerLat, setCenterLat] = useState(37.3595704);
+    const [centerLng, setCenterLng] = useState(127.105399);
+    function getLocation(is_first) {
         if (navigator.geolocation) {
-            setLoading(true);
+            if (is_first) {
+                setLoading(true);
+            }
             // GPS를 지원하면
             return new Promise(resolve => {
                 navigator.geolocation.getCurrentPosition(
@@ -55,8 +58,12 @@ const AroundRealEstate = () => {
                     },
                 );
             }).then(async coords => {
-                setLat(coords?.latitude);
-                setLng(coords?.longitude);
+                if (is_first) {
+                    setCenterLat(coords?.latitude);
+                    setCenterLng(coords?.longitude);
+                    setLat(coords?.latitude);
+                    setLng(coords?.longitude);
+                }
                 return coords;
             });
         }
@@ -67,7 +74,7 @@ const AroundRealEstate = () => {
         };
     }
     useEffect(() => {
-        getLocation();
+        getLocation(true);
         getRealEstate(1);
     }, [])
     function getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2) {
@@ -83,32 +90,39 @@ const AroundRealEstate = () => {
         return d;
     }
     const getRealEstate = async (num) => {
-        setPage(num);
         let coords = undefined;
-        if (!lat && !lng) {
-            coords = await getLocation();
-        } else {
-            coords = {
-                latitude: lat,
-                longitude: lng
-            }
-        }
+        coords = await getLocation();
         const { data: response } = await axios.get(`/api/items?table=real_estate&order=pk`);
-        let items = [...response?.data];
+        const { data: response2 } = await axios.get(`/api/items?table=user&order=pk&level=10`);
+        let users = response2?.data;
+        for (var i = 0; i < users.length; i++) {
+            users[i]['name'] = users[i]['office_name'];
+            users[i]['phone'] = users[i]['office_phone'];
+            users[i]['address'] = users[i]['office_address'];
+            users[i]['address_detail'] = '---';
+            users[i]['lat'] = users[i]['office_lat'];
+            users[i]['lng'] = users[i]['office_lng'];
+        }
+        console.log(users)
+        let items = [...response?.data, ...users];
         setPageList(range(1, makeMaxPage(items.length, 10)))
         for (var i = 0; i < items.length; i++) {
-            items[i]['distance'] = await getDistanceFromLatLonInKm(coords?.latitude, coords?.longitude, items[i]?.lat, items[i]?.lng);
-            items[i]['distance'] = commarNumber(items[i]['distance']) + ' km';
+            items[i]['distance'] = await getDistanceFromLatLonInKm(coords?.latitude, coords?.longitude, items[i]?.lat ?? 37.3595704, items[i]?.lng ?? 127.105399);
         }
         items = items.sort((a, b) => {
             if (a.distance > b.distance) return 1;
             if (a.distance < b.distance) return -1;
             return 0;
         });
+        for (var i = 0; i < items.length; i++) {
+            items[i]['distance'] = commarNumber(items[i]['distance']) + ' km';
+        }
+        console.log(items)
         setPosts(items);
+        setPage(num);
         setLoading(false);
     }
-    const onClickList = (item, idx) =>{
+    const onClickList = (item, idx) => {
         setLat(item?.lat);
         setLng(item?.lng);
         getRealEstate(page)

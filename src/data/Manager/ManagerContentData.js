@@ -30,11 +30,12 @@ export const zSidebar = [
     ], <RiMoneyDollarCircleLine />),
     sidebarContentFormat('기본설정', [
         sidebarObjListFormat('메인배너', '/manager/edit/home_setting/1', 40, ['/manager/edit/home_setting/1']),//list
+        sidebarObjListFormat('기본설정', '/manager/edit/basic_setting/1', 40, ['/manager/edit/basic_setting/1']),//list
         sidebarObjListFormat('팝업관리', '/manager/list/popup', 40, ['/manager/list/popup']),//list
     ], <AiTwotoneSetting />),
     sidebarContentFormat('게시판관리', [
         sidebarObjListFormat('문의관리', '/manager/list/request', 40, ['/manager/list/request']),//list
-        sidebarObjListFormat('FAQ관리', '/manager/list/faq', 40, ['/manager/list/faq']),//list
+        sidebarObjListFormat('자주 하는 질문 관리', '/manager/list/faq', 40, ['/manager/list/faq']),//list
         //sidebarObjListFormat('이벤트관리', '/manager/list/event', 40, ['/manager/list/event']),//list
         sidebarObjListFormat('공지사항', '/manager/list/notice', 40, ['/manager/list/notice']),//list
         //sidebarObjListFormat('후기관리', '/manager/list/review', 40, ['/manager/list/review']),//list
@@ -180,7 +181,7 @@ export const objManagerListContent = {
         false,
         false),
     faq: sidebarObjFormat(
-        'FAQ 관리',
+        '자주 하는 질문 관리',
         'faq',
         [
             columnObjFormat('제목', '', 'text', 'title'),
@@ -492,47 +493,38 @@ export const objManagerEditContent = {
             // ],
         ],
     },
-    enrolment_setting: {
+    basic_setting: {
         schema: 'setting',
-        breadcrumb: '수강신청배너',
+        breadcrumb: '기본설정',
         add_list: [],
         columns: [//img, select, input, 
             [
-                editColumnObjFormat('슬라이드 이미지 1 (500x125)', 'img', { field_name: 'content1' }, 'enrolment_banner_img_1')
+                editColumnObjFormat('부동산 중개수수료 (%)', 'input', { placeholder: '숫자를 입력해 주세요 1~100' }, 'realtor_charge_percent'),
             ],
-            [
-                editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'enrolment_banner_link_1'),
-            ],
-            [
-                editColumnObjFormat('슬라이드 이미지 2 (500x125)', 'img', { field_name: 'content2' }, 'enrolment_banner_img_2')
-            ],
-            [
-                editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'enrolment_banner_link_2'),
-            ],
-            [
-                editColumnObjFormat('슬라이드 이미지 3 (500x125)', 'img', { field_name: 'content3' }, 'enrolment_banner_img_3')
-            ],
-            [
-                editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'enrolment_banner_link_3'),
-            ],
-            [
-                editColumnObjFormat('슬라이드 이미지 4 (500x125)', 'img', { field_name: 'content4' }, 'enrolment_banner_img_4')
-            ],
-            [
-                editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'enrolment_banner_link_4'),
-            ],
-            [
-                editColumnObjFormat('슬라이드 이미지 5 (500x125)', 'img', { field_name: 'content5' }, 'enrolment_banner_img_5')
-            ],
-            [
-                editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'enrolment_banner_link_5'),
-            ],
-            [
-                editColumnObjFormat('하단 배너 (600x150)', 'img', { field_name: 'content' }, 'enrolment_bottom_banner'),
-            ],
-            [
-                editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'enrolment_bottom_banner_link'),
-            ],
+            // [
+            //     editColumnObjFormat('슬라이드 이미지 2 (500x150)', 'img', { field_name: 'content2' }, 'home_banner_img_2'),
+            // ],
+            // [
+            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_2'),
+            // ],
+            // [
+            //     editColumnObjFormat('슬라이드 이미지 3 (500x150)', 'img', { field_name: 'content3' }, 'home_banner_img_3'),
+            // ],
+            // [
+            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_3'),
+            // ],
+            // [
+            //     editColumnObjFormat('슬라이드 이미지 4 (500x150)', 'img', { field_name: 'content4' }, 'home_banner_img_4'),
+            // ],
+            // [
+            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_4'),
+            // ],
+            // [
+            //     editColumnObjFormat('슬라이드 이미지 5 (500x150)', 'img', { field_name: 'content5' }, 'home_banner_img_5'),
+            // ],
+            // [
+            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_5'),
+            // ],
         ],
     },
     event: {
@@ -557,7 +549,7 @@ export const objManagerEditContent = {
     },
     faq: {
         schema: 'faq',
-        breadcrumb: 'FAQ',
+        breadcrumb: '자주 하는 질문',
         add_list: [],
         columns: [//img, select, input, 
             [

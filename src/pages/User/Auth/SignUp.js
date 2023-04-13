@@ -252,6 +252,9 @@ const SignUp = () => {
             navigate('/login');
         } else {
             toast.error(response?.message);
+            if(response?.data?.step){
+                setStep(response?.data?.step);
+            }
         }
     }
     const onPreStep = () => {

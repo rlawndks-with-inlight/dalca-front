@@ -1,6 +1,6 @@
 import { BiEditAlt } from "react-icons/bi";
-import { getPayCategory, getPayStatus, getUserLevelByNumber } from "../../functions/format";
-import { commarNumber, dateFormat } from "../../functions/utils";
+import { getPayStatus, getUserLevelByNumber } from "../../functions/format";
+import { commarNumber, dateFormat, getKoPayCategoryByNum } from "../../functions/utils";
 import theme from "../../styles/theme";
 import { AiFillCreditCard, AiOutlineUnorderedList } from "react-icons/ai";
 import { RiDeleteBinLine, RiMoneyDollarCircleLine } from "react-icons/ri";
@@ -48,7 +48,7 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
     } else if (type == 'level') {
         result = getUserLevelByNumber(data[`${column}`])
     } else if (type == 'pay_category') {
-        result = getPayCategory(data)
+        result = getKoPayCategoryByNum(data?.pay_category)
     } else if (type == 'prider') {
         if (data[`${column}`] == 0) {
             result = "없음";
