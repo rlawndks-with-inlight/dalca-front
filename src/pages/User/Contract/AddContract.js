@@ -71,11 +71,11 @@ const AddContract = () => {
         end_date: returnMoment().substring(0, 10),
         pay_day: 1,
     })
-    useInterval(async ()=>{
-        if(activeStep==1 || activeStep ==2){
+    useInterval(async () => {
+        if (activeStep == 1 || activeStep == 2) {
             getCheckContractAppr();
         }
-    }, 5*1000);
+    }, 5 * 1000);
     useEffect(() => {
         let user_data = getLocalStorage('auth');
         if (user_data?.user_level < 10 || !user_data?.pk) {
@@ -115,7 +115,7 @@ const AddContract = () => {
         obj['monthly'] = obj['monthly'] / 10000;
         obj['deposit'] = obj['deposit'] / 10000;
 
-        let img_list = JSON.parse(obj['document_src']??'[]');
+        let img_list = JSON.parse(obj['document_src'] ?? '[]');
         for (var i = 0; i < img_list.length; i++) {
             img_list[i]['url'] = backUrl + img_list[i]['url'];
         }
@@ -244,7 +244,7 @@ const AddContract = () => {
                     let formData = new FormData();
                     formData.append('pdf', pdf_list[i].content);
                     const { data: response_image } = await axios.post('/api/addimageitems', formData);
-                    if(!pdf_list[i]['name']){
+                    if (!pdf_list[i]['name']) {
                         pdf_list[i]['name'] = pdf_list[i]['content']['name'];
                     }
                     pdf_list[i]['content'] = "";
@@ -252,7 +252,7 @@ const AddContract = () => {
                 }
                 pdf_list[i]['url'] = pdf_list[i]['url'].replaceAll(backUrl, "");
             }
-          
+
             let obj = {
                 address: values?.address,
                 pdf_list: JSON.stringify(pdf_list),
@@ -381,7 +381,7 @@ const AddContract = () => {
     const addContract = async () => {
 
     }
-   
+
     const addFile = (e) => {
         let { id, files } = e.target;
         if (e.target.files[0]) {
@@ -590,7 +590,7 @@ const AddContract = () => {
                                             <input type="file" id={`document_src`} onChange={addFile} style={{ display: 'none' }} />
                                         </div>
                                         <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF업로드</CategoryName>
-                                        <div style={{ display: 'flex', flexDirection:'column' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
                                             {pdfList.map((item, idx) => (
                                                 <>
                                                     <div style={{
@@ -822,9 +822,48 @@ const AddContract = () => {
                                         <div style={{ margin: 'auto auto 8px auto' }}>
                                             <Icon icon="line-md:confirm-circle" style={{ fontSize: '52px', color: theme.color.background1 }} />
                                         </div>
-                                        <div style={{ margin: '8px auto auto auto' }}>
+                                        <div style={{ margin: '8px auto 1rem auto' }}>
                                             계약이 성사되었습니다.<br />
                                         </div>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+                                            {imgList.map((item, idx) => (
+                                                <>
+                                                    <div style={{
+                                                        margin: 'auto 0.25rem',
+                                                        position: 'relative'
+                                                    }}
+                                                    >
+                                                        <img src={item?.url} alt="#"
+                                                            style={{
+                                                                height: '8rem', width: 'auto'
+                                                            }} />
+                                                    </div>
+
+                                                </>
+                                            ))}
+                                        </div>
+
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+                                            {pdfList.map((item, idx) => (
+                                                <>
+                                                    <div style={{
+                                                        margin: 'auto 0.25rem',
+                                                        position: 'relative',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        cursor: 'pointer',
+                                                        color: theme.color.background1,
+                                                    }}
+                                                    >
+                                                        <a href={item?.url} download={item?.content?.name || item?.name} style={{ textDecoration: 'none', color: theme.color.background1 }}>
+                                                            {item?.content?.name || item?.name}
+                                                        </a>
+                                                    </div>
+
+                                                </>
+                                            ))}
+                                        </div>
+
                                     </motion.div>
                                 </>
                                 :
