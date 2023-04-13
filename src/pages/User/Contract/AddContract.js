@@ -53,6 +53,7 @@ const AddContract = () => {
     const [userData, setUserData] = useState({});
     const [isComplete, setIsComplete] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [wantSeeImg, setWantSeeImg] = useState("");
     const [values, setValues] = useState({
         landlord_pk: 0,
         landlord_search: '',
@@ -835,8 +836,13 @@ const AddContract = () => {
                                                     >
                                                         <img src={item?.url} alt="#"
                                                             style={{
-                                                                height: '8rem', width: 'auto'
-                                                            }} />
+                                                                height: '8rem', width: 'auto',
+                                                                cursor:'pointer'
+                                                            }}
+                                                            onClick={() => {
+                                                                setWantSeeImg(item?.url)
+                                                            }}
+                                                            />
                                                     </div>
 
                                                 </>
@@ -889,6 +895,15 @@ const AddContract = () => {
                                 <>
                                     <Modal onClickXbutton={() => { setIsSeePostCode(false) }}>
                                         <DaumPostcode style={postCodeStyle} onComplete={onSelectAddress} />
+                                    </Modal>
+                                </>
+                                :
+                                <>
+                                </>}
+                                {wantSeeImg ?
+                                <>
+                                    <Modal onClickXbutton={() => { setWantSeeImg("") }}>
+                                        <img src={wantSeeImg} style={{ width: '80%', maxHeight: '90vh' }} />
                                     </Modal>
                                 </>
                                 :
