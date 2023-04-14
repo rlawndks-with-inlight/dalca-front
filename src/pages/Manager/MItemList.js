@@ -192,11 +192,11 @@ const MItemList = () => {
 
         }
     })
-    const changeStatus = useCallback(async (num, pk, column) => {
+    const changeStatus = useCallback(async (num, data, column) => {
         const { data: response } = await axios.post('/api/updatestatus', {
-            table: objManagerListContent[params.table].schema,
+            table: data?.table || objManagerListContent[params.table].schema,
             column: column,
-            pk: pk,
+            pk: data?.pk,
             num: num,
         })
         changePage(page)

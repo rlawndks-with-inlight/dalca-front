@@ -80,6 +80,7 @@ export const objManagerListContent = {
             columnObjFormat('주소', '', 'text', 'address'),
             columnObjFormat('우편번호', '', 'text', 'zip_code'),
             columnObjFormat('생성일', '', 'text', 'date'),
+            columnObjFormat('승인여부', '', 'status', 'status'),
             columnObjFormat('수정', '', 'edit', 'edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
         ],

@@ -88,8 +88,8 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         if (is_list) {
             result = <>
                 {data[`${column}`] > 0 ?
-                    <CgToggleOn style={{ color: `${theme.color.background1}`, cursor: 'pointer', fontSize: theme.size.font1 }} onClick={() => { changeStatus(0, data.pk, column) }} /> :
-                    <CgToggleOff style={{ color: '#aaaaaa', cursor: 'pointer', fontSize: theme.size.font1 }} onClick={() => { changeStatus(1, data.pk, column) }} />}
+                    <CgToggleOn style={{ color: `${theme.color.background1}`, cursor: 'pointer', fontSize: theme.size.font1 }} onClick={() => { changeStatus(0, data, column) }} /> :
+                    <CgToggleOff style={{ color: '#aaaaaa', cursor: 'pointer', fontSize: theme.size.font1 }} onClick={() => { changeStatus(1, data, column) }} />}
             </>
         }
     } else if (type == 'request_status') {
@@ -114,7 +114,7 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         result = "---";
         if (is_list) {
             result = <>
-                <BiEditAlt style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() => navigate(`/manager/edit/${schema}/${data.pk}`)} />
+                <BiEditAlt style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() => navigate(`/manager/edit/${data.table || schema}/${data.pk}`)} />
             </>
         }
     } else if (type == 'pay_list') {
