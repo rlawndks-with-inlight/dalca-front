@@ -342,7 +342,8 @@ const AddContract = () => {
             }
         }
         if (activeStep == 3) {
-            navigate('/history/contract');
+            setActiveStep(0);
+            getCheckContractAppr();
         }
     }
     const onPrevButton = () => {
@@ -575,8 +576,11 @@ const AddContract = () => {
                                                             </>}
                                                         <img src={item?.url} alt="#"
                                                             style={{
-                                                                height: '8rem', width: 'auto'
-                                                            }} />
+                                                                height: '8rem', width: 'auto',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                            onClick={() => { setWantSeeImg(item?.url) }}
+                                                        />
                                                     </div>
 
                                                 </>
@@ -823,52 +827,10 @@ const AddContract = () => {
                                         <div style={{ margin: 'auto auto 8px auto' }}>
                                             <Icon icon="line-md:confirm-circle" style={{ fontSize: '52px', color: theme.color.background1 }} />
                                         </div>
-                                        <div style={{ margin: '8px auto 1rem auto' }}>
+                                        <div style={{ margin: '8px auto auto auto' }}>
                                             계약이 성사되었습니다.<br />
                                         </div>
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
-                                            {imgList.map((item, idx) => (
-                                                <>
-                                                    <div style={{
-                                                        margin: 'auto 0.25rem',
-                                                        position: 'relative'
-                                                    }}
-                                                    >
-                                                        <img src={item?.url} alt="#"
-                                                            style={{
-                                                                height: '8rem', width: 'auto',
-                                                                cursor:'pointer'
-                                                            }}
-                                                            onClick={() => {
-                                                                setWantSeeImg(item?.url)
-                                                            }}
-                                                            />
-                                                    </div>
 
-                                                </>
-                                            ))}
-                                        </div>
-
-                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
-                                            {pdfList.map((item, idx) => (
-                                                <>
-                                                    <div style={{
-                                                        margin: 'auto 0.25rem',
-                                                        position: 'relative',
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        cursor: 'pointer',
-                                                        color: theme.color.background1,
-                                                    }}
-                                                    >
-                                                        <a href={item?.url} download={item?.content?.name || item?.name} style={{ textDecoration: 'none', color: theme.color.background1 }}>
-                                                            {item?.content?.name || item?.name}
-                                                        </a>
-                                                    </div>
-
-                                                </>
-                                            ))}
-                                        </div>
 
                                     </motion.div>
                                 </>
@@ -900,7 +862,7 @@ const AddContract = () => {
                                 :
                                 <>
                                 </>}
-                                {wantSeeImg ?
+                            {wantSeeImg ?
                                 <>
                                     <Modal onClickXbutton={() => { setWantSeeImg("") }}>
                                         <img src={wantSeeImg} style={{ width: '80%', maxHeight: '90vh' }} />

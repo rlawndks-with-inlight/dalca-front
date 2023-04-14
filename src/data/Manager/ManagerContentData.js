@@ -27,10 +27,11 @@ export const zSidebar = [
         sidebarObjListFormat('계약관리', '/manager/list/contract', 40, ['/manager/list/contract']),//list
         sidebarObjListFormat('결제관리', '/manager/list/pay', 40, ['/manager/list/pay']),//list
         sidebarObjListFormat('부동산관리', '/manager/list/real_estate', 40, ['/manager/list/real_estate']),//list
+        sidebarObjListFormat('포인트관리', '/manager/edit/point_setting/1', 40, ['/manager/edit/point_setting/1']),//list
+        sidebarObjListFormat('포인트내역관리', '/manager/list/point', 40, ['/manager/list/point']),//list
     ], <RiMoneyDollarCircleLine />),
     sidebarContentFormat('기본설정', [
         sidebarObjListFormat('메인배너', '/manager/edit/home_setting/1', 40, ['/manager/edit/home_setting/1']),//list
-        sidebarObjListFormat('기본설정', '/manager/edit/basic_setting/1', 40, ['/manager/edit/basic_setting/1']),//list
         sidebarObjListFormat('팝업관리', '/manager/list/popup', 40, ['/manager/list/popup']),//list
     ], <AiTwotoneSetting />),
     sidebarContentFormat('게시판관리', [
@@ -140,7 +141,7 @@ export const objManagerListContent = {
         ['order=pk', 'start_date=', 'end_date=', 'is_contract='],
         true,
         false,
-        '150%'),
+        '100%'),
     pay: sidebarObjFormat(
         '결제 내역 관리',
         'pay',
@@ -164,7 +165,23 @@ export const objManagerListContent = {
         ['status=', 'order=pk', 'start_date=', 'end_date=', 'pay_category='],
         true,
         false,
-        '150%'),
+        '100%'),
+    point: sidebarObjFormat(
+        '포인트 내역 관리',
+        'point',
+        [
+            columnObjFormat('유저아이디', '', 'text', 'user_id'),
+            columnObjFormat('유저명', '', 'text', 'user_name'),
+            columnObjFormat('발생금액', '', 'number', 'price'),
+            columnObjFormat('비고', '', 'text', 'manager_note'),
+            columnObjFormat('발생일', '', 'text', 'date'),
+            columnObjFormat('수정', '', 'edit', 'edit'),
+            columnObjFormat('삭제', '', 'delete', 'delete'),
+        ],
+        ['status=', 'order=pk', 'start_date=', 'end_date='],
+        true,
+        false,
+        '100%'),
     request: sidebarObjFormat(
         '문의 관리',
         'request',
@@ -175,7 +192,7 @@ export const objManagerListContent = {
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('확인여부', '', 'request_status', 'request_status'),
             columnObjFormat('문의날짜', '', 'text', 'date'),
-            columnObjFormat('수정', '', 'edit', 'edit'),
+            columnObjFormat('답변하기', '', 'edit', 'edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
         ],
         [],
@@ -275,87 +292,8 @@ export const objManagerOptionCardContent = {
 
 }
 export const objManagerEditContent = {
-    academy_category: {
-        schema: 'academy_category',
-        breadcrumb: '강의',
-        add_list: [],
-        columns: [//img, select, input, 
-            [
-                editColumnObjFormat('메인이미지 (240x150)', 'img', { field_name: 'content' }, 'main_img'),
-            ],
-            [
-                editColumnObjFormat('서브이미지 (90x120)', 'img', { field_name: 'content2' }, 'sub_img'),
-            ],
-            [
-                editColumnObjFormat('제목', 'input', { placeholder: '제목을 입력해 주세요.' }, 'title'),
-                editColumnObjFormat('부제목', 'input', { placeholder: '부제목을 입력해 주세요.' }, 'sub_title'),
-                editColumnObjFormat('해시태그', 'input', { placeholder: '#주식' }, 'hash'),
-            ],
-            [
-                // editColumnObjFormat('난이도', 'select', {
-                //     api_url: false, option_list: [
-                //         { name: '왕초보', val: 1 },
-                //         { name: '검색기', val: 2 },
-                //         { name: '단타', val: 3 },
-                //         { name: '종목발굴', val: 4 },
-                //         { name: '기억분석', val: 5 },
-                //     ]
-                // }, 'difficulty'),
-                editColumnObjFormat('강사', 'select', {
-                    api_url: '/api/items?table=user&level=30', option_list: [], use_name_column: 'nickname', use_val_column: 'pk'
-                }, 'master_pk'),
-            ],
-            [
-                editColumnObjFormat('수강대상', 'input', { placeholder: '수강대상을 입력해 주세요.' }, 'target'),
-                editColumnObjFormat('강의구성', 'input', { placeholder: '강의구성을 입력해 주세요.' }, 'composition'),
-            ],
-            [
-                editColumnObjFormat('시작일', 'input', { type: 'date' }, 'start_date'),
-                editColumnObjFormat('종료일', 'input', { type: 'date' }, 'end_date'),
-            ],
-            [
-                editColumnObjFormat('정가', 'input', { type: 'number', placeholder: '숫자를 입력해 주세요.' }, 'price'),
-                editColumnObjFormat('할인율', 'input', { type: 'number', placeholder: '0 ~ 100' }, 'discount_percent'),
-            ],
-            [
-                editColumnObjFormat('마감여부', 'select', {
-                    api_url: false, option_list: [
-                        { name: '마감안함', val: 0 },
-                        { name: '마감', val: 1 },
-                    ]
-                }, 'is_deadline'),
-            ],
-            [
-                editColumnObjFormat('소개', 'editor', {}, 'introduce_note'),
-            ],
-            [
-                editColumnObjFormat('혜택', 'editor', {}, 'benefit_note'),
-            ],
-            [
-                editColumnObjFormat('리더', 'editor', {}, 'leader_note'),
-            ],
-            [
-                editColumnObjFormat('커리큘럼', 'editor', {}, 'curriculum_note'),
-            ],
-        ],
-    },
-    academy: {
-        schema: 'academy',
-        breadcrumb: '강의 컨텐츠',
-        add_list: [],
-        columns: [//img, select, input, 
-            [
-                editColumnObjFormat('메인이미지 (240x150)', 'img', { field_name: 'content' }, 'main_img'),
-            ],
-            [
-                editColumnObjFormat('제목', 'input', { placeholder: '제목을 입력해 주세요.' }, 'title'),
-                editColumnObjFormat('해시태그', 'input', { placeholder: '' }, 'hash'),
-            ],
-            [
-                editColumnObjFormat('내용', 'editor', {}, 'note'),
-            ],
-        ],
-    },
+
+
     request: {
         schema: 'request',
         breadcrumb: '문의',
@@ -373,36 +311,7 @@ export const objManagerEditContent = {
             ],
         ],
     },
-    master: {
-        schema: 'user',
-        breadcrumb: '전문가',
-        add_list: [{ key: 'user_level', value: 30 }],
-        columns: [//img, select, input, 
-            [
-                editColumnObjFormat('아이디', 'input', {}, 'id'),
-                editColumnObjFormat('비밀번호', 'input', { placeholder: '****', type: 'password' }, 'pw'),
-            ],
-            [
-                editColumnObjFormat('이름', 'input', {}, 'name'),
-                editColumnObjFormat('닉네임(채널명)', 'input', {}, 'nickname'),
-            ],
-            [
-                editColumnObjFormat('프로필이미지  (여백없이 200x200)', 'img', { field_name: 'master', title_width: '100%' }, 'profile_img'),
-            ],
-            [
-                editColumnObjFormat('서브프로필이미지 (여백없이 200x200)', 'img', { field_name: 'master2', title_width: '100%' }, 'sub_profile_img'),
-            ],
-            [
-                editColumnObjFormat('이력', 'textarea', {}, 'record_note'),
-            ],
-            [
-                editColumnObjFormat('소개 이미지', 'img', { field_name: 'content3' }, 'introduce_img'),
-            ],
-            [
-                editColumnObjFormat('소개', 'editor', {}, 'introduce_note'),
-            ],
-        ],
-    },
+
     common_setting: {
         schema: 'setting',
         breadcrumb: '상단띠배너',
@@ -494,16 +403,16 @@ export const objManagerEditContent = {
             // ],
         ],
     },
-    basic_setting: {
+    point_setting: {
         schema: 'setting',
-        breadcrumb: '기본설정',
+        breadcrumb: '포인트설정',
         add_list: [],
         columns: [//img, select, input, 
             // [
             //     editColumnObjFormat('부동산 중개수수료 (%)', 'input', { placeholder: '숫자를 입력해 주세요 1~100' }, 'realtor_charge_percent'),
             // ],
             [
-                editColumnObjFormat('결제시 포인트 퍼센트 (%)', 'input', { placeholder: '숫자를 입력해 주세요 1~100' }, 'point_percent'),
+                editColumnObjFormat('포인트 적립퍼센트 (%)', 'input', { placeholder: '숫자를 입력해 주세요 1~100' }, 'point_percent'),
             ],
             // [
             //     editColumnObjFormat('슬라이드 이미지 2 (500x150)', 'img', { field_name: 'content2' }, 'home_banner_img_2'),
@@ -564,6 +473,7 @@ export const objManagerEditContent = {
             ],
         ],
     },
+   
     notice: {
         schema: 'notice',
         breadcrumb: '공지사항',

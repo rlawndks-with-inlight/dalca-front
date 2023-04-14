@@ -41,6 +41,7 @@ import MContactEdit from '../pages/Manager/MContactEdit';
 import MUserCardEdit from '../pages/Manager/MUserCardEdit';
 import MRealEstateEdit from '../pages/Manager/MRealEstateEdit';
 import AroundRealEstate from '../pages/User/RealEstate/AroundRealEstate';
+import MPointEdit from '../pages/Manager/MPointEdit';
 
 const zManagerRoute = [
     { link: '/manager', element: <MLogin />, title: "관리자로그인" },
@@ -54,6 +55,7 @@ const zManagerRoute = [
     { link: '/manager/edit/pay_cancel/:pk', element: <MPayCancelEdit />, title: "결제 내역 취소 관리" },
     { link: '/manager/edit/user_card/:pk', element: <MUserCardEdit />, title: "결제 카드 관리" },
     { link: '/manager/edit/real_estate/:pk', element: <MRealEstateEdit />, title: "부동산 관리" },
+    { link: '/manager/edit/point/:pk', element: <MPointEdit />, title: "포인트 관리" },
     
     { link: '/manager/edit/setting', element: <MSettingEdit />, title: "환경설정" },
     { link: '/manager/edit/pay_excel', element: <MPayExcelEdit />, title: "" },

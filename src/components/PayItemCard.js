@@ -81,6 +81,8 @@ const PayItemCard = (props) => {
                     // }
                 }
             })
+        }else if(item?.status == 1){
+            navigate('/history/pay')
         }
     }
     const returnPayStatus = () => {
