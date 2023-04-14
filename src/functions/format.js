@@ -91,3 +91,15 @@ export const getUserLevelByNumber = (num, is_profile) => {
     return "잘못된레벨"
   }
 }
+export const getPointHistoryByNum = (data) =>{
+  if(data.type==0){
+    if(data.status==1){
+      return "월세결제로 인해 발생"
+    }else{
+      return "월세결제 취소"
+    }
+  }else{
+    return "---"
+
+  }
+}

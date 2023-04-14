@@ -56,8 +56,8 @@ export const objHistoryListContent = {
         title: "포인트",
         columns: [
             columnObjFormat('날짜', '', 'date', 'date'),
-            columnObjFormat('점수', '', 'score', 'score'),
-            columnObjFormat('비고', '', 'text', 'comment'),
+            columnObjFormat('포인트', '', 'number', 'price'),
+            columnObjFormat('비고', '', 'point_history', 'point_history'),
         ]
     },
     pay_0: {

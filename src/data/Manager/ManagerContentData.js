@@ -498,8 +498,11 @@ export const objManagerEditContent = {
         breadcrumb: '기본설정',
         add_list: [],
         columns: [//img, select, input, 
+            // [
+            //     editColumnObjFormat('부동산 중개수수료 (%)', 'input', { placeholder: '숫자를 입력해 주세요 1~100' }, 'realtor_charge_percent'),
+            // ],
             [
-                editColumnObjFormat('부동산 중개수수료 (%)', 'input', { placeholder: '숫자를 입력해 주세요 1~100' }, 'realtor_charge_percent'),
+                editColumnObjFormat('결제시 포인트 퍼센트 (%)', 'input', { placeholder: '숫자를 입력해 주세요 1~100' }, 'point_percent'),
             ],
             // [
             //     editColumnObjFormat('슬라이드 이미지 2 (500x150)', 'img', { field_name: 'content2' }, 'home_banner_img_2'),

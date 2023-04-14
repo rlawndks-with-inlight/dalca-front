@@ -15,7 +15,7 @@ import { getLocalStorage } from "../functions/LocalStorage";
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { getPayCategory, getPayStatus } from "../functions/format";
+import { getPayCategory, getPayStatus, getPointHistoryByNum } from "../functions/format";
 const Table = styled.table`
 font-size:${props => props.theme.size.font4};
 width:100%;
@@ -163,7 +163,7 @@ const ContentTable = (props) => {
     const getPayMonth = (data) => {
 
     }
-    const sendSmsOnMissPay = async (data) =>{
+    const sendSmsOnMissPay = async (data) => {
         Swal.fire({
             title: `미납문자 발송 하시겠습니까?`,
             showCancelButton: true,
@@ -171,7 +171,7 @@ const ContentTable = (props) => {
             cancelButtonText: '취소'
         }).then(async (result) => {
             if (result.isConfirmed) {
-               
+
                 let fix_phone = data?.lessee_phone;
                 for (var i = 0; i < fix_phone.length; i++) {
                     if (isNaN(parseInt(fix_phone[i]))) {
@@ -181,7 +181,7 @@ const ContentTable = (props) => {
                 }
                 fix_phone = fix_phone.replaceAll('-', '');
                 fix_phone = fix_phone.replaceAll(' ', '');
-                let string = `\n${data?.pay_category==0?`${data?.day} 일자 `:``}${getKoLevelByNum(data?.pay_category)} 미납문자 알림 드립니다.\n\n-달카페이-`;
+                let string = `\n${data?.pay_category == 0 ? `${data?.day} 일자 ` : ``}${getKoLevelByNum(data?.pay_category)} 미납문자 알림 드립니다.\n\n-달카페이-`;
                 try {
                     const { data: response } = await axios.post(`/api/sendsms`, {
                         receiver: [fix_phone, formatPhoneNumber(fix_phone)],
@@ -189,7 +189,7 @@ const ContentTable = (props) => {
                     })
                     if (response?.result > 0) {
                         toast.success('성공적으로 발송되었습니다.');
-        
+
                     } else {
                     }
                 } catch (e) {
@@ -303,6 +303,10 @@ const ContentTable = (props) => {
                                                     null}
                                                 {column.type == 'pay_status' ?
                                                     getPayStatus(item) ?? "---"
+                                                    :
+                                                    null}
+                                                {column.type == 'point_history' ?
+                                                    getPointHistoryByNum(item) ?? "---"
                                                     :
                                                     null}
                                                 {column.type == 'pay_category' ?
