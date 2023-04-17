@@ -188,7 +188,7 @@ export const objManagerListContent = {
         [
             columnObjFormat('문의자아이디', '', 'text', 'id'),
             columnObjFormat('문의자명', '', 'text', 'name'),
-            columnObjFormat('문의자주민번호', '', 'text', 'id_number'),
+           // columnObjFormat('문의자주민번호', '', 'text', 'id_number'),
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('확인여부', '', 'request_status', 'request_status'),
             columnObjFormat('문의날짜', '', 'text', 'date'),
