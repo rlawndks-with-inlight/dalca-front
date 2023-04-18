@@ -1,7 +1,7 @@
 //내역
 
 import { Icon } from "@iconify/react";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -11,7 +11,7 @@ import ContentTable from "../../../components/ContentTable";
 import MBottomContent from "../../../components/elements/MBottomContent";
 import PageButton from "../../../components/elements/pagination/PageButton";
 import PageContainer from "../../../components/elements/pagination/PageContainer";
-import { colorButtonStyle, HalfTitle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, HalfTitle, InputComponent, Wrappers } from "../../../components/elements/UserContentTemplete";
 import Loading from "../../../components/Loading";
 import { mainPhone, objHistoryListContent } from "../../../data/ContentData";
 import { getLocalStorage } from "../../../functions/LocalStorage";
@@ -59,6 +59,7 @@ const History = () => {
     const [data, setData] = useState([]);
     const [pageList, setPageList] = useState([]);
     const [page, setPage] = useState(1);
+    const [searchKeyword, setSearchKeyword] = useState("")
     useEffect(() => {
         if (params?.category) {
             getAuth();
@@ -88,7 +89,7 @@ const History = () => {
         }
         setLoading(true);
         setPage(num);
-        const { data: response } = await axios.get(`/api/items?table=${params?.category}&page=${num}&order=pk${state_query_str}`);
+        const { data: response } = await axios.get(`/api/items?table=${params?.category}&page=${num}&order=pk${state_query_str}&keyword=${searchKeyword}`);
         if (response?.result < 0) {
             toast.error(response?.message);
         } else {
@@ -153,6 +154,32 @@ const History = () => {
                     <>
                     </>}
                 <HalfTitle style={{ maxWidth: '1050px' }}>{getTitle(params?.category)}</HalfTitle>
+                {location?.pathname.includes('/list/') ?
+                    <>
+                        <InputComponent
+                            label={'검색어를 입력해 주세요.'}
+                            input_type={{
+                                placeholder: ''
+                            }}
+                            class_name='keyword'
+                            is_divider={true}
+                            icon_label={
+                                <Icon icon='ic:outline-search' style={{ cursor: 'pointer' }} />
+                            }
+                            onChange={(e) => setSearchKeyword(e)}
+                            value={searchKeyword}
+                            onClickIcon={() => {
+                                changePage(1)
+                            }}
+                            onKeyPress={() => {
+                                changePage(1)
+                            }}
+                        />
+                    </>
+                    :
+                    <>
+                    </>
+                }
                 {loading ?
                     <>
                         <Loading />
@@ -164,6 +191,7 @@ const History = () => {
                             animate={{ opacity: 1 }}
                             style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '350px' }}
                         >
+
                             <ContentTable
                                 columns={objHistoryListContent[schema] ?? []}
                                 data={data}
