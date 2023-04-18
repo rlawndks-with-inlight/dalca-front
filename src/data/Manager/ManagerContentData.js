@@ -158,6 +158,7 @@ export const objManagerListContent = {
             columnObjFormat('금액', '', 'number', 'price'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
             columnObjFormat('납부현황', '', 'pay_status', 'pay_status'),
+            columnObjFormat('취소요청현황', '', 'want_pay_cancel', 'want_pay_cancel'),
             columnObjFormat('취소', '', 'pay_cancel', 'pay_cancel'),
             columnObjFormat('수정', '', 'pay_edit', 'pay_edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),

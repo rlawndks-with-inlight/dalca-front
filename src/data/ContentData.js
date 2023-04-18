@@ -75,7 +75,7 @@ export const objHistoryListContent = {
             columnObjFormat('납부일', '', 'text', 'trade_day'),
             columnObjFormat('납부현황', '', 'pay_status', 'status'),
             columnObjFormat('납부하기', '', 'go_pay', 'go_pay'),
-
+            columnObjFormat('취소요청', '', 'want_cancel', 'want_cancel'),
         ]
     },
     pay_5: {

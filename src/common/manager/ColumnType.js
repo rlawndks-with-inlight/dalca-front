@@ -92,7 +92,13 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
                     <CgToggleOff style={{ color: '#aaaaaa', cursor: 'pointer', fontSize: theme.size.font1 }} onClick={() => { changeStatus(1, data, column) }} />}
             </>
         }
-    } else if (type == 'request_status') {
+    }else if(type=='want_pay_cancel'){  
+        if(data['is_want_cancel']==1){
+            result = '취소요청';
+        }else if(data['is_want_cancel']==-1){
+            result = '취소완료';
+        }
+    }else if (type == 'request_status') {
         if (data[`status`] == 1) {
             result = "답변완료";
         } else {

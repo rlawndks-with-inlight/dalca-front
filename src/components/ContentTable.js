@@ -198,6 +198,26 @@ const ContentTable = (props) => {
             }
         })
     }
+    const onWantPayCancel = async (pk) => {
+        Swal.fire({
+            title: `결제취소 요청을 하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const { data: response } = await axios.post('/api/wantpaycancel', {
+                    pay_pk: pk
+                })
+                if (response?.result > 0) {
+                    toast.success('취소요청이 성공적으로 발송되었습니다.');
+                } else {
+                    toast.error(response?.message);
+                }
+            }
+        })
+
+    }
     return (
         <>
             {loading ?
@@ -261,6 +281,30 @@ const ContentTable = (props) => {
                                                     </IconButton>
                                                     :
                                                     null}
+                                                {column.type == 'want_cancel' ?
+                                                    <>
+                                                        {item?.status == 1 && item?.is_want_cancel == 0 ?
+                                                            <>
+                                                                <IconButton onClick={() => {
+                                                                    onWantPayCancel(item?.pk)
+                                                                }}>
+                                                                    <Icon icon="material-symbols:cancel-outline" style={{ color: theme.color.background1 }} />
+                                                                </IconButton>
+                                                            </>
+                                                            :
+                                                            <>
+                                                            {item?.status == 1 ?
+                                                            <>
+                                                            {item?.is_want_cancel == 1 ? '취소요청완료':''}
+                                                            {item?.is_want_cancel == -1 ? '취소완료':''}
+                                                            </>
+                                                            :
+                                                            <>
+                                                            </>}
+                                                            </>}
+                                                    </>
+                                                    :
+                                                    null}
                                                 {column.type == 'go_pay_list' ?
                                                     <IconButton onClick={() => {
                                                         navigate(`/history/pay`, {
@@ -273,7 +317,6 @@ const ContentTable = (props) => {
                                                     </IconButton>
                                                     :
                                                     null}
-
                                                 {column.type == 'send_miss_pay' ?
                                                     <>
                                                         {item?.status == 0 ?
