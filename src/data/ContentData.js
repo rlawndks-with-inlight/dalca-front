@@ -38,6 +38,9 @@ export const zBottomMenu = [
 ];
 export const mainPhone = "1533-8643";
 export const zManagerLevel = [40, 50];
+export const PAY_INFO = {
+    MID: `wpaybill01`,
+}
 export const zSidebarMenu = [
     { name: '달카페이 회원부동산', link: '/around-realestate', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '결제카드등록 및 변경', link: '/card/change', level_list: [0, ...zManagerLevel] },
