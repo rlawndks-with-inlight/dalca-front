@@ -291,7 +291,7 @@ const ChangeCard = () => {
         setBirth(data?.birth ?? "");
         setPassword(data?.card_password ?? "");
         setFamilyType(data?.family_type);
-        setCardSrc(backUrl + data?.card_src);
+        setCardSrc(data?.card_src);
         setPhone(data?.phone ?? "");
         setPhoneCheck("");
         setEditPk(data?.pk)
