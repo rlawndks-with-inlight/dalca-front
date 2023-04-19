@@ -43,8 +43,8 @@ export const PAY_INFO = {
 }
 export const zSidebarMenu = [
     { name: '달카페이 회원부동산', link: '/around-realestate', level_list: [0, 5, 10, ...zManagerLevel] },
-    { name: '결제카드등록 및 변경', link: '/card/change', level_list: [0, ...zManagerLevel] },
-    { name: '타인카드등록 및 변경', link: '/card/family', level_list: [0, ...zManagerLevel] },
+    { name: '결제카드등록 및 변경', link: '/card/change', level_list: [0, 5, ...zManagerLevel] },
+    { name: '타인카드등록 및 변경', link: '/card/family', level_list: [0, 5, ...zManagerLevel] },
     { name: '계약내역', link: '/history/contract', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '포인트 적립내역 및 사용', link: '/history/point', level_list: [0, 10, ...zManagerLevel] },
     { name: '고객정보조회', link: '/customer-info', level_list: [0, 5, 10, ...zManagerLevel] },
@@ -178,6 +178,7 @@ export const objHistoryListContent = {
     user_card: {
         title: "타인카드",
         columns: [
+            columnObjFormat('체크', '', 'check', 'check'),
             columnObjFormat('카드번호', '', 'text', 'card_number'),
             columnObjFormat('카드사용자명', '', 'text', 'card_name'),
             columnObjFormat('생년월일', '', 'text', 'birth'),

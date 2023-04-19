@@ -1,6 +1,6 @@
 //카드변경
 
-import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 // ** React Imports
 import { useState } from 'react'
 
@@ -100,9 +100,11 @@ const ChangeCard = () => {
     const [phoneCheck, setPhoneCheck] = useState("")
     const [isSendSms, setIsSendSms] = useState(false);
     const [randNum, setRandNum] = useState("");
+    const [myAutoCard, setMyAutoCard] = useState({});
     useEffect(() => {
         setLoading(true);
         getCard(1);
+
     }, [])
     const getCard = async (num) => {
         setEditPk(0);
@@ -151,11 +153,13 @@ const ChangeCard = () => {
         setPassword(data?.card_password ?? "");
         setFamilyType(1);
         setCardSrc("");
+        setLoading(false);
         if (params?.category == 'family') {
             setPageList(range(1, response?.data?.maxPage));
             setPosts(response?.data?.data);
+            const {data:auto_card} = await axios.get('/api/myautocard');
+            $(`#user_card-${auto_card?.data?.pk}`).prop('checked', true);
         }
-        setLoading(false);
 
     }
 
@@ -174,7 +178,7 @@ const ChangeCard = () => {
             setCvc(target.value)
         }
     }
-    const sendMessage = async () =>{
+    const sendMessage = async () => {
         let string = `
         \n
         1) 부  2) 모  3) 형제  4) 자매\n
@@ -258,7 +262,6 @@ const ChangeCard = () => {
                     if (editPk > 0) {
                         api_str = `/api/updatefamilycard`
                         family_obj['pk'] = editPk;
-                        setEditPk(0);
                     } else {
                         api_str = `/api/addfamilycard`;
                     }
@@ -268,6 +271,8 @@ const ChangeCard = () => {
                 if (response?.result > 0) {
                     toast.success('성공적으로 저장 되었습니다.');
                     getCard(1);
+                    setEditPk(0);
+
                 } else {
                     toast.error(response?.message);
                 }
@@ -339,6 +344,56 @@ const ChangeCard = () => {
             console.log(e)
         }
         //console.log(response)
+    }
+    const registerAutoCard = async () => {
+        let table = "";
+        let pk = 0;
+        if (params?.category == 'family') {
+            table = 'user_card';
+            for (var i = 0; i < posts.length; i++) {
+                if ($(`#user_card-${posts[i]?.pk}`).is(':checked')) {
+                    pk = posts[i]?.pk
+                    break;
+                }
+            }
+            if(posts.length==0){
+                toast.error(`카드를 등록해 주세요.`);
+            }
+            if (pk == 0) {
+                toast.error(`선택할 카드를 체크해 주세요.`);
+                return;
+            }
+        } else if (params?.category == 'change') {
+            table = 'user';
+        }else{
+            return;
+        }
+        Swal.fire({
+            title: `저장 하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const { data: response } = await axios.post('/api/registerautocard', {
+                    table: table,
+                    pk: pk
+                })
+                if(response?.result>0){
+                    toast.success("성공적으로 자동결제 카드가 등록 되었습니다.");
+                }else{
+                    toast.error(response?.message);
+                }
+            }
+        })
+    }
+    const checkOnlyOne = (checkThis) => {
+        const checkboxes = document.getElementsByName('user_card-check')
+        for (let i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i] !== checkThis) {
+                checkboxes[i].checked = false
+            }
+        }
     }
     return (
         <>
@@ -558,6 +613,7 @@ const ChangeCard = () => {
                                     <>
                                         <ContentTable
                                             columns={objHistoryListContent['user_card'] ?? []}
+                                            checkOnlyOne={checkOnlyOne}
                                             data={posts}
                                             schema={'user_card'}
                                             table={'user_card'}
@@ -602,6 +658,7 @@ const ChangeCard = () => {
                                     :
                                     <>
                                     </>}
+                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 자동결제 신청' : '자동결제 카드 신청'}</Button>
                             </ContentWrappers>
 
                         </>}

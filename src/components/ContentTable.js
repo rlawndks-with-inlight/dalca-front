@@ -35,7 +35,7 @@ white-space:pre;
 `
 const ContentTable = (props) => {
     const navigate = useNavigate();
-    const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting, onClickList, onClickEditButton } = props;
+    const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting, onClickList, onClickEditButton, checkOnlyOne } = props;
     const [columns, setColumns] = useState([]);
     const [loading, setLoading] = useState(false);
     const onClickEvent = (str) => {
@@ -271,6 +271,10 @@ const ContentTable = (props) => {
                                                     }}>
                                                         <Icon icon="ph:eye" />
                                                     </IconButton>
+                                                    :
+                                                    null}
+                                                {column.type == 'check' ?
+                                                    <input type={'checkbox'} id={`${schema}-${item?.pk}`} name={`${schema}-check`} onChange={(e) => checkOnlyOne(e.target)} />
                                                     :
                                                     null}
                                                 {column.type == 'go_pay' ?
