@@ -181,7 +181,7 @@ const ContentTable = (props) => {
                 }
                 fix_phone = fix_phone.replaceAll('-', '');
                 fix_phone = fix_phone.replaceAll(' ', '');
-                let string = `\n${data?.pay_category == 0 ? `${data?.day} 일자 ` : ``}${getKoLevelByNum(data?.pay_category)} 미납문자 알림 드립니다.\n\n-달카페이-`;
+                let string = `\n${data?.pay_category == 0 ? `${data?.day} 일자 ` : ``}${getKoPayCategoryByNum(data?.pay_category)} 미납문자 알림 드립니다.\n\n-달카페이-`;
                 try {
                     const { data: response } = await axios.post(`/api/sendsms`, {
                         receiver: [fix_phone, formatPhoneNumber(fix_phone)],

@@ -49,6 +49,7 @@ const SignUp = () => {
         office_name: '',//중개업소명칭
         company_number: '',//사업자등록번호
         office_address: '',//사무실주소
+        office_address_detail: '',//사무실주소상세
         office_zip_code: '',//사무실우편번호
         office_lng: '',//사무실우편번호
         office_lat: '',//사무실우편번호
@@ -58,7 +59,7 @@ const SignUp = () => {
         bank_book_src: '',// 파일 -> 통장사본
         id_number_src: '',// 파일 -> 신분증
     }
-    const lesseeObj = {
+    const landlordObj = {
         bank_name: '',
         account_number: '',
         bank_book_src: ''
@@ -71,10 +72,10 @@ const SignUp = () => {
     }
     useEffect(() => {
         if (params?.user_level == 0) {
-            setValues({ ...defaultObj, ...lesseeObj });
+            setValues(defaultObj);
             setTitle('임차인');
         } else if (params?.user_level == 5) {
-            setValues(defaultObj);
+            setValues({ ...defaultObj, ...landlordObj });
             setTitle('임대인');
         } else if (params?.user_level == 10) {
             setValues({ ...defaultObj, ...realtorObj });
@@ -115,12 +116,12 @@ const SignUp = () => {
             if (response?.data?.data?.length > 0) {
                 setValues({
                     ...values,
-                    ['office_address']: data?.jibunAddress,
+                    ['office_address']: data?.autoJibunAddress || data?.jibunAddress,
                     ['office_zip_code']: data?.zonecode,
                     ['office_lat']: response?.data?.data[0]?.lat,
                     ['office_lng']: response?.data?.data[0]?.lng,
                 });
-                $('.office_phone').focus();
+                $('.office_address_detail').focus();
             } else {
                 toast.error("위치추적 할 수 없는 주소입니다.");
             }
@@ -187,11 +188,11 @@ const SignUp = () => {
             setStep(0);
             return;
         }
-        if (!values.address) {
-            toast.error('주소를 입력해 주세요.');
-            setStep(0);
-            return;
-        }
+        // if (!values.address && !params?.user_level != 10) {
+        //     toast.error('주소를 입력해 주세요.');
+        //     setStep(0);
+        //     return;
+        // }
         // if (!$('.id_number').val()) {
         //     alert('주민등록번호를 입력해 주세요.');
         //     return;
@@ -216,9 +217,9 @@ const SignUp = () => {
         //     setStep(0);
         //     return;
         // }
-        if (params.user_level == 0) {
-            for (var i = 0; i < Object.keys(lesseeObj).length; i++) {
-                let key = Object.keys(lesseeObj)[i];
+        if (params.user_level == 5) {
+            for (var i = 0; i < Object.keys(landlordObj).length; i++) {
+                let key = Object.keys(landlordObj)[i];
                 if (!values[key]) {
                     toast.error('필수값을 입력해 주세요요.');
                     setStep(1);
@@ -254,8 +255,8 @@ const SignUp = () => {
     const onSaveUser = async () => {
         let obj = values
         let insert_obj = {};
-        if (params?.user_level == 0) {
-            insert_obj = lesseeObj;
+        if (params?.user_level == 5) {
+            insert_obj = landlordObj;
         }
         if (params?.user_level == 10) {
             insert_obj = realtorObj;
@@ -294,7 +295,7 @@ const SignUp = () => {
         }
     }
     const onPreStep = () => {
-        if (params?.user_level == 10 || params?.user_level == 0) {
+        if (params?.user_level == 10 || params?.user_level == 5) {
             setStep(step - 1);
 
         } else {
@@ -303,7 +304,7 @@ const SignUp = () => {
         window.scrollTo(0, 0);
     }
     const onNextStep = () => {
-        if (params?.user_level == 10 || params?.user_level == 0) {
+        if (params?.user_level == 10 || params?.user_level == 5) {
             setStep(step + 1);
 
         } else {
@@ -409,33 +410,40 @@ const SignUp = () => {
                                 value={values.pw_check}
                                 isSeeButton={true}
                             />
-                            <div onClick={() => {
-                            }}>
-                                <InputComponent
-                                    label={'집주소* '}
-                                    input_type={{
-                                        placeholder: '',
-                                        disabled: "true"
-                                    }}
-                                    class_name='address'
-                                    is_divider={true}
-                                    onClick={() => {
-                                        setIsSeePostCode(!isSeePostCode)
-                                    }}
-                                    value={values.address}
-                                />
-                            </div>
-                            <InputComponent
-                                label={'상세주소'}
-                                input_type={{
-                                    placeholder: ''
-                                }}
-                                class_name='address_detail'
-                                is_divider={true}
-                                onKeyPress={() => $('.id_number').focus()}
-                                onChange={(e) => handleChange(e, 'address_detail')}
-                                value={values.address_detail}
-                            />
+                            {params?.user_level != 10 ?
+                                <>
+                                    <div onClick={() => {
+                                    }}>
+                                        <InputComponent
+                                            label={'집주소* '}
+                                            input_type={{
+                                                placeholder: '',
+                                                disabled: "true"
+                                            }}
+                                            class_name='address'
+                                            is_divider={true}
+                                            onClick={() => {
+                                                setIsSeePostCode(!isSeePostCode)
+                                            }}
+                                            value={values.address}
+                                        />
+                                    </div>
+                                    <InputComponent
+                                        label={'상세주소'}
+                                        input_type={{
+                                            placeholder: ''
+                                        }}
+                                        class_name='address_detail'
+                                        is_divider={true}
+                                        onKeyPress={() => $('.id_number').focus()}
+                                        onChange={(e) => handleChange(e, 'address_detail')}
+                                        value={values.address_detail}
+                                    />
+                                </>
+                                :
+                                <>
+                                </>}
+
                             <RowContent style={{ margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <InputComponent
                                     label={'주민등록번호 앞자리'}
@@ -549,7 +557,16 @@ const SignUp = () => {
                                             value={values.office_address}
                                         />
                                     </div>
-
+                                    <InputComponent
+                                        label={'사무실상세주소'}
+                                        input_type={{
+                                            placeholder: ''
+                                        }}
+                                        class_name='office_address_detail'
+                                        is_divider={true}
+                                        onChange={(e) => handleChange(e, 'office_address_detail')}
+                                        value={values.office_address_detail}
+                                    />
                                     <InputComponent
                                         label={'사무실연락처'}
                                         input_type={{
@@ -607,7 +624,7 @@ const SignUp = () => {
                                 <>
                                 </>
                             }
-                            {params?.user_level == 0 ?
+                            {params?.user_level == 5 ?
                                 <>
                                     <InputComponent
                                         label={'은행명*'}

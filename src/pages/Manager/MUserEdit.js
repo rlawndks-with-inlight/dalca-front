@@ -69,8 +69,8 @@ const MUserEdit = () => {
                 $('.id_number').val(response.data.id_number)
                 $('.level').val(response.data.user_level)
                 setUserLevel(response.data.user_level)
-                $('.address').val(response.data.address)
-                $('.address_detail').val(response.data.address_detail)
+                $('.address').val(response.data.address || response.data.office_address)
+                $('.address_detail').val(response.data.address_detail || response.data.office_address_detail)
                 $('.zip_code').val(response.data.zip_code)
                 $('.account_holder').val(response.data.account_holder)
                 $('.bank_name').val(response.data.bank_name)
@@ -91,8 +91,7 @@ const MUserEdit = () => {
             !$(`.id_number`).val() ||
             !$(`.level`).val() ||
             !$(`.address`).val() ||
-            !$(`.address_detail`).val() ||
-            !$(`.zip_code`).val()
+            !$(`.address_detail`).val()
         ) {
             toast.error('필요값이 비어있습니다.');
         } else {
@@ -109,6 +108,7 @@ const MUserEdit = () => {
                 office_name: user?.office_name,
                 company_number: user?.company_number,
                 office_address: user?.office_address,
+                office_address_detail: user?.office_address_detail,
                 office_phone: user?.office_phone,
             }
             if (params?.pk > 0) {
@@ -131,7 +131,7 @@ const MUserEdit = () => {
                     if ($(`.level`).val() == 10) {
 
                         let num = 1;
-                        for (var i = 0; i<realtor_src_list.length; i++) {
+                        for (var i = 0; i < realtor_src_list.length; i++) {
                             if (typeof user[realtor_src_list[i]] == 'string') {
                                 realtor_src_obj[realtor_src_list[i]] = user[realtor_src_list[i]]
                             } else {
@@ -172,8 +172,27 @@ const MUserEdit = () => {
             alert(response?.message);
         }
     }
-    const onSelectAddress = (data) => {
+    const onSelectAddress = async (data) => {
         setIsSeePostCode(false);
+        if ($('.level').val() == 10) {
+            const response = await axios.post('/api/getaddressbytext', {
+                text: data?.autoJibunAddress || data?.jibunAddress || data?.address
+            })
+            if (response?.data?.data?.length > 0) {
+                setUser({
+                    ...user,
+                    ['office_address']: data?.autoJibunAddress || data?.jibunAddress || data?.address,
+                    ['office_zip_code']: data?.zonecode,
+                    ['office_lat']: response?.data?.data[0]?.lat,
+                    ['office_lng']: response?.data?.data[0]?.lng,
+                });
+                $('.address_detail').focus();
+            } else {
+                toast.error("위치추적 할 수 없는 주소입니다.");
+            }
+        } else {
+
+        }
         $('.address').val(data?.address);
         $('.zip_code').val(data?.zonecode);
         $('.address_detail').val("");
@@ -231,6 +250,24 @@ const MUserEdit = () => {
                         </Select>
                     </Col>
                 </Row>
+                <Col>
+                    <Title>우편번호</Title>
+                    <div style={{ display: 'flex' }}>
+                        <Input style={{ margin: '12px 0 6px 24px' }} className='zip_code' placeholder="예) 12345" />
+                        <AddButton style={{ margin: '12px auto 6px 12px', width: '104px' }} onClick={() => { setIsSeePostCode(!isSeePostCode) }}>우편번호검색</AddButton>
+                    </div>
+                </Col>
+                <Row>
+                    <Col>
+                        <Title>주소</Title>
+                        <Input className='address' defaultValue={user?.office_address ? user?.office_address : ''} onChange={(e) => { setUser({ ...user, office_address: e.target.value }) }} />
+                    </Col>
+                    <Col>
+                        <Title>상세주소</Title>
+                        <Input className='address_detail' defaultValue={user?.office_address_detail ? user?.office_address_detail : ''} onChange={(e) => { setUser({ ...user, office_address_detail: e.target.value }) }} />
+                    </Col>
+
+                </Row>
                 {userLevel == 10 ?
                     <>
                         <Row>
@@ -243,14 +280,11 @@ const MUserEdit = () => {
                                 <Input className='company_number' defaultValue={user?.company_number} onChange={(e) => { setUser({ ...user, company_number: e.target.value }) }} />
                             </Col>
                             <Col>
-                                <Title style={{ margintop: '32px' }}>사무실주소</Title>
-                                <Input className='office_address' defaultValue={user?.office_address} onChange={(e) => { setUser({ ...user, office_address: e.target.value }) }} />
-                            </Col>
-                            <Col>
                                 <Title style={{ margintop: '32px' }}>사무실연락처</Title>
                                 <Input className='office_phone' defaultValue={user?.office_phone} onChange={(e) => { setUser({ ...user, office_phone: e.target.value }) }} />
                             </Col>
                         </Row>
+
                         <Row>
                             <Col>
                                 <Title>사업자등록증사진</Title>
@@ -352,24 +386,7 @@ const MUserEdit = () => {
                     :
                     <>
                     </>}
-                <Col>
-                    <Title>우편번호</Title>
-                    <div style={{ display: 'flex' }}>
-                        <Input style={{ margin: '12px 0 6px 24px' }} className='zip_code' placeholder="예) 12345" />
-                        <AddButton style={{ margin: '12px auto 6px 12px', width: '104px' }} onClick={() => { setIsSeePostCode(!isSeePostCode) }}>우편번호검색</AddButton>
-                    </div>
-                </Col>
-                <Row>
-                    <Col>
-                        <Title>주소</Title>
-                        <Input className='address' />
-                    </Col>
-                    <Col>
-                        <Title>상세주소</Title>
-                        <Input className='address_detail' />
-                    </Col>
 
-                </Row>
                 <Row>
                     <Col>
                         {isSeePostCode ?

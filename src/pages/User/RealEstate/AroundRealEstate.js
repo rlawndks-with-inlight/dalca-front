@@ -99,7 +99,7 @@ const AroundRealEstate = () => {
             users[i]['name'] = users[i]['office_name'];
             users[i]['phone'] = users[i]['office_phone'];
             users[i]['address'] = users[i]['office_address'];
-            users[i]['address_detail'] = '---';
+            users[i]['address_detail'] = users[i]['office_address_detail'];
             users[i]['lat'] = users[i]['office_lat'];
             users[i]['lng'] = users[i]['office_lng'];
         }
