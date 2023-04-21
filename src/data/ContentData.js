@@ -82,7 +82,7 @@ export const objHistoryListContent = {
         title: "결제",
         columns: [
             columnObjFormat('계약고유번호', '74px', 'number', 'contract_pk'),
-            columnObjFormat('임차인명', '', 'text', 'lessee_name'),
+            columnObjFormat('지불인명', '', 'text', 'lessee_name'),
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
             columnObjFormat('금액', '', 'number', 'price'),
@@ -96,7 +96,7 @@ export const objHistoryListContent = {
         columns: [
             columnObjFormat('계약고유번호', '74px', 'number', 'contract_pk'),
             columnObjFormat('임대인명 ', '', 'text', 'landlord_name'),
-            columnObjFormat('임차인명', '', 'text', 'lessee_name'),
+            columnObjFormat('지불인명', '', 'text', 'lessee_name'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
             columnObjFormat('금액', '', 'number', 'price'),
             columnObjFormat('납부예정일', '', 'text', 'day'),

@@ -212,6 +212,8 @@ export const getKoPayCategoryByNum = (num) => {
         return '보증금';
     else if (num == 2)
         return '계약금';
+    else if (num == 3)
+        return '부동산 중개수수료';
 }
 
 export const regExp = (type, str) => {//id,pw,nickname,name

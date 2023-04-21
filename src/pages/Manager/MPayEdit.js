@@ -108,6 +108,7 @@ const MPayEdit = () => {
                             <option value={0}>월세</option>
                             <option value={1}>보증금</option>
                             <option value={2}>계약금</option>
+                            <option value={3}>부동산 중개수수료</option>
                         </Select>
                     </Col>
                     <Col>

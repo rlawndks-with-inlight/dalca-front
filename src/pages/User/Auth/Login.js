@@ -17,6 +17,7 @@ import axios from "axios";
 import $ from 'jquery';
 import { setLocalStorage } from "../../../functions/LocalStorage";
 import { motion } from "framer-motion";
+import Footer from '../../../common/Footer'
 const SignUpCategoryButton = (props) => {
     const { icon, title, sub_title, onClick } = props;
     return (
@@ -162,6 +163,7 @@ const Login = () => {
                     <div style={{ margin: '0 auto auto auto' }} />
                 </ContentWrappers>
             </Wrappers>
+            <Footer/>
         </>
     )
 }
