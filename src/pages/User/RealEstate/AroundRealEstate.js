@@ -141,7 +141,7 @@ const AroundRealEstate = () => {
                                 animate={{ opacity: 1 }}
                                 style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                             >
-                                <HalfTitle>달카페이 회원부동산</HalfTitle>
+                                <HalfTitle>달카페이<br/>회원부동산</HalfTitle>
 
                                 {/* 네이버 지도 */}
 
@@ -159,8 +159,8 @@ const AroundRealEstate = () => {
                                         zoom={15}
                                         minZoom={10}
                                         maxZoom={19}
-                                        mapTypeControl={true}
-                                        zoomControl={true}
+                                        mapTypeControl={false}
+                                        zoomControl={false}
                                     >
                                         {posts && posts.map((item, idx) => (
                                             <Marker

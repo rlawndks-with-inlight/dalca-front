@@ -146,7 +146,11 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
                         cancelButtonText: '취소'
                     }).then(async (result) => {
                         if (result.isConfirmed) {
-                            deleteItem(data.pk, schema)
+                            if(data?.table){
+                                deleteItem(data.pk, data?.table)
+                            }else{
+                                deleteItem(data.pk, schema)
+                            }
 
                         }
                     })
