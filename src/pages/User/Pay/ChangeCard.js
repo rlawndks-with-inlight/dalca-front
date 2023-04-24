@@ -157,7 +157,7 @@ const ChangeCard = () => {
         if (params?.category == 'family') {
             setPageList(range(1, response?.data?.maxPage));
             setPosts(response?.data?.data);
-            const {data:auto_card} = await axios.get('/api/myautocard');
+            const { data: auto_card } = await axios.get('/api/myautocard');
             $(`#user_card-${auto_card?.data?.pk}`).prop('checked', true);
         }
 
@@ -356,7 +356,7 @@ const ChangeCard = () => {
                     break;
                 }
             }
-            if(posts.length==0){
+            if (posts.length == 0) {
                 toast.error(`카드를 등록해 주세요.`);
             }
             if (pk == 0) {
@@ -365,7 +365,7 @@ const ChangeCard = () => {
             }
         } else if (params?.category == 'change') {
             table = 'user';
-        }else{
+        } else {
             return;
         }
         Swal.fire({
@@ -379,9 +379,9 @@ const ChangeCard = () => {
                     table: table,
                     pk: pk
                 })
-                if(response?.result>0){
+                if (response?.result > 0) {
                     toast.success("성공적으로 자동결제 카드가 등록 되었습니다.");
-                }else{
+                } else {
                     toast.error(response?.message);
                 }
             }

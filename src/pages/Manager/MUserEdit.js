@@ -71,7 +71,7 @@ const MUserEdit = () => {
                 setUserLevel(response.data.user_level)
                 $('.address').val(response.data.address || response.data.office_address)
                 $('.address_detail').val(response.data.address_detail || response.data.office_address_detail)
-                $('.zip_code').val(response.data.zip_code)
+                $('.zip_code').val(response.data.zip_code || response.data.office_zip_code)
                 $('.account_holder').val(response.data.account_holder)
                 $('.bank_name').val(response.data.bank_name)
                 $('.account_number').val(response.data.account_number)
@@ -80,8 +80,6 @@ const MUserEdit = () => {
         }
         fetchPost();
     }, [])
-
-
     const editUser = async () => {
         if (
             !$(`.id`).val() ||

@@ -125,6 +125,7 @@ export const objManagerListContent = {
             columnObjFormat('상세주소', '', 'text', 'address_detail'),
             columnObjFormat('보증금', '', 'number', 'deposit'),
             columnObjFormat('월세', '', 'number', 'monthly'),
+            columnObjFormat('부동산중개수수료', '', 'number', 'brokerage_fee'),
             columnObjFormat('임차인아이디', '', 'text', 'lessee_id'),
             columnObjFormat('임차인명', '', 'text', 'lessee_name'),
             columnObjFormat('임차인동의여부', '', 'is_appr', 'lessee_appr'),

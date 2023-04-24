@@ -66,6 +66,7 @@ const AddContract = () => {
         realtor_pk: 0,
         deposit: 0,
         monthly: 0,
+        brokerage_fee: 0,
         address: '',
         address_detail: '',
         start_date: returnMoment().substring(0, 10),
@@ -261,6 +262,7 @@ const AddContract = () => {
                 address_detail: values?.address_detail,
                 deposit: parseInt(values?.deposit) * 10000,
                 monthly: parseInt(values?.monthly) * 10000,
+                brokerage_fee: parseInt(values?.brokerage_fee),
                 start_date: values?.start_date,
                 end_date: values?.end_date,
                 pay_day: values?.pay_day,
@@ -535,6 +537,17 @@ const AddContract = () => {
                                                 })}
                                             </CustomSelect>
                                         </FormControl>
+                                        <InputComponent
+                                            label={'부동산 중개수수료'}
+                                            input_type={{
+                                                placeholder: '숫자를 입력해 주세요.'
+                                            }}
+                                            class_name='brokerage_fee'
+                                            is_divider={true}
+                                            onChange={(e) => handleChange(e, 'brokerage_fee')}
+                                            value={values.brokerage_fee}
+                                            icon_label={<div style={{ fontSize: theme.size.font4 }}>원</div>}
+                                        />
                                         <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>이미지업로드</CategoryName>
                                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                             {imgList.map((item, idx) => (

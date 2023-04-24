@@ -69,6 +69,7 @@ const MContactEdit = () => {
                 //$('.pay_type').val(response.data.pay_type)
                 $('.deposit').val(response.data.deposit)
                 $('.monthly').val(response.data.monthly)
+                $('.brokerage_fee').val(response.data.brokerage_fee)
                 $('.start_date').val(response.data.start_date)
                 $('.end_date').val(response.data.end_date)
                 $('.pay_day').val(response.data.pay_day)
@@ -92,6 +93,7 @@ const MContactEdit = () => {
             //!$(`.pay_type`).val() || 
             !$(`.deposit`).val() || 
             !$(`.monthly`).val() || 
+            !$(`.brokerage_fee`).val() || 
             !$(`.start_date`).val() || 
             !$(`.end_date`).val() || 
             !$(`.pay_day`).val()
@@ -111,6 +113,7 @@ const MContactEdit = () => {
                 is_auto_pay: $(`.is_auto_pay`).val(),
                 deposit: $(`.deposit`).val(),
                 monthly: $(`.monthly`).val(),
+                brokerage_fee: $(`.brokerage_fee`).val(),
                 start_date: $(`.start_date`).val(),
                 end_date: $(`.end_date`).val(),
                 pay_day: $(`.pay_day`).val(),
@@ -243,6 +246,10 @@ const MContactEdit = () => {
                     <Col>
                         <Title>월세</Title>
                         <Input className='monthly' placeholder='숫자를 입력해 주세요.' />
+                    </Col>
+                    <Col>
+                        <Title>부동산중개 수수료</Title>
+                        <Input className='brokerage_fee' placeholder='숫자를 입력해 주세요.' />
                     </Col>
                 </Row>
                 <Row>

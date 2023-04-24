@@ -23,7 +23,7 @@ import Modal from '../../components/Modal';
 import { toast } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 //카드변경
-import { colorButtonStyle, ContentWrappers, InputComponent, Wrappers } from "../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, Wrappers } from "../../components/elements/UserContentTemplete";
 // ** React Imports
 // ** MUI Imports
 import Button from '@mui/material/Button'
@@ -41,6 +41,11 @@ import theme from "../../styles/theme";
 // ** Styles Import
 import 'react-credit-cards/es/styles-compiled.css'
 import { Icon } from "@iconify/react";
+import ContentTable from '../../components/ContentTable';
+import { objHistoryListContent } from '../../data/ContentData';
+import { FormControl, InputLabel, MenuItem } from '@mui/material';
+import { AiFillFileImage } from 'react-icons/ai';
+import { CategoryName } from '../../components/elements/AuthContentTemplete';
 const CreditCardWrapper = styled(Box)(({ }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -83,7 +88,13 @@ const MUserCardEdit = () => {
     const [expiry, setExpiry] = useState('')
     const [password, setPassword] = useState('')
     const [birth, setBirth] = useState('');
-    const [passwordCheck, setPasswordCheck] = useState('')
+    const [passwordCheck, setPasswordCheck] = useState('');
+    const [cards, setCards] = useState([]);
+    const [isUserMine, setIsUserMine] = useState(true);
+    const [familyType, setFamilyType] = useState(1);
+    const [cardSrc, setCardSrc] = useState(undefined);
+    const [phone, setPhone] = useState("");
+    const [editPk, setEditPk] = useState(0);
     useEffect(() => {
 
         async function fetchPost() {
@@ -95,12 +106,23 @@ const MUserCardEdit = () => {
                 setExpiry(response?.data?.card_expire ?? "");
                 setBirth(response?.data?.birth ?? "");
                 setPassword(response?.data?.card_password ?? "");
-                setUser(response?.data);
+                setUser({ ...response?.data, ['pk']: 0 });
+                getFamilyCard({ ...response?.data, ['pk']: 0 });
             }
         }
         fetchPost();
     }, [])
+    const getFamilyCard = async (user) => {
+        const { data: res_cards } = await axios.get(`/api/items?table=user_card&user_pk=${params?.pk}&order=pk`);
+        if (user?.card_number) {
+            setCards([...[user], ...res_cards?.data]);
 
+        } else {
+            setCards(res_cards?.data);
+        }
+        const { data: auto_card } = await axios.get(`/api/myautocard?user_pk=${params?.pk}`);
+        $(`#user_card-${auto_card?.data?.pk}`).prop('checked', true);
+    }
 
     const handleBlur = () => setFocus(undefined)
 
@@ -125,18 +147,111 @@ const MUserCardEdit = () => {
             cancelButtonText: '취소'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const { data: response } = await axios.post('/api/change-card', {
+                let obj = {
                     card_number: cardNumber,
                     card_name: name,
                     card_expire: expiry,
                     card_cvc: cvc,
                     card_password: password,
                     birth: birth,
+                }
+                let user_obj = {
+                    user_pk: params?.pk
+                }
+                let family_obj = {
+                    family_type: familyType,
+                    phone: phone,
+                    pk: editPk
+                }
+                let api_str = '/api/change-card'
+                if (isUserMine) {
+                    obj = { ...obj, ...user_obj };
+                } else {
+                    if (typeof cardSrc == 'string') {
+                        family_obj['card_src'] = cardSrc.replaceAll(backUrl, '');
+                    } else {
+                        let formData = new FormData();
+                        formData.append(`card`, cardSrc);
+                        const { data: add_image } = await axios.post('/api/addimageitems', formData);
+                        if (add_image.result < 0) {
+                            toast.error(add_image?.message);
+                            return;
+                        }
+                        family_obj['card_src'] = add_image?.data[0]?.filename;
+                    }
+                    obj = { ...obj, ...family_obj };
+                    api_str = `/api/updatefamilycard`
+                }
+                const { data: response } = await axios.post(api_str, obj);
+                if (response?.result > 0) {
+                    toast.success('성공적으로 저장 되었습니다.');
+                    // navigate(-1)
+                } else {
+                    toast.error(response?.message);
+                }
+            }
+        })
+    }
+    const onClickEditButton = (data, idx) => {
+        if (idx == 0 && user?.card_number) {
+            setIsUserMine(true);
+        } else {
+            setIsUserMine(false);
+        }
+        setCvc(data?.card_cvc ?? "");
+        setCardNumber(data?.card_number ?? "");
+        setName(data?.card_name ?? "");
+        setExpiry(data?.card_expire ?? "");
+        setBirth(data?.birth ?? "");
+        setPassword(data?.card_password ?? "");
+        setFamilyType(data?.family_type);
+        setCardSrc(data?.card_src);
+        setPhone(data?.phone ?? "");
+        setEditPk(data?.pk)
+    }
+    const addFile = (e) => {
+        let { name, files } = e.target;
+        if (files[0]) {
+            setCardSrc(files[0]);
+            $(`.${name}`).val("");
+        }
+    };
+    const checkOnlyOne = (checkThis) => {
+        const checkboxes = document.getElementsByName('user_card-check')
+        for (let i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i] !== checkThis) {
+                checkboxes[i].checked = false
+            }
+        }
+    }
+    const registerAutoCard = async () => {
+        let table = "";
+        let pk = 0;
+        for (var i = 0; i < cards.length; i++) {
+            if ($(`#user_card-${cards[i]?.pk}`).is(':checked')) {
+                pk = cards[i]?.pk
+                break;
+            }
+        }
+        if (pk == 0) {
+            table = 'user';
+        } else {
+            table = 'user_card'
+        }
+        Swal.fire({
+            title: `저장 하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const { data: response } = await axios.post('/api/registerautocard', {
+                    table: table,
+                    pk: pk,
                     user_pk: params?.pk
                 })
                 if (response?.result > 0) {
-                    toast.success('성공적으로 저장 되었습니다.');
-                    navigate(-1)
+                    toast.success("성공적으로 자동결제 카드가 등록 되었습니다.");
                 } else {
                     toast.error(response?.message);
                 }
@@ -231,11 +346,106 @@ const MUserCardEdit = () => {
                         onChange={e => setPassword(e.target.value)}
                         onFocus={e => setFocus(e.target.name)}
                     />
+
+                    {!isUserMine ?
+                        <>
+                            <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
+                                <InputLabel id="demo-select-small">가족관계</InputLabel>
+                                <CustomSelect
+                                    labelId="demo-select-small"
+                                    id="demo-select-small"
+                                    value={familyType}
+                                    label="가족관계"
+
+                                    onChange={(e) => setFamilyType(e.target.value)}
+                                >
+                                    <MenuItem value={1}>부</MenuItem>
+                                    <MenuItem value={2}>모</MenuItem>
+                                    <MenuItem value={3}>형제</MenuItem>
+                                    <MenuItem value={4}>자매</MenuItem>
+                                    <MenuItem value={5}>배우자</MenuItem>
+                                    <MenuItem value={6}>자녀</MenuItem>
+                                </CustomSelect>
+                            </FormControl>
+                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>카드 일부분 사진</CategoryName>
+                            <ImageContainer for={`card_src`} style={{ margin: 'auto' }}>
+
+                                {cardSrc ?
+                                    <>
+                                        <img src={typeof cardSrc == 'string' ? backUrl + cardSrc : URL.createObjectURL(cardSrc)} alt="#"
+                                            style={{
+                                                width: 'auto', maxHeight: '8rem',
+                                                maxWidth: '80%',
+                                                margin: 'auto'
+                                            }} />
+                                    </>
+                                    :
+                                    <>
+                                        <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                    </>}
+                            </ImageContainer>
+                            <div>
+                                <input type="file" id={`card_src`} name={'card_src'} onChange={addFile} style={{ display: 'none' }} />
+                            </div>
+
+                            <InputComponent
+                                label={'휴대폰번호*'}
+                                input_type={{
+                                    placeholder: '-없이 숫자만 입력',
+                                }}
+                                class_name='phone'
+                                isButtonAble={true}
+                                onChange={(e) => {
+                                    setPhone(e)
+                                }}
+                                value={phone}
+                            />
+
+                        </>
+                        :
+                        <>
+                        </>}
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        margin: '1rem 0',
+                    }}>
+                        <div />
+                        <Button
+                            sx={{ ...colorButtonStyle }}
+                            startIcon={<Icon icon="line-md:confirm" />}
+                            onClick={onChangeMyCard}
+                        >저장</Button>
+                    </div>
+                    <ContentTable
+                        columns={objHistoryListContent['user_card'] ?? []}
+                        checkOnlyOne={checkOnlyOne}
+                        data={cards}
+                        schema={'user_card'}
+                        table={'user_card'}
+                        onClickEditButton={onClickEditButton}
+                        pageSetting={() => {
+                            getFamilyCard();
+                        }}
+                    />
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        margin: '1rem 0',
+                    }}>
+                        <div />
+                        <Button
+                            sx={{ ...colorButtonStyle }}
+                            startIcon={<Icon icon="line-md:confirm" />}
+                            onClick={registerAutoCard}
+                        >정기결제카드 저장</Button>
+                    </div>
                 </ContentWrappers>
             </Card>
             <ButtonContainer>
-                <CancelButton onClick={() => navigate(-1)}>x 취소</CancelButton>
-                <AddButton onClick={onChangeMyCard}>{'수정'}</AddButton>
+                <CancelButton style={{ marginRight: '0', width: '84px' }} onClick={() => navigate(-1)}>x 뒤로가기</CancelButton>
             </ButtonContainer>
         </>
     )
