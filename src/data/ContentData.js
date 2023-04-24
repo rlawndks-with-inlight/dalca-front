@@ -88,6 +88,7 @@ export const objHistoryListContent = {
             columnObjFormat('금액', '', 'number', 'price'),
             columnObjFormat('납부예정일', '', 'text', 'day'),
             columnObjFormat('납부일', '', 'text', 'trade_day'),
+            columnObjFormat('납부하기', '', 'go_pay', 'go_pay'),
             columnObjFormat('납부현황', '', 'pay_status', 'status'),
         ]
     },

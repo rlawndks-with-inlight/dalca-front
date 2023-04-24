@@ -35,7 +35,7 @@ white-space:pre;
 `
 const ContentTable = (props) => {
     const navigate = useNavigate();
-    const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting, onClickList, onClickEditButton, checkOnlyOne } = props;
+    const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting, onClickList, onClickEditButton, checkOnlyOne, auth } = props;
     const [columns, setColumns] = useState([]);
     const [loading, setLoading] = useState(false);
     const onClickEvent = (str) => {
@@ -278,11 +278,20 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'go_pay' ?
-                                                    <IconButton onClick={() => {
-                                                        navigate(`/payready/${item?.pk}`)
-                                                    }}>
-                                                        <Icon icon={item?.status == 0 ? `ri:money-dollar-circle-line` : `ph:eye`} style={{ color: `${item?.status == 0 ? theme.color.background1 : ''}` }} />
-                                                    </IconButton>
+                                                    <>
+                                                        {item?.lessee_pk == getLocalStorage('auth')?.pk ?
+                                                            <>
+                                                                <IconButton onClick={() => {
+                                                                    navigate(`/payready/${item?.pk}`)
+                                                                }}>
+                                                                    <Icon icon={item?.status == 0 ? `ri:money-dollar-circle-line` : `ph:eye`} style={{ color: `${item?.status == 0 ? theme.color.background1 : ''}` }} />
+                                                                </IconButton>
+                                                            </>
+                                                            :
+                                                            <>
+                                                            ---
+                                                            </>}
+                                                    </>
                                                     :
                                                     null}
                                                 {column.type == 'want_cancel' ?
@@ -297,14 +306,14 @@ const ContentTable = (props) => {
                                                             </>
                                                             :
                                                             <>
-                                                            {item?.status == 1 ?
-                                                            <>
-                                                            {item?.is_want_cancel == 1 ? '취소요청완료':''}
-                                                            {item?.is_want_cancel == -1 ? '취소완료':''}
-                                                            </>
-                                                            :
-                                                            <>
-                                                            </>}
+                                                                {item?.status == 1 ?
+                                                                    <>
+                                                                        {item?.is_want_cancel == 1 ? '취소요청완료' : ''}
+                                                                        {item?.is_want_cancel == -1 ? '취소완료' : ''}
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                    </>}
                                                             </>}
                                                     </>
                                                     :
