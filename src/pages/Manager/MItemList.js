@@ -131,10 +131,15 @@ const MItemList = () => {
     const getItems = async () => {
         setLoading(true)
         let search = await makeQueryObj(decodeURI(location.search));
+        let keys = Object.keys(search);
+        for(var i = 0;i<keys.length;i++){
+            $(`.${keys[i]}`).val(search[keys[i]]);
+        }
         search['table'] = objManagerListContent[`${params.table}`].schema;
         search['page'] = search['page'] ?? 1;
         search['page_cut'] = search['page_cut'] ?? 10;
         const { data: response } = await axios.post(apiStr, search);
+
         setPage(search['page']);
         setPosts(response.data.data);
         setOptionObj(response?.data?.option_obj);
