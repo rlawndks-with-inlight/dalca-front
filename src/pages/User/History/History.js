@@ -89,7 +89,11 @@ const History = () => {
         }
         setLoading(true);
         setPage(num);
-        const { data: response } = await axios.get(`/api/items?table=${params?.category}&page=${num}&order=pk${state_query_str}&keyword=${searchKeyword}`);
+        let api_str = `/api/items?table=${params?.category}&page=${num}&order=pk${state_query_str}&keyword=${searchKeyword}`
+        if(userData?.user_level==5){
+            api_str += `&is_landlord=1`
+        }
+        const { data: response } = await axios.get(api_str);
         if (response?.result < 0) {
             toast.error(response?.message);
         } else {
