@@ -55,16 +55,6 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         }
     } else if (type == 'pay_category') {
         result = getKoPayCategoryByNum(data?.pay_category)
-    } else if (type == 'prider') {
-        if (data[`${column}`] == 0) {
-            result = "없음";
-        } else if (data[`${column}`] == 1) {
-            result = "그린리더";
-        } else if (data[`${column}`] == 2) {
-            result = "프라이더";
-        } else if (data[`${column}`] == 3) {
-            result = "로얄프라이더";
-        }
     } else if (type == 'img') {
         result = data[`${column}`];
         if (is_list) {

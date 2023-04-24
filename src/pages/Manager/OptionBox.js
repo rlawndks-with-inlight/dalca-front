@@ -188,7 +188,7 @@ const ReturnSecondOptionContentBySchema = (props) => {
         return (
             <>
                 <OptionCardWrappers>
-                    <Row>
+                    <Row style={{flexWrap:'wrap'}}>
                         <RowContent>
                             <AddButton style={{ margin: '0 0 0 0' }} onClick={() => onClickDate(-1)}>어제</AddButton>
                             <AddButton style={{ margin: '0 0 0 12px' }} onClick={() => onClickDate(1)}>당일</AddButton>
