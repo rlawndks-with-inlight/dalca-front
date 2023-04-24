@@ -47,6 +47,12 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         }
     } else if (type == 'level') {
         result = getUserLevelByNumber(data[`${column}`])
+    }else if(type=='is_auto_pay'){
+        if(data[`is_auto`]==0){
+            result = '일반납부'
+        }else if(data[`is_auto`]==1){
+            result = '정기납부'
+        }
     } else if (type == 'pay_category') {
         result = getKoPayCategoryByNum(data?.pay_category)
     } else if (type == 'prider') {

@@ -220,6 +220,13 @@ const ReturnSecondOptionContentBySchema = (props) => {
                                 <option value={3}>부동산 중개수수료</option>
                             </Select>
                         </RowContent>
+                        <RowContent>
+                            <Select className="is_auto" style={{ margin: '0 0 0 0' }} onChange={onChangeType}>
+                                <option value={'all'}>전체납부종류</option>
+                                <option value={0}>일반납부</option>
+                                <option value={1}>정기납부</option>
+                            </Select>
+                        </RowContent>
                     </Row>
                 </OptionCardWrappers>
             </>
