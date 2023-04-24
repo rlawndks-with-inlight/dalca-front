@@ -90,7 +90,7 @@ const History = () => {
         setLoading(true);
         setPage(num);
         let api_str = `/api/items?table=${params?.category}&page=${num}&order=pk${state_query_str}&keyword=${searchKeyword}`
-        if(userData?.user_level==5 && params?.category=='pay'){
+        if(getLocalStorage('auth')?.user_level==5 && params?.category=='pay'){
             api_str += `&is_landlord=1`
         }
         const { data: response } = await axios.get(api_str);
