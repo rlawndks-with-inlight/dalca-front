@@ -92,19 +92,10 @@ const AroundRealEstate = () => {
     const getRealEstate = async (num) => {
         let coords = undefined;
         coords = await getLocation();
-        const { data: response } = await axios.get(`/api/items?table=real_estate&order=pk&status=1`);
-        const { data: response2 } = await axios.get(`/api/items?table=user&order=pk&level=10&status=1`);
-        let users = response2?.data;
-        for (var i = 0; i < users.length; i++) {
-            users[i]['name'] = users[i]['office_name'];
-            users[i]['phone'] = users[i]['office_phone'];
-            users[i]['address'] = users[i]['office_address'];
-            users[i]['address_detail'] = users[i]['office_address_detail'];
-            users[i]['lat'] = users[i]['office_lat'];
-            users[i]['lng'] = users[i]['office_lng'];
-        }
-        let items = [...response?.data, ...users];
-        setPageList(range(1, makeMaxPage(items.length, 10)))
+        const { data: response } = await axios.get(`/api/items?table=real_estate&order=pk&status=1&page=${num}&page_cut=10`);
+       
+        let items = [...response?.data?.data];
+        setPageList(range(1,response?.data?.maxPage))
         for (var i = 0; i < items.length; i++) {
             items[i]['distance'] = await getDistanceFromLatLonInKm(coords?.latitude, coords?.longitude, items[i]?.lat ?? 37.3595704, items[i]?.lng ?? 127.105399);
         }

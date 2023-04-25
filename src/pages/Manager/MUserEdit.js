@@ -93,6 +93,9 @@ const MUserEdit = () => {
         ) {
             toast.error('필요값이 비어있습니다.');
         } else {
+            if($(`.level`).val()==10){
+
+            }
             let obj = {
                 id: $(`.id`).val(),
                 pw: $(`.pw`).val(),
@@ -124,13 +127,17 @@ const MUserEdit = () => {
                         'office_src',
                         'bank_book_src',
                         'id_number_src',
+                        'office_address',
+                        'office_zip_code',
+                        'office_lat',
+                        'office_lng',
                     ];
                     let realtor_src_obj = {};
                     if ($(`.level`).val() == 10) {
 
                         let num = 1;
                         for (var i = 0; i < realtor_src_list.length; i++) {
-                            if (typeof user[realtor_src_list[i]] == 'string') {
+                            if (typeof user[realtor_src_list[i]] == 'string' || typeof user[realtor_src_list[i]] == 'number') {
                                 realtor_src_obj[realtor_src_list[i]] = user[realtor_src_list[i]]
                             } else {
                                 let formData = new FormData();
@@ -145,6 +152,7 @@ const MUserEdit = () => {
                             }
                         }
                     }
+
                     obj = { ...obj, ...realtor_src_obj };
                     const { data: response } = await axios.post(`/api/${params?.pk == 0 ? 'add' : 'update'}user`, obj);
                     if (response?.result > 0) {
@@ -184,6 +192,13 @@ const MUserEdit = () => {
                     ['office_lat']: response?.data?.data[0]?.lat,
                     ['office_lng']: response?.data?.data[0]?.lng,
                 });
+                console.log({
+                    ...user,
+                    ['office_address']: data?.autoJibunAddress || data?.jibunAddress || data?.address,
+                    ['office_zip_code']: data?.zonecode,
+                    ['office_lat']: response?.data?.data[0]?.lat,
+                    ['office_lng']: response?.data?.data[0]?.lng,
+                })
                 $('.address_detail').focus();
             } else {
                 toast.error("위치추적 할 수 없는 주소입니다.");
@@ -250,15 +265,15 @@ const MUserEdit = () => {
                 </Row>
                 <Col>
                     <Title>우편번호</Title>
-                    <div style={{ display: 'flex' }}>
-                        <Input style={{ margin: '12px 0 6px 24px' }} className='zip_code' placeholder="예) 12345" />
+                    <div style={{ display: 'flex' }} onClick={() => { setIsSeePostCode(!isSeePostCode) }}>
+                        <Input style={{ margin: '12px 0 6px 24px' }} className='zip_code' placeholder="예) 12345" readOnly />
                         <AddButton style={{ margin: '12px auto 6px 12px', width: '104px' }} onClick={() => { setIsSeePostCode(!isSeePostCode) }}>우편번호검색</AddButton>
                     </div>
                 </Col>
                 <Row>
                     <Col>
                         <Title>주소</Title>
-                        <Input className='address' defaultValue={user?.office_address ? user?.office_address : ''} onChange={(e) => { setUser({ ...user, office_address: e.target.value }) }} />
+                        <Input className='address' defaultValue={user?.office_address ? user?.office_address : ''} readOnly onChange={(e) => { setUser({ ...user, office_address: e.target.value }) }} onClick={() => { setIsSeePostCode(!isSeePostCode) }}/>
                     </Col>
                     <Col>
                         <Title>상세주소</Title>
