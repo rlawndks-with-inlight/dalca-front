@@ -39,6 +39,9 @@ export const zSidebar = [
         sidebarObjListFormat('자주 하는 질문 관리', '/manager/list/faq', 40, ['/manager/list/faq']),//list
         //sidebarObjListFormat('이벤트관리', '/manager/list/event', 40, ['/manager/list/event']),//list
         sidebarObjListFormat('공지사항', '/manager/list/notice', 40, ['/manager/list/notice']),//list
+        sidebarObjListFormat('공인중개사 이용가이드', '/manager/edit/guide/3', 40, ['/manager/edit/guide/3']),//list
+        sidebarObjListFormat('임대인 이용가이드', '/manager/edit/guide/2', 40, ['/manager/edit/guide/2']),//list
+        sidebarObjListFormat('임차인 이용가이드', '/manager/edit/guide/1', 40, ['/manager/edit/guide/1']),//list
         //sidebarObjListFormat('후기관리', '/manager/list/review', 40, ['/manager/list/review']),//list
     ], <AiOutlineUnorderedList />),
     sidebarContentFormat('푸시알림', [
@@ -484,6 +487,18 @@ export const objManagerEditContent = {
             [
                 editColumnObjFormat('메인이미지 (150x100)', 'img', { field_name: 'content' }, 'main_img'),
             ],
+            [
+                editColumnObjFormat('제목', 'input', { placeholder: '제목을 입력해 주세요.' }, 'title'),
+            ],
+            [
+                editColumnObjFormat('내용', 'editor', {}, 'note'),
+            ],
+        ],
+    },
+    guide: {
+        schema: 'guide',
+        breadcrumb: '공지사항',
+        columns: [//img, select, input, 
             [
                 editColumnObjFormat('제목', 'input', { placeholder: '제목을 입력해 주세요.' }, 'title'),
             ],

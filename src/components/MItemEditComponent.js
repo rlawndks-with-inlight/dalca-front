@@ -137,7 +137,7 @@ const MItemEditComponent = (props) => {
                         }, 500);
                     }
                     if (content.type == 'editor') {
-                        item[`${content.class_name}`] = item[`${content.class_name}`].replaceAll('https://1st-academy.kr:8443', backUrl);
+                        item[`${content.class_name}`] = (item[`${content.class_name}`]??"").replaceAll('https://1st-academy.kr:8443', backUrl);
                         editor_list_obj[`${content.class_name}`] = item[`${content.class_name}`];
                     }
                 }

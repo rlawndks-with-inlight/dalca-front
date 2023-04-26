@@ -53,6 +53,9 @@ export const zSidebarMenu = [
     { name: '자주 하는 질문', link: '/list/faq', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '문의하기', link: '/list/request', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '마이페이지', link: '/mypage', level_list: [0, 5, 10, ...zManagerLevel] },
+    { name: '공인중개사 이용가이드', link: '/post/guide/3', level_list: [10, ...zManagerLevel] },
+    { name: '임대인 이용가이드', link: '/post/guide/2', level_list: [5, ...zManagerLevel] },
+    { name: '임차인 이용가이드', link: '/post/guide/1', level_list: [0, ...zManagerLevel] },
 ]
 export const objHistoryListContent = {
     point: {

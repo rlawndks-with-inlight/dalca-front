@@ -69,9 +69,9 @@ const MUserEdit = () => {
                 $('.id_number').val(response.data.id_number)
                 $('.level').val(response.data.user_level)
                 setUserLevel(response.data.user_level)
-                $('.address').val(response.data.address || response.data.office_address)
-                $('.address_detail').val(response.data.address_detail || response.data.office_address_detail)
-                $('.zip_code').val(response.data.zip_code || response.data.office_zip_code)
+                $('.address').val(response.data.user_level == 10 ? response.data.office_address : response.data.address)
+                $('.address_detail').val(response.data.user_level == 10 ? response.data.office_address_detail : response.data.address_detail)
+                $('.zip_code').val(response.data.user_level == 10 ? response.data.office_zip_code : response.data.zip_code)
                 $('.account_holder').val(response.data.account_holder)
                 $('.bank_name').val(response.data.bank_name)
                 $('.account_number').val(response.data.account_number)
@@ -93,7 +93,7 @@ const MUserEdit = () => {
         ) {
             toast.error('필요값이 비어있습니다.');
         } else {
-            if($(`.level`).val()==10){
+            if ($(`.level`).val() == 10) {
 
             }
             let obj = {
@@ -273,13 +273,12 @@ const MUserEdit = () => {
                 <Row>
                     <Col>
                         <Title>주소</Title>
-                        <Input className='address' defaultValue={user?.office_address ? user?.office_address : ''} readOnly onChange={(e) => { setUser({ ...user, office_address: e.target.value }) }} onClick={() => { setIsSeePostCode(!isSeePostCode) }}/>
+                        <Input className='address' defaultValue={user?.office_address ? user?.office_address : ''} readOnly onChange={(e) => { setUser({ ...user, office_address: e.target.value }) }} onClick={() => { setIsSeePostCode(!isSeePostCode) }} />
                     </Col>
                     <Col>
                         <Title>상세주소</Title>
                         <Input className='address_detail' defaultValue={user?.office_address_detail ? user?.office_address_detail : ''} onChange={(e) => { setUser({ ...user, office_address_detail: e.target.value }) }} />
                     </Col>
-
                 </Row>
                 {userLevel == 10 ?
                     <>
