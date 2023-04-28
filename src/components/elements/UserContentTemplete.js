@@ -189,7 +189,7 @@ export const smallButtonStyle = {
 export const colorButtonStyle = {
     height: '43px',
     minWidth: '55px',
-    fontSize: `${theme.size.font5}`,
+    fontSize: `${theme.size.font6}`,
     fontWeight: 'bold',
     color: '#fff',
     background: `${theme.color.background1}`,
@@ -208,7 +208,7 @@ export const colorButtonStyle = {
 export const borderButtonStyle = {
     height: '43px',
     minWidth: '53px',
-    fontSize: `${theme.size.font5}`,
+    fontSize: `${theme.size.font6}`,
     fontWeight: 'bold',
     border: `2px solid ${theme.color.background1}`,
     color: `${theme.color.background1}`,

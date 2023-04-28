@@ -106,7 +106,7 @@ const SideBarList = styled.div`
 `
 const SideBarMenu = styled.div`
 text-align:left;
-font-size:${props => props.theme.size.font3_5};
+font-size:${props => props.theme.size.font4};
 padding:0.5rem;
 margin-left:1rem;
 font-weight:bold;
