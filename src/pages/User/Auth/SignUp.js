@@ -153,6 +153,7 @@ const SignUp = () => {
         }
     }
     const onSignUp = () => {
+        
         if (!values.id) {
             toast.error('아이디를 입력해주세요.');
             setStep(0);
@@ -239,6 +240,10 @@ const SignUp = () => {
         }
         if (!$('input[id=term-of-use-1]:checked').val()) {
             toast.error('이용약관을 동의해 주세요.');
+            return;
+        }
+        if (params?.user_level != 10 && !$('input[id=fee-1]:checked').val()) {
+            toast.error('부동산 중개수수료 결제여부를 동의해 주세요.');
             return;
         }
         Swal.fire({
@@ -722,6 +727,31 @@ const SignUp = () => {
                                     }} />
                                 <label for={'term-of-use-2'} style={{ margin: '0', fontSize: theme.size.font5 }}>동의안함</label>
                             </RowContent>
+                            {params?.user_level != 10 ?
+                                <>
+                                    <RowContent style={{ alignItems: 'center', marginTop: '2rem', justifyContent: 'space-between' }}>
+                                        <div>부동산 중개수수료 결제에 동의합니다.</div>
+                                        <RowContent style={{ width: 'auto' }}>
+                                            <input type={'radio'} id="fee-1" name="fee" style={{ margin: '0 4px 0 auto' }}
+                                                onChange={(e) => {
+                                                    if ($('input[id=privacy-policy-1]:checked').val()) {
+                                                        $('#all-allow').prop('checked', true);
+                                                    }
+                                                }} />
+                                            <label for={'fee-1'} style={{ margin: '0 4px 0 0', fontSize: theme.size.font5 }}>동의함</label>
+                                            <input type={'radio'} id="fee-2" name="fee" style={{ margin: '0 4px 0 0' }}
+                                                onChange={(e) => {
+                                                    $('#all-allow').prop('checked', false);
+                                                }} />
+                                            <label for={'fee-2'} style={{ margin: '0', fontSize: theme.size.font5 }}>동의안함</label>
+                                        </RowContent>
+                                    </RowContent>
+                                </>
+                                :
+                                <>
+                                </>}
+
+
                         </>
                         :
                         <>
