@@ -27,6 +27,7 @@ export const zSidebar = [
         sidebarObjListFormat('계약관리', '/manager/list/contract', 40, ['/manager/list/contract']),//list
         sidebarObjListFormat('결제관리', '/manager/list/pay', 40, ['/manager/list/pay']),//list
         sidebarObjListFormat('부동산관리', '/manager/list/real_estate', 40, ['/manager/list/real_estate']),//list
+        sidebarObjListFormat('카드수수료관리', '/manager/edit/card_percent_setting/1', 40, ['/manager/edit/card_percent_setting/1']),//list
         sidebarObjListFormat('포인트관리', '/manager/edit/point_setting/1', 40, ['/manager/edit/point_setting/1']),//list
         sidebarObjListFormat('포인트내역관리', '/manager/list/point', 40, ['/manager/list/point']),//list
     ], <RiMoneyDollarCircleLine />),
@@ -152,7 +153,7 @@ export const objManagerListContent = {
         [
             columnObjFormat('계약고유번호', '', 'number', 'contract_pk'),
             columnObjFormat('임차인아이디', '', 'text', 'lessee_id'),
-            columnObjFormat('임차인명', '', 'text', 'lessee_name'),
+            columnObjFormat('임차인명(결제인명)', '', 'text', 'lessee_name'),
             columnObjFormat('임대인아이디', '', 'text', 'landlord_id'),
             columnObjFormat('임대인명', '', 'text', 'landlord_name'),
             columnObjFormat('공인중개사아이디', '', 'text', 'realtor_id'),
@@ -160,6 +161,7 @@ export const objManagerListContent = {
             columnObjFormat('결제예정일', '', 'text', 'day'),
             columnObjFormat('생성일', '', 'text', 'date'),
             columnObjFormat('금액', '', 'number', 'price'),
+            columnObjFormat('카드수수료', '', 'percent', 'card_percent'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
             columnObjFormat('납부종류', '', 'is_auto_pay', 'is_auto_pay'),
             columnObjFormat('납부현황', '', 'pay_status', 'pay_status'),
@@ -413,37 +415,20 @@ export const objManagerEditContent = {
         schema: 'setting',
         breadcrumb: '포인트설정',
         add_list: [],
-        columns: [//img, select, input, 
-            // [
-            //     editColumnObjFormat('부동산 중개수수료 (%)', 'input', { placeholder: '숫자를 입력해 주세요 1~100' }, 'realtor_charge_percent'),
-            // ],
+        columns: [
             [
                 editColumnObjFormat('포인트 적립퍼센트 (%)', 'input', { placeholder: '숫자를 입력해 주세요 1~100' }, 'point_percent'),
             ],
-            // [
-            //     editColumnObjFormat('슬라이드 이미지 2 (500x150)', 'img', { field_name: 'content2' }, 'home_banner_img_2'),
-            // ],
-            // [
-            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_2'),
-            // ],
-            // [
-            //     editColumnObjFormat('슬라이드 이미지 3 (500x150)', 'img', { field_name: 'content3' }, 'home_banner_img_3'),
-            // ],
-            // [
-            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_3'),
-            // ],
-            // [
-            //     editColumnObjFormat('슬라이드 이미지 4 (500x150)', 'img', { field_name: 'content4' }, 'home_banner_img_4'),
-            // ],
-            // [
-            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_4'),
-            // ],
-            // [
-            //     editColumnObjFormat('슬라이드 이미지 5 (500x150)', 'img', { field_name: 'content5' }, 'home_banner_img_5'),
-            // ],
-            // [
-            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_5'),
-            // ],
+        ],
+    },
+    card_percent_setting: {
+        schema: 'setting',
+        breadcrumb: '카드 수수료 설정',
+        add_list: [],
+        columns: [
+            [
+                editColumnObjFormat('카드수수료 (%)', 'input', { placeholder: '숫자를 입력해 주세요 0~100' }, 'card_percent'),
+            ],
         ],
     },
     event: {

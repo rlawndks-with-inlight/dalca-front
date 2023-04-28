@@ -288,20 +288,25 @@ const ChangeCard = () => {
             $(`.${name}`).val("");
         }
     };
-    const onClickEditButton = (data, idx) => {
+    const onClickEditButton = (data, idx, is_mine) => {
         setCvc(data?.card_cvc ?? "");
         setCardNumber(data?.card_number ?? "");
         setName(data?.card_name ?? "");
         setExpiry(data?.card_expire ?? "");
         setBirth(data?.birth ?? "");
         setPassword(data?.card_password ?? "");
-        setFamilyType(data?.family_type);
-        setCardSrc(data?.card_src);
-        setPhone(data?.phone ?? "");
-        setPhoneCheck("");
-        setEditPk(data?.pk)
-        setIsSeeCard(true);
-        setIsSendSms(false);
+
+
+        if (!is_mine) {
+            setFamilyType(data?.family_type);
+            setCardSrc(data?.card_src);
+            setPhone(data?.phone ?? "");
+            setPhoneCheck("");
+            setEditPk(data?.pk)
+            setIsSeeCard(true);
+            setIsSendSms(false);
+        }
+
     }
     const sendSms = async () => {
         if (!phone) {
@@ -598,11 +603,20 @@ const ChangeCard = () => {
                                             margin: '1rem 0',
                                         }}>
                                             <div />
-                                            <Button
-                                                sx={{ ...colorButtonStyle }}
-                                                startIcon={<Icon icon="line-md:confirm" />}
-                                                onClick={onChangeMyCard}
-                                            >저장</Button>
+                                            <div style={{ display: 'flex' }}>
+                                                <Button
+                                                    sx={{ ...colorButtonStyle }}
+                                                    startIcon={<Icon icon="line-md:confirm" />}
+                                                    onClick={onChangeMyCard}
+                                                >저장</Button>
+                                                <Button
+                                                    sx={{ ...colorButtonStyle, marginLeft: '0.5rem' }}
+                                                    startIcon={<Icon icon="akar-icons:arrow-cycle" />}
+                                                    onClick={() => {
+                                                        onClickEditButton({},0,true)
+                                                    }}
+                                                >변경</Button>
+                                            </div>
                                         </div>
                                     </>
                                     :
@@ -658,7 +672,7 @@ const ChangeCard = () => {
                                     :
                                     <>
                                     </>}
-                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 자동결제 신청' : '자동결제 카드 신청'}</Button>
+                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 자동결제 신청' : '정기결제 카드등록'}</Button>
                             </ContentWrappers>
 
                         </>}

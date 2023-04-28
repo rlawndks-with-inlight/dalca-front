@@ -27,6 +27,8 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         result = data[`${column}`] ?? "---";
     } else if (type == 'number') {
         result = commarNumber(data[`${column}`] ?? 0);
+    }else if (type == 'percent') {
+        result = `${commarNumber(data[`${column}`] ?? 0)}%`;
     } else if (type == 'minus_number') {
         result = commarNumber((data[`${column}`] ?? 0) * (-1));
     } else if (type == 'date') {

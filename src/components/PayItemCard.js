@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { backUrl } from "../data/Data";
-import { commarNumber, getKoPayCategoryByNum, makeQueryObj } from "../functions/utils";
+import { commarNumber, getKoPayCategoryByNum, getMoneyByCardPercent, makeQueryObj } from "../functions/utils";
 import theme from "../styles/theme";
 import AddButton from "./elements/button/AddButton";
 import { borderButtonStyle, colorButtonStyle, HalfTitle, TextButton, TextFillButton } from "./elements/UserContentTemplete";
@@ -40,7 +40,7 @@ height:120px;
 }
 `
 const PayItemCard = (props) => {
-    let { item, is_detail, not_price, column, user } = props;
+    let { item, is_detail, not_price, column, user, setting } = props;
 
     const navigate = useNavigate();
 
@@ -58,7 +58,7 @@ const PayItemCard = (props) => {
                         temp: item?.pk,
                         ord_nm: `${user?.pk}${item?.pk}${new Date().getTime()}`,
                         name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} 일자` : ''} ${getKoPayCategoryByNum(item?.pay_category)}`,
-                        price: item?.price,
+                        price: getMoneyByCardPercent(item?.price, setting?.card_percent),
                         buyer: user?.name,
                         tel: user?.phone,
                         is_mobile: window.innerWidth >= 700 ? 0 : 1
@@ -81,7 +81,7 @@ const PayItemCard = (props) => {
                     // }
                 }
             })
-        }else if(item?.status == 1){
+        } else if (item?.status == 1) {
             navigate('/history/pay')
         }
     }
@@ -138,7 +138,7 @@ const PayItemCard = (props) => {
                             :
                             <>
                             </>}
-                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(item?.price)}원</div>
+                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(getMoneyByCardPercent(item?.price, setting?.card_percent))}원</div>
                     </div>
                 </ContentContainer>
                 {not_price ?

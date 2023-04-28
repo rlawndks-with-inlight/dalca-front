@@ -38,7 +38,7 @@ const PayReady = () => {
     const [isSeePostCode, setIsSeePostCode] = useState(false);
     const [userData, setUserData] = useState({});
     const [loading, setLoading] = useState(false);
-
+    const [setting, setSetting] = useState({});
     const [values, setValues] = useState({
         landlord_pk: 0,
         landlord_search: '',
@@ -77,6 +77,8 @@ const PayReady = () => {
         try {
             setLoading(true);
             const { data: response } = await axios.get(`/api/item?table=pay&pk=${params?.contract_pk}`);
+            const {data:res_setting} = await axios.get(`/api/item?table=setting&pk=1`);
+            setSetting(res_setting?.data);
             let obj = response?.data;
             if (user_data?.pk != obj?.lessee_pk && user_data?.pk != obj?.landlord_pk) {
                 toast.error("잘못된 접근입니다.")
@@ -124,7 +126,7 @@ const PayReady = () => {
                                 animate={{ opacity: 1 }}
                                 style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                             >
-                            <PayItemCard item={values} user={userData} />
+                            <PayItemCard item={values} user={userData} setting={setting} />
                             </motion.div>
                         </ContentWrappers>
                     </>}
