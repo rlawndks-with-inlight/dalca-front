@@ -86,8 +86,8 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         if (is_list) {
             result = <>
                 {data[`${column}`] > 0 ?
-                    <CgToggleOn style={{ color: `${theme.color.background1}`, cursor: 'pointer', fontSize: theme.size.font1 }} onClick={() => { changeStatus(0, data, column) }} /> :
-                    <CgToggleOff style={{ color: '#aaaaaa', cursor: 'pointer', fontSize: theme.size.font1 }} onClick={() => { changeStatus(1, data, column) }} />}
+                    <CgToggleOn style={{ color: `${theme.color.background1}`, cursor: 'pointer', fontSize: theme.size.font2 }} onClick={() => { changeStatus(0, data, column) }} /> :
+                    <CgToggleOff style={{ color: '#aaaaaa', cursor: 'pointer', fontSize: theme.size.font2 }} onClick={() => { changeStatus(1, data, column) }} />}
             </>
         }
     }else if(type=='want_pay_cancel'){  
