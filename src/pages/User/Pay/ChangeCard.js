@@ -674,7 +674,7 @@ const ChangeCard = () => {
                                     </>}
                                 {user?.user_level == 0 ?
                                     <>
-                                        <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 월세 정기결제 신청' : '월세정기결제 카드등록'}</Button>
+                                        <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 월세 정기결제 신청' : '월세 정기결제 카드등록'}</Button>
                                     </>
                                     :
                                     <>
