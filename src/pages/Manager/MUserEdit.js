@@ -131,6 +131,7 @@ const MUserEdit = () => {
                         'office_zip_code',
                         'office_lat',
                         'office_lng',
+                        'is_agree_brokerage_fee',
                     ];
                     let realtor_src_obj = {};
                     if ($(`.level`).val() == 10) {
@@ -294,6 +295,13 @@ const MUserEdit = () => {
                             <Col>
                                 <Title style={{ margintop: '32px' }}>사무실연락처</Title>
                                 <Input className='office_phone' defaultValue={user?.office_phone} onChange={(e) => { setUser({ ...user, office_phone: e.target.value }) }} />
+                            </Col>
+                            <Col>
+                                <Title style={{ margintop: '32px' }}>복비 카드결제 승인여부</Title>
+                                <Select defaultValue={user?.is_agree_brokerage_fee} onChange={(e) => { setUser({ ...user, is_agree_brokerage_fee: e.target.value }) }}>
+                                <option value={1}>승인</option>
+                                <option value={0}>승인안함</option>
+                                </Select>
                             </Col>
                         </Row>
 

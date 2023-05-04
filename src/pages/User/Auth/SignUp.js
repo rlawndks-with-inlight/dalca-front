@@ -242,8 +242,8 @@ const SignUp = () => {
             toast.error('이용약관을 동의해 주세요.');
             return;
         }
-        if (params?.user_level != 10 && !$('input[id=fee-1]:checked').val()) {
-            toast.error('부동산 중개수수료 결제여부를 동의해 주세요.');
+        if (params?.user_level == 10 && (!$('input[id=fee-1]:checked').val() && !$('input[id=fee-2]:checked').val())) {
+            toast.error('부동산 중개수수료 결제 동의여부를 체크해 주세요.');
             return;
         }
         Swal.fire({
@@ -260,14 +260,18 @@ const SignUp = () => {
     const onSaveUser = async () => {
         let obj = values
         let insert_obj = {};
+        let add_obj = {};
         if (params?.user_level == 5) {
             insert_obj = landlordObj;
         }
         if (params?.user_level == 10) {
             insert_obj = realtorObj;
+            if($('input[id=fee-1]:checked').val()){
+                add_obj['is_agree_brokerage_fee'] = 1;
+            }else if($('input[id=fee-2]:checked').val()){
+                add_obj['is_agree_brokerage_fee'] = 0;
+            }
         }
-        let add_obj = {};
-
         let num = 1;
         for (var i = 0; i < Object.keys(insert_obj).length; i++) {
             let key = Object.keys(insert_obj)[i];
@@ -727,10 +731,10 @@ const SignUp = () => {
                                     }} />
                                 <label for={'term-of-use-2'} style={{ margin: '0', fontSize: theme.size.font5 }}>동의안함</label>
                             </RowContent>
-                            {params?.user_level != 10 ?
+                            {params?.user_level == 10 ?
                                 <>
                                     <RowContent style={{ alignItems: 'center', marginTop: '2rem', justifyContent: 'space-between' }}>
-                                        <div>부동산 중개수수료 결제에 동의합니다.</div>
+                                        <div>부동산 중개수수료를 카드로 결제하는 것에 동의합니다.</div>
                                         <RowContent style={{ width: 'auto' }}>
                                             <input type={'radio'} id="fee-1" name="fee" style={{ margin: '0 4px 0 auto' }}
                                                 onChange={(e) => {

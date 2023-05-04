@@ -92,10 +92,11 @@ const AroundRealEstate = () => {
     const getRealEstate = async (num) => {
         let coords = undefined;
         coords = await getLocation();
-        const { data: response } = await axios.get(`/api/items?table=real_estate&order=pk&status=1&page=${num}&page_cut=10`);
-       
-        let items = [...response?.data?.data];
-        setPageList(range(1,response?.data?.maxPage))
+        
+        const { data: response } = await axios.get(`/api/items?table=real_estate&order=pk&status=1`);
+        
+        let items = [...response?.data];
+        setPageList(range(1,makeMaxPage(items.length, 10)))
         for (var i = 0; i < items.length; i++) {
             items[i]['distance'] = await getDistanceFromLatLonInKm(coords?.latitude, coords?.longitude, items[i]?.lat ?? 37.3595704, items[i]?.lng ?? 127.105399);
         }
@@ -165,7 +166,7 @@ const AroundRealEstate = () => {
                                 </RenderAfterNavermapsLoaded>
                                 <ContentTable
                                     columns={objHistoryListContent['real_estate'] ?? []}
-                                    data={posts.splice((page - 1) * 10, page * 10)}
+                                    data={posts.splice((page - 1) * 10, 10)}
                                     schema={'real_estate'}
                                     table={'real_estate'}
                                     onClickList={onClickList}

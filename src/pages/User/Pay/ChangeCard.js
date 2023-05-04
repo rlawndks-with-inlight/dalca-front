@@ -613,7 +613,7 @@ const ChangeCard = () => {
                                                     sx={{ ...colorButtonStyle, marginLeft: '0.5rem' }}
                                                     startIcon={<Icon icon="akar-icons:arrow-cycle" />}
                                                     onClick={() => {
-                                                        onClickEditButton({},0,true)
+                                                        onClickEditButton({}, 0, true)
                                                     }}
                                                 >변경</Button>
                                             </div>
@@ -672,7 +672,13 @@ const ChangeCard = () => {
                                     :
                                     <>
                                     </>}
-                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 자동결제 신청' : '정기결제 카드등록'}</Button>
+                                {user?.user_level == 0 ?
+                                    <>
+                                        <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 월세 정기결제 신청' : '월세정기결제 카드등록'}</Button>
+                                    </>
+                                    :
+                                    <>
+                                    </>}
                             </ContentWrappers>
 
                         </>}
