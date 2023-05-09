@@ -87,6 +87,7 @@ const SideBarContainer = styled.div`
   height:100vh;
   margin:0;
   z-index:50;
+  font-family:${theme.font.light};
   @media screen and (max-width:300px) { 
     width:90%;
   }
