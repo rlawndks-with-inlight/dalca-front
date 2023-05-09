@@ -129,7 +129,7 @@ const Home = () => {
                     <div style={{ width: '100%', display: 'flex' }}>
                         <img
                             src={backUrl + post?.setting?.home_banner_img_1}
-                            style={{ width: '100%', margin: '16px auto', maxWidth: '750px', cursor: `${post?.setting?.home_banner_link_1 ? 'pointer' : ''}` }}
+                            style={{ width: '100%', margin: '16px auto', maxWidth: '1000px', cursor: `${post?.setting?.home_banner_link_1 ? 'pointer' : ''}` }}
                             onClick={() => { if (post?.setting?.home_banner_link_1) window.location.href = post?.setting?.home_banner_link_1; }}
                         />
                     </div>

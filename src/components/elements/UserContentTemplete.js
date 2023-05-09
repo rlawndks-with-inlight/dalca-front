@@ -17,7 +17,7 @@ position:relative;
 display:flex;
 flex-direction:column;
 width:90%;
-max-width:750px;
+max-width:1000px;
 margin-top:10rem;
 margin-left:auto;
 margin-right:auto;
