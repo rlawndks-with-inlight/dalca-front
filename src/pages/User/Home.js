@@ -49,7 +49,7 @@ flex-direction:column;
 `
 const NoticeContent = styled.div`
 width:90%;
-max-width: 752px;
+max-width: 1002px;
 margin:0 auto;
 padding:8px 0;
 display:flex;
