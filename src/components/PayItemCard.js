@@ -57,7 +57,7 @@ const PayItemCard = (props) => {
                         mid: 'welcometst',
                         temp: item?.pk,
                         ord_nm: `${user?.pk}${item?.pk}${new Date().getTime()}`,
-                        name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} 일자` : ''} ${getKoPayCategoryByNum(item?.pay_category)}`,
+                        name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} ` : ''} ${getKoPayCategoryByNum(item?.pay_category)}`,
                         price: getMoneyByCardPercent(item?.price, setting?.card_percent),
                         buyer: user?.name,
                         tel: user?.phone,
