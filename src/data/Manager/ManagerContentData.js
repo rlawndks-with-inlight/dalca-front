@@ -61,6 +61,7 @@ export const objManagerListContent = {
             //columnObjFormat('닉네임', '', 'text', 'nickname'),
             columnObjFormat('폰번호', '', 'text', 'phone'),
             columnObjFormat('접근권한', '', 'level', 'user_level'),
+            columnObjFormat('포인트', '', 'number', 'point_sum'),
             columnObjFormat('주소', '', 'text', 'address'),
             columnObjFormat('상세주소', '', 'text', 'address_detail'),
             columnObjFormat('우편번호', '', 'text', 'zip_code'),

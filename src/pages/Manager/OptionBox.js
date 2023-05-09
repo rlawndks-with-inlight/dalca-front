@@ -314,6 +314,7 @@ const OptionBox = (props) => {
             }
         }
         const { data: response } = await axios.post(apiStr, obj);
+        console.log(response)
         //setPosts(response?.data);
         await excelDownload(response.data ?? [], objManagerListContent, schema);
     }
@@ -335,7 +336,7 @@ const OptionBox = (props) => {
                             <option value={100}>100개</option>
                         </Select>
 
-                        <AddButton style={{ margin: '12px 24px 12px 24px', width: '96px', alignItems: 'center', display: 'flex', justifyContent: 'space-around' }} onClick={exportExcel}><SiMicrosoftexcel /> 액셀추출</AddButton>
+                        <AddButton style={{ margin: '12px 24px 12px 24px', width: '96px', alignItems: 'center', display: 'flex', justifyContent: 'space-around' }} onClick={exportExcel}><SiMicrosoftexcel /> 엑셀추출</AddButton>
 
                     </Row>
 

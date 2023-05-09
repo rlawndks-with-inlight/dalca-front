@@ -315,7 +315,7 @@ export const getViewerAlignByNumber = (num) => {
         return "center";
     }
 }
-export const excelDownload = async (excelData, objManagerListContent, schema) => {
+export const excelDownload = async (excelData, objManagerListContent, schema, navigate) => {
     const excelFileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const excelFileExtension = '.xlsx';
     const excelFileName = schema;
@@ -339,7 +339,9 @@ export const excelDownload = async (excelData, objManagerListContent, schema) =>
     for (var i = 0; i < result.length; i++) {
         excel_list[i] = [];
         for (var j = 0; j < column_list.length; j++) {
-            let data = await returnColumn(result[i], column_list[j]?.type, column_list[j]?.column, objManagerListContent[schema].schema);;
+            let data = await returnColumn(result[i], column_list[j]?.type, column_list[j]?.column, objManagerListContent[schema].schema, false, {
+                navigate:()=>{}
+            });;
             await excel_list[i].push(data);
         }
     }
