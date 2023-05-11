@@ -26,6 +26,7 @@ import ManagerContentWrappers from '../../components/elements/ManagerContentWrap
 import OptionBox from './OptionBox';
 import { toast } from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import { socket } from '../../data/Data';
 const OptionCardWrappers = styled.div`
 width:95%;
 margin:0.5rem auto;
@@ -58,6 +59,15 @@ const MItemList = () => {
     const use_user_pk_list = [];
     const use_pay_user_pk_list = ['pay'];
     useEffect(() => {
+        socket.on('message', (msg) => {
+            if (msg?.site == 'manager') {
+                if (msg?.table == 'user' && msg?.signup_user_level == 10) {
+                    toast.success(`새로운 공인중개사가 회원가입 하였습니다.`)
+                }
+            }
+        });
+    }, [])
+    useEffect(() => {
         setZColumn(objManagerListContent[`${params.table}`].zColumn ?? {})
         async function fetchPost() {
             if (state?.breadcrumb) {
@@ -76,22 +86,22 @@ const MItemList = () => {
         }
         fetchPost();
     }, [location.pathname, location.search])
-    useEffect(()=>{
+    useEffect(() => {
         $('.search').val("");
-        if(!location.search.includes('page=')){
+        if (!location.search.includes('page=')) {
             changePage(1);
         }
-    },[location.pathname])
-    useEffect(()=>{
-        if(location.search.includes('page=')){
+    }, [location.pathname])
+    useEffect(() => {
+        if (location.search.includes('page=')) {
             getItems();
         }
-    },[location.search])
+    }, [location.search])
     const changePage = async (num) => {
         setLoading(true)
-        setPage(num??1)
+        setPage(num ?? 1)
         let obj = {};
-        obj['page'] = num??1;
+        obj['page'] = num ?? 1;
         obj['page_cut'] = $('.page-cut').val();
         obj['keyword'] = $('.search').val();
         if (objManagerListContent[`${params.table}`].is_move) {
@@ -121,14 +131,14 @@ const MItemList = () => {
                 query += `?`;
             }
             let key = Object.keys(obj)[i];
-            if(obj[key]){
+            if (obj[key]) {
                 query += `${key}=${obj[key]}&`;
             }
         }
-        query = query.substring(0, query.length-1);
-        if(decodeURI(`${location.pathname}${location.search}`) == `${location.pathname.split('?')[0]}${query}`){
+        query = query.substring(0, query.length - 1);
+        if (decodeURI(`${location.pathname}${location.search}`) == `${location.pathname.split('?')[0]}${query}`) {
             getItems();
-        }else{
+        } else {
             navigate(`${location.pathname.split('?')[0]}${query}`);
         }
     }
@@ -136,7 +146,7 @@ const MItemList = () => {
         setLoading(true)
         let search = await makeQueryObj(decodeURI(location.search));
         let keys = Object.keys(search);
-        for(var i = 0;i<keys.length;i++){
+        for (var i = 0; i < keys.length; i++) {
             $(`.${keys[i]}`).val(search[keys[i]]);
         }
         search['table'] = objManagerListContent[`${params.table}`].schema;
@@ -217,7 +227,7 @@ const MItemList = () => {
     const onChangeType = (e) => {
         changePage(1);
     }
-    const onSearch = () =>{
+    const onSearch = () => {
 
     }
     const onPayCancel = (item) => {
@@ -246,15 +256,15 @@ const MItemList = () => {
     return (
         <>
             <Breadcrumb title={breadcrumbText} nickname={``} />
-            <OptionBox 
-            schema={params?.table} 
-            onChangeType={onChangeType} 
-            changePage={changePage} 
-            onchangeSelectPageCut={onchangeSelectPageCut} 
-            apiStr={apiStr} 
-            onClickType={onClickType}
-            onSearch={onSearch}
-             />
+            <OptionBox
+                schema={params?.table}
+                onChangeType={onChangeType}
+                changePage={changePage}
+                onchangeSelectPageCut={onchangeSelectPageCut}
+                apiStr={apiStr}
+                onClickType={onClickType}
+                onSearch={onSearch}
+            />
             {Object.keys(optionObj).length > 0 ?
                 <>
                     <OptionCardWrappers>
@@ -277,18 +287,18 @@ const MItemList = () => {
                 </>
                 :
                 <>
-                    <DataTable 
-                    width={objManagerListContent[`${params.table}`]?.width} 
-                    data={posts} 
-                    column={zColumn} 
-                    schema={params.table}
-                    opTheTopItem={opTheTopItem} 
-                    changeItemSequence={changeItemSequence} 
-                    deleteItem={deleteItem} 
-                    changeStatus={changeStatus} 
-                    changePage={changePage} 
-                    page={page}
-                    onPayCancel={onPayCancel}
+                    <DataTable
+                        width={objManagerListContent[`${params.table}`]?.width}
+                        data={posts}
+                        column={zColumn}
+                        schema={params.table}
+                        opTheTopItem={opTheTopItem}
+                        changeItemSequence={changeItemSequence}
+                        deleteItem={deleteItem}
+                        changeStatus={changeStatus}
+                        changePage={changePage}
+                        page={page}
+                        onPayCancel={onPayCancel}
                     />
                 </>}
 

@@ -265,6 +265,41 @@ const ContentTable = (props) => {
                                                     item[column.column] ?? "---"
                                                     :
                                                     null}
+                                                {column.type == 'card_percent_add_price' ?
+                                                    <>
+                                                        {item?.card_percent ?
+                                                            <>
+                                                                {commarNumber(item?.price * (100 + item?.card_percent) / 100)}
+                                                            </>
+                                                            :
+                                                            <>
+                                                                ---
+                                                            </>
+                                                        }
+                                                    </>
+
+                                                    :
+                                                    null}
+                                                {column.type == 'change_pay_status' ?
+                                                    <>
+                                                        {(item?.status == 0 || item?.status == 1) ?
+                                                            <>
+                                                                <IconButton onClick={() => {
+                                                                    navigate(`/change_pay_status`, {
+                                                                        state: item?.pk
+                                                                    })
+                                                                }}>
+                                                                    <Icon icon="ic:twotone-published-with-changes" />
+                                                                </IconButton>
+                                                            </>
+                                                            :
+                                                            <>
+                                                            </>
+                                                        }
+                                                    </>
+
+                                                    :
+                                                    null}
                                                 {column.type == 'link' ?
                                                     <IconButton onClick={() => {
                                                         goToLink(item)
@@ -289,11 +324,12 @@ const ContentTable = (props) => {
                                                             </>
                                                             :
                                                             <>
-                                                            ---
+                                                                ---
                                                             </>}
                                                     </>
                                                     :
                                                     null}
+                                                { }
                                                 {column.type == 'want_cancel' ?
                                                     <>
                                                         {item?.status == 1 && item?.is_want_cancel == 0 ?

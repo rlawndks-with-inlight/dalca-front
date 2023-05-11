@@ -42,6 +42,7 @@ import MUserCardEdit from '../pages/Manager/MUserCardEdit';
 import MRealEstateEdit from '../pages/Manager/MRealEstateEdit';
 import AroundRealEstate from '../pages/User/RealEstate/AroundRealEstate';
 import MPointEdit from '../pages/Manager/MPointEdit';
+import ChangePayStatus from '../pages/User/Pay/ChangePayStatus';
 
 const zManagerRoute = [
     { link: '/manager', element: <MLogin />, title: "관리자로그인" },
@@ -79,6 +80,7 @@ const zUserRoute = [
     { link: '/payready/:contract_pk', element: <PayReady />, title: "" },
     { link: '/card/:category', element: <ChangeCard />, title: "" },
     { link: '/around-realestate', element: <AroundRealEstate />, title: "" },
+    { link: '/change_pay_status', element: <ChangePayStatus />, title: "" },
     
     //{ link: '/payready/:pk', element: <PayReady />, title: "결제준비" },
     //{ link: '/authpay/:pk', element: <AuthPay />, title: "결제" },

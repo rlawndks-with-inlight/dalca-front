@@ -19,6 +19,7 @@ import { AiFillFileImage } from "react-icons/ai";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
 import Policy from "../Policy/Policy";
 import { PAY_INFO } from "../../../data/ContentData";
+import { socket } from "../../../data/Data";
 const SignUp = () => {
     const params = useParams();
     const navigate = useNavigate();
@@ -85,6 +86,7 @@ const SignUp = () => {
             toast.error('잘못된 접근입니다.');
             navigate(-1);
         }
+        
         //getBankList();
     }, []);
     const getBankList = async () => {
@@ -294,6 +296,9 @@ const SignUp = () => {
         obj = { ...obj, ['id_number']: obj?.id_number_front + '-' + obj?.id_number_back }
         const { data: response } = await axios.post('/api/adduser', obj);
         if (response?.result > 0) {
+            socket.emit('message', {
+                signup_user_level:params?.user_level
+            });
             toast.success(response?.message);
             navigate('/login');
         } else {

@@ -27,7 +27,7 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         result = data[`${column}`] ?? "---";
     } else if (type == 'number') {
         result = commarNumber(data[`${column}`] ?? 0);
-    }else if (type == 'percent') {
+    } else if (type == 'percent') {
         result = `${commarNumber(data[`${column}`] ?? 0)}%`;
     } else if (type == 'minus_number') {
         result = commarNumber((data[`${column}`] ?? 0) * (-1));
@@ -49,10 +49,10 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         }
     } else if (type == 'level') {
         result = getUserLevelByNumber(data[`${column}`])
-    }else if(type=='is_auto_pay'){
-        if(data[`is_auto`]==0){
+    } else if (type == 'is_auto_pay') {
+        if (data[`is_auto`] == 0) {
             result = '일반납부'
-        }else if(data[`is_auto`]==1){
+        } else if (data[`is_auto`] == 1) {
             result = '정기납부'
         }
     } else if (type == 'pay_category') {
@@ -78,25 +78,37 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
             result = "새창";
         }
     } else if (type == 'status') {
-        if (data[`${column}`] > 0) {
-            result = "on";
+        let flag = true;
+        if (column == 'is_agree_brokerage_fee') {
+            if(data?.user_level != 10){
+                flag = false;
+            }
+        }
+        if (flag) {
+            if (data[`${column}`] > 0) {
+                result = "on";
+            } else {
+                result = "off";
+            }
+            if (is_list) {
+                result = <>
+                    {data[`${column}`] > 0 ?
+                        <CgToggleOn style={{ color: `${theme.color.background1}`, cursor: 'pointer', fontSize: theme.size.font2 }} onClick={() => { changeStatus(0, data, column) }} /> :
+                        <CgToggleOff style={{ color: '#aaaaaa', cursor: 'pointer', fontSize: theme.size.font2 }} onClick={() => { changeStatus(1, data, column) }} />}
+                </>
+            }
         } else {
-            result = "off";
+            result = '---';
         }
-        if (is_list) {
-            result = <>
-                {data[`${column}`] > 0 ?
-                    <CgToggleOn style={{ color: `${theme.color.background1}`, cursor: 'pointer', fontSize: theme.size.font2 }} onClick={() => { changeStatus(0, data, column) }} /> :
-                    <CgToggleOff style={{ color: '#aaaaaa', cursor: 'pointer', fontSize: theme.size.font2 }} onClick={() => { changeStatus(1, data, column) }} />}
-            </>
-        }
-    }else if(type=='want_pay_cancel'){  
-        if(data['is_want_cancel']==1){
+
+
+    } else if (type == 'want_pay_cancel') {
+        if (data['is_want_cancel'] == 1) {
             result = '취소요청';
-        }else if(data['is_want_cancel']==-1){
+        } else if (data['is_want_cancel'] == -1) {
             result = '취소완료';
         }
-    }else if (type == 'request_status') {
+    } else if (type == 'request_status') {
         if (data[`status`] == 1) {
             result = "답변완료";
         } else {
@@ -148,9 +160,9 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
                         cancelButtonText: '취소'
                     }).then(async (result) => {
                         if (result.isConfirmed) {
-                            if(data?.table){
+                            if (data?.table) {
                                 deleteItem(data.pk, data?.table)
-                            }else{
+                            } else {
                                 deleteItem(data.pk, schema)
                             }
 
@@ -163,75 +175,25 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         result = "---";
         if (is_list) {
             result = <>
-                 <GiCancel style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() =>{
-                   onPayCancel(data);
-                 }} />
+                <GiCancel style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() => {
+                    onPayCancel(data);
+                }} />
             </>
         }
-    }else if (type == 'user_pay_list') {
+    } else if (type == 'user_pay_list') {
         result = "---";
         if (is_list) {
             result = <>
                 <RiMoneyDollarCircleLine style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() => navigate(`/manager/list/pay/${data.pk}`, { state: { breadcrumb: `${data?.id} 회원 결제 내역` } })} />
             </>
         }
-    }else if (type == 'pay_card') {
+    } else if (type == 'pay_card') {
         result = "---";
         if (is_list) {
             result = <>
                 <AiFillCreditCard style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() => navigate(`/manager/edit/user_card/${data.pk}`, { state: { breadcrumb: `${data?.id} 회원 결제 카드` } })} />
             </>
         }
-    } else if (type == 'user_money_edit') {
-        result = "---";
-    } else if (type == 'user_marketing') {
-        result = "---";
-    } else if (type.includes('exchange')) {
-        data['explain_obj'] = JSON.parse(data['explain_obj']);
-        if (type.split('_')[1] == 'star') {
-            if (data[`explain_obj`]?.star) {
-                result = commarNumber(data[`explain_obj`]?.star);
-            } else {
-                result = "---";
-            }
-        } else if (type.split('_')[1] == 'money') {
-            if (data[`explain_obj`]?.star) {
-                result = commarNumber(data[`explain_obj`]?.star * 100);
-            } else {
-                result = "---";
-            }
-        } else if (type.split('_')[1] == 'moneycommission') {
-            if (data[`explain_obj`]?.star) {
-                result = commarNumber(data[`explain_obj`]?.star * data[`explain_obj`]?.withdraw_commission_percent / 100);
-            } else {
-                result = "---";
-            }
-        } else if (type.split('_')[1] == 'moneypayment') {
-            if (data[`explain_obj`]?.star) {
-                result = commarNumber(data[`explain_obj`]?.star * 100);
-            } else {
-                result = "---";
-            }
-        } else if (type.split('_')[1] == 'status') {
-            if (data?.status == -1) {
-                result = "반송";
-            } else if (data?.status == 0) {
-                result = "접수대기";
-            } else if (data?.status == 1) {
-                result = "접수완료";
-            } else if (data?.status == 2) {
-                result = "지급완료";
-            }
-        } else if (type.split('_')[1] == 'date') {
-            if (data[`explain_obj`]?.date) {
-                result = data['explain_obj']?.date;
-            } else {
-                result = "---";
-            }
-        } else if (type.split('_')[1] == 'edit') {
-            result = "---";
-        }
-
     } else if (type == 'pay_status') {
         result = getPayStatus(data);
     }

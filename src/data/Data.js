@@ -23,6 +23,7 @@ import defaultImage from '../assets/images/test/default-image.png'
 import { EditorState } from "draft-js"
 import theme from '../styles/theme';
 import axios from 'axios';
+import io from 'socket.io-client';
 
 const test = true;
 
@@ -30,6 +31,9 @@ const test = true;
 export const backUrl = "https://dalcapay.com:8443";
 export const frontUrl = "https://dalcapay.com";
 //export const backUrl = "https://1st-academy.kr:8443";
+export const SOCKET_URL = `http://localhost:5000`; // https://dalcapay.com:5000
+export const socket = io(SOCKET_URL);
+
 
 export const logoSrc = logo;
 export const logoWhiteSrc = logo_white;
