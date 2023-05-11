@@ -108,7 +108,6 @@ const AroundRealEstate = () => {
         for (var i = 0; i < items.length; i++) {
             items[i]['distance'] = commarNumber(items[i]['distance']) + ' km';
         }
-        console.log(items)
         setPosts(items);
         setPage(num);
         setLoading(false);

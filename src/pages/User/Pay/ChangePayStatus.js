@@ -77,10 +77,8 @@ const ChangePayStatus = () => {
         let user_data = getLocalStorage('auth');
         setUserData(user_data);
         const { data: response } = await axios.get(`/api/item?table=pay&pk=${location?.state}`);
-        console.log(response)
         const { data: res_setting } = await axios.get(`/api/item?table=setting&pk=1`);
         setSetting(res_setting?.data);
-        console.log(user_data)
         if (user_data?.user_level != 10 || response?.data?.realtor_pk != user_data?.pk) {
             toast.error("잘못된 접근입니다.");
             navigate('/home')

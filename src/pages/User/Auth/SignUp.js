@@ -96,7 +96,6 @@ const SignUp = () => {
             noacct: '3561311914533',
             mid: PAY_INFO.MID,
         });
-        console.log(response)
     }
     useEffect(() => {
         if (step == 1 && params?.user_level == 10) {
@@ -104,7 +103,6 @@ const SignUp = () => {
         }
     }, [step])
     const onSelectAddress = async (data) => {
-        console.log(data)
         if (step == 0) {
             setIsSeePostCode(false);
             setValues({ ...values, ['address']: data?.autoJibunAddress || data?.jibunAddress, ['zip_code']: data?.zonecode, ['address_detail']: '' });
