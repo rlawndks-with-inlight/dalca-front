@@ -398,8 +398,8 @@ const SignUp = () => {
                 <input type="text" name="authHash" value={idInfo?.authHash} /><br />
                 <input type="text" name="flgFixedUser" value={idInfo?.flgFixedUser} /><br />
                 <input type="text" name="reservedMsg" value={idInfo?.reservedMsg} /><br />
-                <input type="text" name="successUrl" value={backUrl + '/returnidurl'} /><br />
-                <input type="text" name="failUrl" value={backUrl + '/returnidurl'} /><br />
+                <input type="text" name="successUrl" value={backUrl + '/api/returnidurl'} /><br />
+                <input type="text" name="failUrl" value={backUrl + '/api/returnidurl'} /><br />
             </form>
             <FakeHeaders label='회원가입' />
             <Wrappers className="wrapper" style={{ width: '100%' }}>
