@@ -19,7 +19,8 @@ import { AiFillFileImage } from "react-icons/ai";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
 import Policy from "../Policy/Policy";
 import { PAY_INFO } from "../../../data/ContentData";
-import { socket } from "../../../data/Data";
+import { backUrl, frontUrl, socket } from "../../../data/Data";
+import Loading from "../../../components/Loading";
 const SignUp = () => {
     const params = useParams();
     const navigate = useNavigate();
@@ -33,6 +34,8 @@ const SignUp = () => {
     const [values, setValues] = useState({});
     const [isSendSms, setIsSendSms] = useState(false)
     const [randNum, setRandNum] = useState("")
+    const [loading, setLoading] = useState(true);
+    const [idInfo, setIdInfo] = useState({});
     const defaultObj = {
         id: '',
         pw: '',
@@ -86,16 +89,13 @@ const SignUp = () => {
             toast.error('잘못된 접근입니다.');
             navigate(-1);
         }
-        
+        getIdentificationInfo();
         //getBankList();
     }, []);
-    const getBankList = async () => {
-        const response = await axios.post('https://iniweb-api.inicis.com/DefaultWebApp/service/acct_cfrm/inicis.jsp', {
-            nmcomp: '',
-            banksett: '',
-            noacct: '3561311914533',
-            mid: PAY_INFO.MID,
-        });
+    const getIdentificationInfo = async () => {
+        const { data: response } = await axios.get(`/api/gii?level=${params?.user_level}`);
+        console.log(response)
+        callSa()
     }
     useEffect(() => {
         if (step == 1 && params?.user_level == 10) {
@@ -125,9 +125,7 @@ const SignUp = () => {
             } else {
                 toast.error("위치추적 할 수 없는 주소입니다.");
             }
-
         }
-
     }
     const onCheckId = async () => {
         if (!values.id) {
@@ -153,7 +151,7 @@ const SignUp = () => {
         }
     }
     const onSignUp = () => {
-        
+
         if (!values.id) {
             toast.error('아이디를 입력해주세요.');
             setStep(0);
@@ -266,9 +264,9 @@ const SignUp = () => {
         }
         if (params?.user_level == 10) {
             insert_obj = realtorObj;
-            if($('input[id=fee-1]:checked').val()){
+            if ($('input[id=fee-1]:checked').val()) {
                 add_obj['is_agree_brokerage_fee'] = 1;
-            }else if($('input[id=fee-2]:checked').val()){
+            } else if ($('input[id=fee-2]:checked').val()) {
                 add_obj['is_agree_brokerage_fee'] = 0;
             }
         }
@@ -295,7 +293,7 @@ const SignUp = () => {
         const { data: response } = await axios.post('/api/adduser', obj);
         if (response?.result > 0) {
             socket.emit('message', {
-                signup_user_level:params?.user_level
+                signup_user_level: params?.user_level
             });
             toast.success(response?.message);
             navigate('/login');
@@ -373,420 +371,454 @@ const SignUp = () => {
             $(`.${name}`).val("");
         }
     };
+    function callSa() {
+        let window = popupCenter();
+        if (window != undefined && window != null) {
+            document.saForm.setAttribute("target", "sa_popup");
+            document.saForm.setAttribute("post", "post");
+            document.saForm.setAttribute("action", "https://sa.inicis.com/auth");
+            document.saForm.submit();
+        }
+    }
+
+    function popupCenter() {
+        let _width = 400;
+        let _height = 620;
+        var xPos = (document.body.offsetWidth / 2) - (_width / 2); // 가운데 정렬
+        xPos += window.screenLeft; // 듀얼 모니터일 때
+
+        return window.open("", "sa_popup", "width=" + _width + ", height=" + _height + ", left=" + xPos + ", menubar=yes, status=yes, titlebar=yes, resizable=yes");
+    }
     return (
         <>
+            <form name="saForm" style={{ display: 'none' }}>
+                <input type="text" name="mid" value={idInfo?.mid} /><br />
+                <input type="text" name="reqSvcCd" value={idInfo?.reqSvcCd} /><br />
+                <input type="text" name="mTxId" value={idInfo?.mTxId} /><br />
+                <input type="text" name="authHash" value={idInfo?.authHash} /><br />
+                <input type="text" name="flgFixedUser" value={idInfo?.flgFixedUser} /><br />
+                <input type="text" name="reservedMsg" value={idInfo?.reservedMsg} /><br />
+                <input type="text" name="successUrl" value={backUrl + '/returnidurl'} /><br />
+                <input type="text" name="failUrl" value={backUrl + '/returnidurl'} /><br />
+            </form>
             <FakeHeaders label='회원가입' />
             <Wrappers className="wrapper" style={{ width: '100%' }}>
                 <ContentWrappers>
-                    {step == 0 ?
+                    {loading ?
                         <>
-                            <HalfTitle>{title}</HalfTitle>
-                            <InputComponent
-                                label={'ID*'}
-                                input_type={{
-                                    placeholder: '특수문자 제외한 6자리 이상 20자리 이하',
-                                    disabled: isCheckId
-                                }}
-                                class_name='id'
-                                button_label={isCheckId ? '완료' : '중복확인'}
-                                isButtonAble={!isCheckId}
-                                is_divider={true}
-                                onKeyPress={() => onCheckId()}
-                                onClickButton={() => onCheckId()}
-                                onChange={(e) => handleChange(e, 'id')}
-                                value={values.id}
-                            />
-                            <InputComponent
-                                label={'PW*'}
-                                input_type={{
-                                    placeholder: '영문, 숫자, 특수문자조합 8~20자',
-                                    type: 'password'
-                                }}
-                                class_name='pw'
-                                is_divider={true}
-                                onKeyPress={() => $('.pw_check').focus()}
-                                onChange={(e) => handleChange(e, 'pw')}
-                                value={values.pw}
-                                isSeeButton={true}
-                            />
-                            <InputComponent
-                                label={'PW 확인*'}
-                                input_type={{
-                                    placeholder: '비밀번호 확인을 위해 한번 더 입력해주세요',
-                                    type: 'password'
-                                }}
-                                class_name='pw_check'
-                                is_divider={true}
-                                onKeyPress={() => setIsSeePostCode(true)}
-                                onChange={(e) => handleChange(e, 'pw_check')}
-                                value={values.pw_check}
-                                isSeeButton={true}
-                            />
-                            {params?.user_level != 10 ?
-                                <>
-                                    <div onClick={() => {
-                                    }}>
-                                        <InputComponent
-                                            label={'집주소* '}
-                                            input_type={{
-                                                placeholder: '',
-                                                disabled: "true"
-                                            }}
-                                            class_name='address'
-                                            is_divider={true}
-                                            onClick={() => {
-                                                setIsSeePostCode(!isSeePostCode)
-                                            }}
-                                            value={values.address}
-                                        />
-                                    </div>
-                                    <InputComponent
-                                        label={'상세주소'}
-                                        input_type={{
-                                            placeholder: ''
-                                        }}
-                                        class_name='address_detail'
-                                        is_divider={true}
-                                        onKeyPress={() => $('.id_number').focus()}
-                                        onChange={(e) => handleChange(e, 'address_detail')}
-                                        value={values.address_detail}
-                                    />
-                                </>
-                                :
-                                <>
-                                </>}
-
-                            <RowContent style={{ margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <InputComponent
-                                    label={'주민등록번호 앞자리'}
-                                    input_type={{
-                                        placeholder: ''
-                                    }}
-                                    class_name='id_number_front'
-                                    is_divider={true}
-                                    onKeyPress={() => $('.id_number_back').focus()}
-                                    onChange={(e) => handleChange(e, 'id_number_front')}
-                                    value={values.id_number_front}
-                                    divStyle={{ width: '47%', margin: '0' }}
-                                />
-                                <div>
-                                    -
-                                </div>
-                                <InputComponent
-                                    label={'뒷자리'}
-                                    input_type={{
-                                        placeholder: '',
-                                        type: 'password'
-                                    }}
-                                    class_name='id_number_back'
-                                    is_divider={true}
-                                    onKeyPress={() => $('.phone').focus()}
-                                    onChange={(e) => handleChange(e, 'id_number_back')}
-                                    value={values.id_number_back}
-                                    divStyle={{ width: '47%', margin: '0' }}
-                                />
-                            </RowContent>
-                            <InputComponent
-                                label={'휴대폰번호*'}
-                                input_type={{
-                                    placeholder: '-없이 숫자만 입력',
-                                }}
-                                class_name='phone'
-                                button_label={isCheckPhone ? '완료' : '인증하기'}
-                                isButtonAble={!isCheckPhone}
-                                onClickButton={() => sendSms()}
-                                onChange={(e) => {
-                                    handleChange(e, 'phone');
-                                    setIsCheckPhone(false);
-                                }}
-                                value={values.phone}
-                            />
-                            <InputComponent
-                                label={'휴대폰인증번호*'}
-                                input_type={{
-                                    placeholder: '인증번호를 입력해주세요.',
-                                }}
-                                class_name='phone'
-                                onChange={(e) => handleChange(e, 'phoneCheck')}
-                                value={values.phoneCheck}
-                            />
-                            <InputComponent
-                                label={'성명*'}
-                                input_type={{
-                                    placeholder: ''
-                                }}
-                                class_name='name'
-                                is_divider={true}
-                                onChange={(e) => handleChange(e, 'name')}
-                                value={values.name}
-                            />
-
-
-
+                            <Loading />
                         </>
                         :
                         <>
-                        </>}
-                    {step == 1 ?
-                        <>
-                            <HalfTitle>{title}</HalfTitle>
 
-                            {params?.user_level == 10 ?
+                            {step == 0 ?
                                 <>
+                                    <HalfTitle>{title}</HalfTitle>
                                     <InputComponent
-                                        label={'중개업소명칭'}
+                                        label={'ID*'}
                                         input_type={{
-                                            placeholder: ''
+                                            placeholder: '특수문자 제외한 6자리 이상 20자리 이하',
+                                            disabled: isCheckId
                                         }}
-                                        class_name='office_name'
+                                        class_name='id'
+                                        button_label={isCheckId ? '완료' : '중복확인'}
+                                        isButtonAble={!isCheckId}
                                         is_divider={true}
-                                        onChange={(e) => handleChange(e, 'office_name')}
-                                        value={values.office_name}
+                                        onKeyPress={() => onCheckId()}
+                                        onClickButton={() => onCheckId()}
+                                        onChange={(e) => handleChange(e, 'id')}
+                                        value={values.id}
                                     />
                                     <InputComponent
-                                        label={'사업자등록번호'}
+                                        label={'PW*'}
                                         input_type={{
-                                            placeholder: '필수입력'
+                                            placeholder: '영문, 숫자, 특수문자조합 8~20자',
+                                            type: 'password'
                                         }}
-                                        class_name='company_number'
+                                        class_name='pw'
                                         is_divider={true}
-                                        onChange={(e) => handleChange(e, 'company_number')}
-                                        value={values.company_number}
+                                        onKeyPress={() => $('.pw_check').focus()}
+                                        onChange={(e) => handleChange(e, 'pw')}
+                                        value={values.pw}
+                                        isSeeButton={true}
                                     />
-                                    <div onClick={() => {
-                                    }}>
+                                    <InputComponent
+                                        label={'PW 확인*'}
+                                        input_type={{
+                                            placeholder: '비밀번호 확인을 위해 한번 더 입력해주세요',
+                                            type: 'password'
+                                        }}
+                                        class_name='pw_check'
+                                        is_divider={true}
+                                        onKeyPress={() => setIsSeePostCode(true)}
+                                        onChange={(e) => handleChange(e, 'pw_check')}
+                                        value={values.pw_check}
+                                        isSeeButton={true}
+                                    />
+                                    {params?.user_level != 10 ?
+                                        <>
+                                            <div onClick={() => {
+                                            }}>
+                                                <InputComponent
+                                                    label={'집주소* '}
+                                                    input_type={{
+                                                        placeholder: '',
+                                                        disabled: "true"
+                                                    }}
+                                                    class_name='address'
+                                                    is_divider={true}
+                                                    onClick={() => {
+                                                        setIsSeePostCode(!isSeePostCode)
+                                                    }}
+                                                    value={values.address}
+                                                />
+                                            </div>
+                                            <InputComponent
+                                                label={'상세주소'}
+                                                input_type={{
+                                                    placeholder: ''
+                                                }}
+                                                class_name='address_detail'
+                                                is_divider={true}
+                                                onKeyPress={() => $('.id_number').focus()}
+                                                onChange={(e) => handleChange(e, 'address_detail')}
+                                                value={values.address_detail}
+                                            />
+                                        </>
+                                        :
+                                        <>
+                                        </>}
+
+                                    <RowContent style={{ margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}>
                                         <InputComponent
-                                            label={'사무실주소'}
+                                            label={'주민등록번호 앞자리'}
+                                            input_type={{
+                                                placeholder: ''
+                                            }}
+                                            class_name='id_number_front'
+                                            is_divider={true}
+                                            onKeyPress={() => $('.id_number_back').focus()}
+                                            onChange={(e) => handleChange(e, 'id_number_front')}
+                                            value={values.id_number_front}
+                                            divStyle={{ width: '47%', margin: '0' }}
+                                        />
+                                        <div>
+                                            -
+                                        </div>
+                                        <InputComponent
+                                            label={'뒷자리'}
                                             input_type={{
                                                 placeholder: '',
-                                                disabled: "true"
+                                                type: 'password'
                                             }}
-                                            class_name='office_address'
+                                            class_name='id_number_back'
                                             is_divider={true}
-                                            onClick={() => {
-                                                setIsSeePostCode(!isSeePostCode)
-                                            }}
-                                            value={values.office_address}
+                                            onKeyPress={() => $('.phone').focus()}
+                                            onChange={(e) => handleChange(e, 'id_number_back')}
+                                            value={values.id_number_back}
+                                            divStyle={{ width: '47%', margin: '0' }}
                                         />
-                                    </div>
-                                    <InputComponent
-                                        label={'사무실상세주소'}
-                                        input_type={{
-                                            placeholder: ''
-                                        }}
-                                        class_name='office_address_detail'
-                                        is_divider={true}
-                                        onChange={(e) => handleChange(e, 'office_address_detail')}
-                                        value={values.office_address_detail}
-                                    />
-                                    <InputComponent
-                                        label={'사무실연락처'}
-                                        input_type={{
-                                            placeholder: ''
-                                        }}
-                                        class_name='office_phone'
-                                        is_divider={true}
-                                        onChange={(e) => handleChange(e, 'office_phone')}
-                                        value={values.office_phone}
-                                    />
-                                    <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>사업자등록증사진</CategoryName>
-                                    <ImageContainer for={`company_number_src`} style={{ margin: 'auto' }}>
-
-                                        {values?.company_number_src ?
-                                            <>
-                                                <img src={URL.createObjectURL(values?.company_number_src)} alt="#"
-                                                    style={{
-                                                        width: 'auto', maxHeight: '8rem',
-                                                        maxWidth: '80%',
-                                                        margin: 'auto'
-                                                    }} />
-                                            </>
-                                            :
-                                            <>
-                                                <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
-                                            </>}
-                                    </ImageContainer>
-                                    <div>
-                                        <input type="file" id={`company_number_src`} name={'company_number_src'} onChange={addFile} style={{ display: 'none' }} />
-                                    </div>
-                                    <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>중개업소등록증사진</CategoryName>
-                                    <ImageContainer for={`office_src`} style={{ margin: 'auto' }}>
-
-                                        {values?.office_src ?
-                                            <>
-                                                <img src={URL.createObjectURL(values?.office_src)} alt="#"
-                                                    style={{
-                                                        width: 'auto', maxHeight: '8rem',
-                                                        maxWidth: '80%',
-                                                        margin: 'auto'
-                                                    }} />
-                                            </>
-                                            :
-                                            <>
-                                                <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
-                                            </>}
-                                    </ImageContainer>
-                                    <div>
-                                        <input type="file" id={`office_src`} name={'office_src'} onChange={addFile} style={{ display: 'none' }} />
-                                    </div>
-
-
-                                </>
-                                :
-                                <>
-                                </>
-                            }
-                            {params?.user_level == 5 ?
-                                <>
-                                    <InputComponent
-                                        label={'은행명*'}
-                                        input_type={{
-                                            placeholder: ''
-                                        }}
-                                        class_name='bank_name'
-                                        is_divider={true}
-                                        onChange={(e) => handleChange(e, 'bank_name')}
-                                        value={values.bank_name}
-                                    />
-                                    <InputComponent
-                                        label={'계좌번호*'}
-                                        input_type={{
-                                            placeholder: ''
-                                        }}
-                                        class_name='account_number'
-                                        is_divider={true}
-                                        onChange={(e) => handleChange(e, 'account_number')}
-                                        value={values.account_number}
-                                    />
-                                </>
-                                :
-                                <>
-                                </>}
-                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>통장사본사진</CategoryName>
-                            <ImageContainer for={`bank_book_src`} style={{ margin: 'auto' }}>
-
-                                {values?.bank_book_src ?
-                                    <>
-                                        <img src={URL.createObjectURL(values?.bank_book_src)} alt="#"
-                                            style={{
-                                                width: 'auto', maxHeight: '8rem',
-                                                maxWidth: '80%',
-                                                margin: 'auto'
-                                            }} />
-                                    </>
-                                    :
-                                    <>
-                                        <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
-                                    </>}
-                            </ImageContainer>
-                            <div>
-                                <input type="file" id={`bank_book_src`} name={'bank_book_src'} onChange={addFile} style={{ display: 'none' }} />
-                            </div>
-                            {params?.user_level == 10 ?
-                                <>
-                                    <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>신분증사진</CategoryName>
-                                    <ImageContainer for={`id_number_src`} style={{ margin: 'auto' }}>
-
-                                        {values?.id_number_src ?
-                                            <>
-                                                <img src={URL.createObjectURL(values?.id_number_src)} alt="#"
-                                                    style={{
-                                                        width: 'auto', maxHeight: '8rem',
-                                                        maxWidth: '80%',
-                                                        margin: 'auto'
-                                                    }} />
-                                            </>
-                                            :
-                                            <>
-                                                <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
-                                            </>}
-                                    </ImageContainer>
-                                    <div>
-                                        <input type="file" id={`id_number_src`} name={'id_number_src'} onChange={addFile} style={{ display: 'none' }} />
-                                    </div>
-                                </>
-                                :
-                                <>
-
-                                </>}
-
-                        </>
-                        :
-                        <>
-                        </>}
-                    {step == 2 ?
-                        <>
-                            <HalfTitle style={{ textAlign: 'left' }}>{'약관동의'}</HalfTitle>
-                            <div style={{ width: '94%', height: '150px', overflowY: 'scroll', border: `1px solid ${theme.color.font3}`, padding: '3%' }}>
-                                <Policy pk={0} />
-                            </div>
-                            <RowContent style={{ alignItems: 'center', marginTop: '8px' }}>
-                                <input type={'radio'} id="term-of-use-1" name="term-of-use" style={{ margin: '0 4px 0 auto' }}
-                                    onChange={(e) => {
-                                        if ($('input[id=privacy-policy-1]:checked').val()) {
-                                            $('#all-allow').prop('checked', true);
-                                        }
-                                    }} />
-                                <label for={'term-of-use-1'} style={{ margin: '0 4px 0 0', fontSize: theme.size.font5 }}>동의함</label>
-                                <input type={'radio'} id="term-of-use-2" name="term-of-use" style={{ margin: '0 4px 0 0' }}
-                                    onChange={(e) => {
-                                        $('#all-allow').prop('checked', false);
-                                    }} />
-                                <label for={'term-of-use-2'} style={{ margin: '0', fontSize: theme.size.font5 }}>동의안함</label>
-                            </RowContent>
-                            {params?.user_level == 10 ?
-                                <>
-                                    <RowContent style={{ alignItems: 'center', marginTop: '2rem', justifyContent: 'space-between' }}>
-                                        <div>부동산 중개수수료를 카드로 결제하는 것에 동의합니다.</div>
-                                        <RowContent style={{ width: 'auto' }}>
-                                            <input type={'radio'} id="fee-1" name="fee" style={{ margin: '0 4px 0 auto' }}
-                                                onChange={(e) => {
-                                                    if ($('input[id=privacy-policy-1]:checked').val()) {
-                                                        $('#all-allow').prop('checked', true);
-                                                    }
-                                                }} />
-                                            <label for={'fee-1'} style={{ margin: '0 4px 0 0', fontSize: theme.size.font5 }}>동의함</label>
-                                            <input type={'radio'} id="fee-2" name="fee" style={{ margin: '0 4px 0 0' }}
-                                                onChange={(e) => {
-                                                    $('#all-allow').prop('checked', false);
-                                                }} />
-                                            <label for={'fee-2'} style={{ margin: '0', fontSize: theme.size.font5 }}>동의안함</label>
-                                        </RowContent>
                                     </RowContent>
+                                    <InputComponent
+                                        label={'휴대폰번호*'}
+                                        input_type={{
+                                            placeholder: '-없이 숫자만 입력',
+                                        }}
+                                        class_name='phone'
+                                        button_label={isCheckPhone ? '완료' : '인증하기'}
+                                        isButtonAble={!isCheckPhone}
+                                        onClickButton={() => sendSms()}
+                                        onChange={(e) => {
+                                            handleChange(e, 'phone');
+                                            setIsCheckPhone(false);
+                                        }}
+                                        value={values.phone}
+                                    />
+                                    <InputComponent
+                                        label={'휴대폰인증번호*'}
+                                        input_type={{
+                                            placeholder: '인증번호를 입력해주세요.',
+                                        }}
+                                        class_name='phone'
+                                        onChange={(e) => handleChange(e, 'phoneCheck')}
+                                        value={values.phoneCheck}
+                                    />
+                                    <InputComponent
+                                        label={'성명*'}
+                                        input_type={{
+                                            placeholder: ''
+                                        }}
+                                        class_name='name'
+                                        is_divider={true}
+                                        onChange={(e) => handleChange(e, 'name')}
+                                        value={values.name}
+                                    />
+
+
+
+                                </>
+                                :
+                                <>
+                                </>}
+                            {step == 1 ?
+                                <>
+                                    <HalfTitle>{title}</HalfTitle>
+
+                                    {params?.user_level == 10 ?
+                                        <>
+                                            <InputComponent
+                                                label={'중개업소명칭'}
+                                                input_type={{
+                                                    placeholder: ''
+                                                }}
+                                                class_name='office_name'
+                                                is_divider={true}
+                                                onChange={(e) => handleChange(e, 'office_name')}
+                                                value={values.office_name}
+                                            />
+                                            <InputComponent
+                                                label={'사업자등록번호'}
+                                                input_type={{
+                                                    placeholder: '필수입력'
+                                                }}
+                                                class_name='company_number'
+                                                is_divider={true}
+                                                onChange={(e) => handleChange(e, 'company_number')}
+                                                value={values.company_number}
+                                            />
+                                            <div onClick={() => {
+                                            }}>
+                                                <InputComponent
+                                                    label={'사무실주소'}
+                                                    input_type={{
+                                                        placeholder: '',
+                                                        disabled: "true"
+                                                    }}
+                                                    class_name='office_address'
+                                                    is_divider={true}
+                                                    onClick={() => {
+                                                        setIsSeePostCode(!isSeePostCode)
+                                                    }}
+                                                    value={values.office_address}
+                                                />
+                                            </div>
+                                            <InputComponent
+                                                label={'사무실상세주소'}
+                                                input_type={{
+                                                    placeholder: ''
+                                                }}
+                                                class_name='office_address_detail'
+                                                is_divider={true}
+                                                onChange={(e) => handleChange(e, 'office_address_detail')}
+                                                value={values.office_address_detail}
+                                            />
+                                            <InputComponent
+                                                label={'사무실연락처'}
+                                                input_type={{
+                                                    placeholder: ''
+                                                }}
+                                                class_name='office_phone'
+                                                is_divider={true}
+                                                onChange={(e) => handleChange(e, 'office_phone')}
+                                                value={values.office_phone}
+                                            />
+                                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>사업자등록증사진</CategoryName>
+                                            <ImageContainer for={`company_number_src`} style={{ margin: 'auto' }}>
+
+                                                {values?.company_number_src ?
+                                                    <>
+                                                        <img src={URL.createObjectURL(values?.company_number_src)} alt="#"
+                                                            style={{
+                                                                width: 'auto', maxHeight: '8rem',
+                                                                maxWidth: '80%',
+                                                                margin: 'auto'
+                                                            }} />
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                                    </>}
+                                            </ImageContainer>
+                                            <div>
+                                                <input type="file" id={`company_number_src`} name={'company_number_src'} onChange={addFile} style={{ display: 'none' }} />
+                                            </div>
+                                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>중개업소등록증사진</CategoryName>
+                                            <ImageContainer for={`office_src`} style={{ margin: 'auto' }}>
+
+                                                {values?.office_src ?
+                                                    <>
+                                                        <img src={URL.createObjectURL(values?.office_src)} alt="#"
+                                                            style={{
+                                                                width: 'auto', maxHeight: '8rem',
+                                                                maxWidth: '80%',
+                                                                margin: 'auto'
+                                                            }} />
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                                    </>}
+                                            </ImageContainer>
+                                            <div>
+                                                <input type="file" id={`office_src`} name={'office_src'} onChange={addFile} style={{ display: 'none' }} />
+                                            </div>
+
+
+                                        </>
+                                        :
+                                        <>
+                                        </>
+                                    }
+                                    {params?.user_level == 5 ?
+                                        <>
+                                            <InputComponent
+                                                label={'은행명*'}
+                                                input_type={{
+                                                    placeholder: ''
+                                                }}
+                                                class_name='bank_name'
+                                                is_divider={true}
+                                                onChange={(e) => handleChange(e, 'bank_name')}
+                                                value={values.bank_name}
+                                            />
+                                            <InputComponent
+                                                label={'계좌번호*'}
+                                                input_type={{
+                                                    placeholder: ''
+                                                }}
+                                                class_name='account_number'
+                                                is_divider={true}
+                                                onChange={(e) => handleChange(e, 'account_number')}
+                                                value={values.account_number}
+                                            />
+                                        </>
+                                        :
+                                        <>
+                                        </>}
+                                    <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>통장사본사진</CategoryName>
+                                    <ImageContainer for={`bank_book_src`} style={{ margin: 'auto' }}>
+
+                                        {values?.bank_book_src ?
+                                            <>
+                                                <img src={URL.createObjectURL(values?.bank_book_src)} alt="#"
+                                                    style={{
+                                                        width: 'auto', maxHeight: '8rem',
+                                                        maxWidth: '80%',
+                                                        margin: 'auto'
+                                                    }} />
+                                            </>
+                                            :
+                                            <>
+                                                <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                            </>}
+                                    </ImageContainer>
+                                    <div>
+                                        <input type="file" id={`bank_book_src`} name={'bank_book_src'} onChange={addFile} style={{ display: 'none' }} />
+                                    </div>
+                                    {params?.user_level == 10 ?
+                                        <>
+                                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>신분증사진</CategoryName>
+                                            <ImageContainer for={`id_number_src`} style={{ margin: 'auto' }}>
+
+                                                {values?.id_number_src ?
+                                                    <>
+                                                        <img src={URL.createObjectURL(values?.id_number_src)} alt="#"
+                                                            style={{
+                                                                width: 'auto', maxHeight: '8rem',
+                                                                maxWidth: '80%',
+                                                                margin: 'auto'
+                                                            }} />
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
+                                                    </>}
+                                            </ImageContainer>
+                                            <div>
+                                                <input type="file" id={`id_number_src`} name={'id_number_src'} onChange={addFile} style={{ display: 'none' }} />
+                                            </div>
+                                        </>
+                                        :
+                                        <>
+
+                                        </>}
+
+                                </>
+                                :
+                                <>
+                                </>}
+                            {step == 2 ?
+                                <>
+                                    <HalfTitle style={{ textAlign: 'left' }}>{'약관동의'}</HalfTitle>
+                                    <div style={{ width: '94%', height: '150px', overflowY: 'scroll', border: `1px solid ${theme.color.font3}`, padding: '3%' }}>
+                                        <Policy pk={0} />
+                                    </div>
+                                    <RowContent style={{ alignItems: 'center', marginTop: '8px' }}>
+                                        <input type={'radio'} id="term-of-use-1" name="term-of-use" style={{ margin: '0 4px 0 auto' }}
+                                            onChange={(e) => {
+                                                if ($('input[id=privacy-policy-1]:checked').val()) {
+                                                    $('#all-allow').prop('checked', true);
+                                                }
+                                            }} />
+                                        <label for={'term-of-use-1'} style={{ margin: '0 4px 0 0', fontSize: theme.size.font5 }}>동의함</label>
+                                        <input type={'radio'} id="term-of-use-2" name="term-of-use" style={{ margin: '0 4px 0 0' }}
+                                            onChange={(e) => {
+                                                $('#all-allow').prop('checked', false);
+                                            }} />
+                                        <label for={'term-of-use-2'} style={{ margin: '0', fontSize: theme.size.font5 }}>동의안함</label>
+                                    </RowContent>
+                                    {params?.user_level == 10 ?
+                                        <>
+                                            <RowContent style={{ alignItems: 'center', marginTop: '2rem', justifyContent: 'space-between' }}>
+                                                <div>부동산 중개수수료를 카드로 결제하는 것에 동의합니다.</div>
+                                                <RowContent style={{ width: 'auto' }}>
+                                                    <input type={'radio'} id="fee-1" name="fee" style={{ margin: '0 4px 0 auto' }}
+                                                        onChange={(e) => {
+                                                            if ($('input[id=privacy-policy-1]:checked').val()) {
+                                                                $('#all-allow').prop('checked', true);
+                                                            }
+                                                        }} />
+                                                    <label for={'fee-1'} style={{ margin: '0 4px 0 0', fontSize: theme.size.font5 }}>동의함</label>
+                                                    <input type={'radio'} id="fee-2" name="fee" style={{ margin: '0 4px 0 0' }}
+                                                        onChange={(e) => {
+                                                            $('#all-allow').prop('checked', false);
+                                                        }} />
+                                                    <label for={'fee-2'} style={{ margin: '0', fontSize: theme.size.font5 }}>동의안함</label>
+                                                </RowContent>
+                                            </RowContent>
+                                        </>
+                                        :
+                                        <>
+                                        </>}
+                                </>
+                                :
+                                <>
+                                </>}
+                            {isSeePostCode ?
+                                <>
+                                    <Modal onClickXbutton={() => { setIsSeePostCode(false) }}>
+                                        <DaumPostcode style={postCodeStyle} onComplete={onSelectAddress} />
+                                    </Modal>
+                                </>
+                                :
+                                <>
+                                </>}
+                            {step != 0 ?
+                                <>
+                                    <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '32px' }} onClick={onPreStep}>이전단계로</Button>
                                 </>
                                 :
                                 <>
                                 </>}
 
-
-                        </>
-                        :
-                        <>
-                        </>}
-                    {isSeePostCode ?
-                        <>
-                            <Modal onClickXbutton={() => { setIsSeePostCode(false) }}>
-                                <DaumPostcode style={postCodeStyle} onComplete={onSelectAddress} />
-                            </Modal>
-                        </>
-                        :
-                        <>
-                        </>}
-                    {step != 0 ?
-                        <>
-                            <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '32px' }} onClick={onPreStep}>이전단계로</Button>
-                        </>
-                        :
-                        <>
-                        </>}
-
-                    {step == 2 ?
-                        <>
-                            <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={onSignUp}>회원가입</Button>
-                        </>
-                        :
-                        <>
-                            <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={onNextStep}>임시저장</Button>
+                            {step == 2 ?
+                                <>
+                                    <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={onSignUp}>회원가입</Button>
+                                </>
+                                :
+                                <>
+                                    <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={onNextStep}>임시저장</Button>
+                                </>}
                         </>}
                 </ContentWrappers>
             </Wrappers>
