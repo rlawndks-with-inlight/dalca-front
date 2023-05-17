@@ -90,7 +90,7 @@ const History = () => {
         setLoading(true);
         setPage(num);
         let api_str = `/api/items?table=${params?.category}&page=${num}&order=pk${state_query_str}&keyword=${searchKeyword}`
-        if(getLocalStorage('auth')?.user_level==5 && params?.category=='pay'){
+        if (getLocalStorage('auth')?.user_level == 5 && params?.category == 'pay') {
             api_str += `&is_landlord=1`
         }
         const { data: response } = await axios.get(api_str);
@@ -168,7 +168,7 @@ const History = () => {
                             class_name='keyword'
                             is_divider={true}
                             icon_label={
-                                <Icon icon='ic:outline-search' style={{ cursor: 'pointer' }} />
+                                <Icon icon='ic:outline-search' style={{ cursor: 'pointer', marginBottom: '8px' }} />
                             }
                             onChange={(e) => setSearchKeyword(e)}
                             value={searchKeyword}

@@ -22,7 +22,7 @@ const SignUpCategoryButton = (props) => {
     const { icon, title, sub_title, onClick } = props;
     return (
         <>
-            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', width: '30%', fontSize: theme.size.font4, cursor: 'pointer' }} onClick={onClick}>
+            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', width: '30%', fontSize: theme.size.font5, cursor: 'pointer' }} onClick={onClick}>
                 <div style={{ background: '#fff', width: '100%', height: '13vh', borderRadius: '14px', display: 'flex', backgroundColor: '#ddd' }}>
                     <img src={icon} style={{ margin: 'auto auto', width: '50%' }} />
                 </div>
@@ -45,12 +45,12 @@ const Login = () => {
         pw: ''
     }
     const [values, setValues] = useState(defaultObj);
-    useEffect(()=>{
+    useEffect(() => {
         isAuth();
-    },[])
-    const isAuth = async () =>{
-        const {data:response} = await axios.get(`/api/auth`);
-        if(response?.pk>0){
+    }, [])
+    const isAuth = async () => {
+        const { data: response } = await axios.get(`/api/auth`);
+        if (response?.pk > 0) {
             navigate('/home');
         }
     }
@@ -77,14 +77,14 @@ const Login = () => {
                 });
             }
             await setLocalStorage('auth', JSON.stringify(response.data));
-            window.location.href = state?.redirect_url??'/home';
+            window.location.href = state?.redirect_url ?? '/home';
 
         }
     }
     return (
         <>
             <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff", height: '100vh' }}>
-                <ContentWrappers style={{margin:'auto'}}>
+                <ContentWrappers style={{ margin: 'auto', maxWidth: '750px' }}>
                     <img src={logoSrc} style={{ maxWidth: '500px', width: '90%', margin: 'auto auto 10vh auto' }} onClick={() => { setSignUpCount(0) }} />
                     {signUpCount == 0 ?
                         <>
@@ -93,7 +93,7 @@ const Login = () => {
                                 input_type={{
                                     placeholder: '',
                                 }}
-                                icon_label={<img src={userIcon} />}
+                                icon_label={<img src={userIcon} style={{ marginBottom: '6px' }} />}
                                 class_name='id'
                                 onKeyPress={() => $('.pw').focus()}
                                 onChange={(e) => handleChange(e, 'id')}
@@ -112,10 +112,10 @@ const Login = () => {
                                 isSeeButton={true}
                             />
                             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
-                                <div style={{marginLeft:'auto',cursor:'pointer',color:theme.color.background1}}
-                                onClick={()=>{
-                                    navigate('/findmyinfo')
-                                }}
+                                <div style={{ marginLeft: 'auto', cursor: 'pointer', color: theme.color.background1 }}
+                                    onClick={() => {
+                                        navigate('/findmyinfo')
+                                    }}
                                 >아이디/비밀번호 찾기</div>
                             </div>
                         </>
@@ -163,7 +163,7 @@ const Login = () => {
                     <div style={{ margin: '0 auto auto auto' }} />
                 </ContentWrappers>
             </Wrappers>
-            <Footer/>
+            <Footer />
         </>
     )
 }

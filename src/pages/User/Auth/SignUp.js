@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { GrFormPrevious } from "react-icons/gr";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,9 +21,29 @@ import Policy from "../Policy/Policy";
 import { PAY_INFO } from "../../../data/ContentData";
 import { backUrl, frontUrl, socket } from "../../../data/Data";
 import Loading from "../../../components/Loading";
+
+function Countdown({ seconds, timeLeft, setTimeLeft }) {
+
+
+    useEffect(() => {
+        // 1초마다 timeLeft 값을 1씩 감소시킵니다.
+        const timer = setInterval(() => {
+            setTimeLeft((prevTime) => prevTime - 1);
+        }, 1000);
+
+        // 컴포넌트가 언마운트되면 타이머를 정리합니다.
+        return () => clearInterval(timer);
+    }, [seconds]);
+
+    return <div></div>;
+}
+
 const SignUp = () => {
     const params = useParams();
     const navigate = useNavigate();
+
+    const idRef = useRef([]);
+
     const [title, setTitle] = useState("");
     const [signUpCount, setSignUpCount] = useState(0);
     const [isSeePostCode, setIsSeePostCode] = useState(false);
@@ -34,8 +54,12 @@ const SignUp = () => {
     const [values, setValues] = useState({});
     const [isSendSms, setIsSendSms] = useState(false)
     const [randNum, setRandNum] = useState("")
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [idInfo, setIdInfo] = useState({});
+    const [isConfirmId, setIsConfirmId] = useState(false);
+    const [openConfirmId, setOpenConfirmId] = useState(false);
+    const [popupContent, setPopupContent] = useState(undefined)
+    const [timeLeft, setTimeLeft] = useState(0);
     const defaultObj = {
         id: '',
         pw: '',
@@ -89,14 +113,74 @@ const SignUp = () => {
             toast.error('잘못된 접근입니다.');
             navigate(-1);
         }
-        getIdentificationInfo();
-        //getBankList();
     }, []);
     const getIdentificationInfo = async () => {
-        const { data: response } = await axios.get(`/api/gii?level=${params?.user_level}`);
-        console.log(response)
-        callSa()
+        const { data: response } = await axios.post(`/api/gii`, {
+            level: params?.user_level,
+            name: values.name,
+            phone: values.phone,
+            birth: values.id_number_front
+        });
+        setIdInfo(response?.data)
+
+        setOpenConfirmId(true);
     }
+    useEffect(() => {
+        let flag = true;
+        for (var i = 0; i < idRef.current.length; i++) {
+            if (!idRef.current[i].value) {
+                flag = false;
+            }
+        }
+        if (flag && openConfirmId) {
+            callSa()
+            setOpenConfirmId(false);
+        }
+    }, [idRef.current.map(item => { return item?.value })])
+useEffect(()=>{
+    if((popupContent?.location && !popupContent?.closed)){
+        try{
+            if(popupContent.location.href == `${frontUrl}/api/returnidurl`){
+                let json = popupContent.document.body.innerText;
+                json = JSON.parse(json);
+                popupContent.close();
+                if(json?.result>0){
+                    toast.success("성공적으로 인증 되었습니다.");
+                    setIsConfirmId(true);
+                }else{
+                    toast.error(json?.message);
+                }
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }else{
+        setTimeLeft(0);
+    }
+},[timeLeft])
+
+
+    function callSa() {
+        let newWindow = popupCenter();
+        setPopupContent(newWindow);
+        setTimeLeft(300);
+        if (newWindow != undefined && newWindow != null) {
+            document.saForm.setAttribute("target", "sa_popup");
+            document.saForm.setAttribute("post", "post");
+            document.saForm.setAttribute("action", "https://sa.inicis.com/auth");
+            document.saForm.submit();
+        }
+    }
+
+    function popupCenter() {
+        let _width = 400;
+        let _height = 620;
+        var xPos = (document.body.offsetWidth / 2) - (_width / 2); // 가운데 정렬
+        xPos += window.screenLeft; // 듀얼 모니터일 때
+
+        return window.open("", "sa_popup", "width=" + _width + ", height=" + _height + ", left=" + xPos + ", menubar=yes, status=yes, titlebar=yes, resizable=yes");
+    }
+
     useEffect(() => {
         if (step == 1 && params?.user_level == 10) {
             setTitle('중개업확인')
@@ -201,11 +285,11 @@ const SignUp = () => {
             setStep(0);
             return;
         }
-        if (values.phoneCheck != randNum) {
-            toast.error('휴대폰 인증번호가 일치하지 않습니다.');
-            setStep(0);
-            return;
-        }
+        // if (values.phoneCheck != randNum) {
+        //     toast.error('휴대폰 인증번호가 일치하지 않습니다.');
+        //     setStep(0);
+        //     return;
+        // }
         if (!values.name) {
             toast.error('이름을 입력해 주세요.');
             setStep(0);
@@ -307,13 +391,16 @@ const SignUp = () => {
     const onPreStep = () => {
         if (params?.user_level == 10 || params?.user_level == 5) {
             setStep(step - 1);
-
         } else {
             setStep(step - 2);
         }
         window.scrollTo(0, 0);
     }
     const onNextStep = () => {
+        if (step == 0 && !isConfirmId) {
+            getIdentificationInfo();
+            return;
+        }
         if (params?.user_level == 10 || params?.user_level == 5) {
             setStep(step + 1);
 
@@ -371,38 +458,25 @@ const SignUp = () => {
             $(`.${name}`).val("");
         }
     };
-    function callSa() {
-        let window = popupCenter();
-        if (window != undefined && window != null) {
-            document.saForm.setAttribute("target", "sa_popup");
-            document.saForm.setAttribute("post", "post");
-            document.saForm.setAttribute("action", "https://sa.inicis.com/auth");
-            document.saForm.submit();
-        }
-    }
 
-    function popupCenter() {
-        let _width = 400;
-        let _height = 620;
-        var xPos = (document.body.offsetWidth / 2) - (_width / 2); // 가운데 정렬
-        xPos += window.screenLeft; // 듀얼 모니터일 때
-
-        return window.open("", "sa_popup", "width=" + _width + ", height=" + _height + ", left=" + xPos + ", menubar=yes, status=yes, titlebar=yes, resizable=yes");
-    }
     return (
         <>
             <form name="saForm" style={{ display: 'none' }}>
-                <input type="text" name="mid" value={idInfo?.mid} /><br />
-                <input type="text" name="reqSvcCd" value={idInfo?.reqSvcCd} /><br />
-                <input type="text" name="mTxId" value={idInfo?.mTxId} /><br />
-                <input type="text" name="authHash" value={idInfo?.authHash} /><br />
-                <input type="text" name="flgFixedUser" value={idInfo?.flgFixedUser} /><br />
-                <input type="text" name="reservedMsg" value={idInfo?.reservedMsg} /><br />
-                <input type="text" name="successUrl" value={backUrl + '/api/returnidurl'} /><br />
-                <input type="text" name="failUrl" value={backUrl + '/api/returnidurl'} /><br />
+                <input type="text" name="mid" value={idInfo?.mid} ref={el => idRef.current[0] = el} /><br />
+                <input type="text" name="reqSvcCd" value={idInfo?.reqSvcCd} ref={el => idRef.current[1] = el} /><br />
+                <input type="text" name="mTxId" value={idInfo?.mTxId} ref={el => idRef.current[2] = el} /><br />
+                <input type="text" name="authHash" value={idInfo?.authHash} ref={el => idRef.current[3] = el} /><br />
+                <input type="text" name="flgFixedUser" value={idInfo?.flgFixedUser} ref={el => idRef.current[4] = el} /><br />
+                <input type="text" name="userName" value={idInfo?.userName} ref={el => idRef.current[5] = el} /><br />
+                <input type="text" name="userPhone" value={idInfo?.userPhone} ref={el => idRef.current[6] = el} /><br />
+                <input type="text" name="userBirth" value={idInfo?.userBirth} ref={el => idRef.current[7] = el} /><br />
+                <input type="text" name="userHash" value={idInfo?.userHash} ref={el => idRef.current[8] = el} /><br />
+                <input type="text" name="reservedMsg" value={idInfo?.reservedMsg} ref={el => idRef.current[9] = el} /><br />
+                <input type="text" name="successUrl" value={frontUrl + '/api/returnidurl'} ref={el => idRef.current[10] = el} /><br />
+                <input type="text" name="failUrl" value={frontUrl + '/api/returnidurl'} ref={el => idRef.current[11] = el} /><br />
             </form>
             <FakeHeaders label='회원가입' />
-            <Wrappers className="wrapper" style={{ width: '100%' }}>
+            <Wrappers className="wrapper">
                 <ContentWrappers>
                     {loading ?
                         <>
@@ -495,6 +569,7 @@ const SignUp = () => {
                                             input_type={{
                                                 placeholder: ''
                                             }}
+                                            disabled={isConfirmId}
                                             class_name='id_number_front'
                                             is_divider={true}
                                             onKeyPress={() => $('.id_number_back').focus()}
@@ -517,6 +592,7 @@ const SignUp = () => {
                                             onChange={(e) => handleChange(e, 'id_number_back')}
                                             value={values.id_number_back}
                                             divStyle={{ width: '47%', margin: '0' }}
+                                            isSeeButton={true}
                                         />
                                     </RowContent>
                                     <InputComponent
@@ -524,38 +600,33 @@ const SignUp = () => {
                                         input_type={{
                                             placeholder: '-없이 숫자만 입력',
                                         }}
+                                        disabled={isConfirmId}
                                         class_name='phone'
-                                        button_label={isCheckPhone ? '완료' : '인증하기'}
-                                        isButtonAble={!isCheckPhone}
-                                        onClickButton={() => sendSms()}
-                                        onChange={(e) => {
-                                            handleChange(e, 'phone');
-                                            setIsCheckPhone(false);
-                                        }}
+                                        onChange={(e) => handleChange(e, 'phone')}
                                         value={values.phone}
-                                    />
-                                    <InputComponent
-                                        label={'휴대폰인증번호*'}
-                                        input_type={{
-                                            placeholder: '인증번호를 입력해주세요.',
-                                        }}
-                                        class_name='phone'
-                                        onChange={(e) => handleChange(e, 'phoneCheck')}
-                                        value={values.phoneCheck}
                                     />
                                     <InputComponent
                                         label={'성명*'}
                                         input_type={{
                                             placeholder: ''
                                         }}
+                                        disabled={isConfirmId}
                                         class_name='name'
                                         is_divider={true}
                                         onChange={(e) => handleChange(e, 'name')}
                                         value={values.name}
                                     />
-
-
-
+                                    {timeLeft > 0 ?
+                                        <>
+                                            <Countdown
+                                                seconds={300}
+                                                timeLeft={timeLeft}
+                                                setTimeLeft={setTimeLeft}
+                                            />
+                                        </>
+                                        :
+                                        <>
+                                        </>}
                                 </>
                                 :
                                 <>
@@ -790,6 +861,15 @@ const SignUp = () => {
                                         :
                                         <>
                                         </>}
+                                </>
+                                :
+                                <>
+                                </>}
+                            {isSeePostCode ?
+                                <>
+                                    <Modal onClickXbutton={() => { setIsSeePostCode(false) }}>
+                                        <DaumPostcode style={postCodeStyle} onComplete={onSelectAddress} />
+                                    </Modal>
                                 </>
                                 :
                                 <>

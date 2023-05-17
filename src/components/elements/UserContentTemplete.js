@@ -127,8 +127,8 @@ export const ContentWrappers = styled.div`
 display:flex;
 flex-direction:column;
 max-width:1050px;
-width:75%;
-margin:0 auto;
+width:100%;
+margin:0 auto 4rem auto;
 `
 
 const HeaderContainer = styled.div`
@@ -169,7 +169,7 @@ export const smallButtonStyle = {
     minWidth: '12px',
     height: '48px',
     width: '72px',
-    top: '10px',
+    top: '8px',
     borderTopRightRadius: '4px',
     borderBottomRightRadius: '4px',
     borderBottomLeftRadius: '0',
@@ -226,7 +226,7 @@ width:96%;
 border:1px solid ${props => props.theme.color.font5};
 background:#fff;
 border-radius:4px;
-font-size:${props => props.theme.size.font4};
+font-size:${props => props.theme.size.font5};
 outline:none;
 margin:1px;
 &::placeholder {
@@ -340,8 +340,8 @@ export const InputComponent = (props) => {
     },[value])
 
     const getInputType = () =>{
-        if((input_type?.type == 'password' && !isSeePassword)){
-            return 'password'
+        if((input_type?.type == 'password' && isSeePassword)){
+            return 'text'
         }
         if(input_type?.type){
             return input_type?.type
@@ -367,8 +367,8 @@ export const InputComponent = (props) => {
                 >
                     <InputLabel
                         style={{
-                            top: `${(focused || isValue) ? '2px' : '24px'}`,
-                            fontSize: `${(focused || isValue) ? theme.size.font6 : theme.size.font5}`,
+                            top: `${(focused || isValue) ? '0px' : '22px'}`,
+                            fontSize: `${(focused || isValue) ? theme.size.font7 : theme.size.font6}`,
                             color: `${focused ? theme.color.background1 : theme.color.font4}`,
                         }}
                         onClick={() => $(`.${class_name}`).focus()}>{label}</InputLabel>
@@ -576,8 +576,8 @@ export const twoOfThreeButtonStyle = {
     width: '70%',
     maxWidth: '400px',
     borderRadius: '10px',
-    minWidth: '160px',
-    fontSize: `${theme.size.font4}`,
+    minWidth: '220px',
+    fontSize: `${theme.size.font5}`,
     fontWeight: 'bold',
     '&:hover': {
         background: `${theme.color.background1}`,
