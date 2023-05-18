@@ -469,7 +469,16 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'percent' ?
-                                                    `${item[column.column] >= 0 ? '+' : '-'}` + commarNumber(item[column.column]) + '%'
+                                                    <>
+                                                        {item[column.column] == 0 ?
+                                                            <>
+                                                                ---
+                                                            </>
+                                                            :
+                                                            <>
+                                                                {`${item[column.column] >= 0 ? '+' : '-'}` + commarNumber(item[column.column]) + '%'}
+                                                            </>}
+                                                    </>
                                                     :
                                                     null}
                                                 {column.type == 'delete' ?

@@ -1,6 +1,6 @@
 //카드변경
 
-import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, SelectType, twoOfThreeButtonStyle, Type, Wrappers } from "../../../components/elements/UserContentTemplete";
 // ** React Imports
 import { useState } from 'react'
 // ** MUI Imports
@@ -107,8 +107,7 @@ const ChangeCard = () => {
     useEffect(() => {
         setLoading(true);
         getCard(1);
-
-    }, [])
+    }, [location.pathname])
 
     const getCardIdentificationInfo = async () => {
         const { data: response } = await axios.post('/api/gcii');
@@ -128,23 +127,23 @@ const ChangeCard = () => {
             setOpenConfirmCardId(false);
         }
     }, [cardIdRef.current.map(item => { return item?.value })])
-    function openWindow(){
+    function openWindow() {
 
-		/*
-		 * 해당 로직은 팝업창 구현으로
-		 * 가맹점측에서 알맞게 팝업창 구현 해주시면 됩니다.
-		 */
+        /*
+         * 해당 로직은 팝업창 구현으로
+         * 가맹점측에서 알맞게 팝업창 구현 해주시면 됩니다.
+         */
         console.log(1)
-		var contents;
-		var OpenOption = 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=420,height=800,top=100,left=100,';
+        var contents;
+        var OpenOption = 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=420,height=800,top=100,left=100,';
 
-		contents = window.open("", "contents", OpenOption);
+        contents = window.open("", "contents", OpenOption);
 
-		document.reqfrm.action = "https://cas.inicis.com/casapp/ui/cardauthreq";
-		document.reqfrm.target = "contents"; 
-		document.reqfrm.submit();
+        document.reqfrm.action = "https://cas.inicis.com/casapp/ui/cardauthreq";
+        document.reqfrm.target = "contents";
+        document.reqfrm.submit();
 
-	}
+    }
     const getCard = async (num) => {
         setEditPk(0);
         setPage(num);
@@ -440,28 +439,32 @@ const ChangeCard = () => {
     return (
         <>
             <form name="reqfrm" id="reqfrm" method="post" style={{ display: 'none' }}>
-                <input type="hidden" id="mid" name="mid" value={saveCardInfo?.mid} ref={el => cardIdRef.current[0] = el}/>
-                <input type="hidden" id="Siteurl" name="Siteurl" value={frontUrl.replace('https://', '').replace('http://', '')} ref={el => cardIdRef.current[1] = el}/>
-                <input type="hidden" id="Tradeid" name="Tradeid" value={saveCardInfo?.Tradeid} ref={el => cardIdRef.current[2] = el}/>
-                <input type="hidden" id="Closeurl" name="Closeurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[3] = el}/>
-                <input type="hidden" id="Okurl" name="Okurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[4] = el}/>
+                <input type="hidden" id="mid" name="mid" value={saveCardInfo?.mid} ref={el => cardIdRef.current[0] = el} />
+                <input type="hidden" id="Siteurl" name="Siteurl" value={frontUrl.replace('https://', '').replace('http://', '')} ref={el => cardIdRef.current[1] = el} />
+                <input type="hidden" id="Tradeid" name="Tradeid" value={saveCardInfo?.Tradeid} ref={el => cardIdRef.current[2] = el} />
+                <input type="hidden" id="Closeurl" name="Closeurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[3] = el} />
+                <input type="hidden" id="Okurl" name="Okurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[4] = el} />
             </form>
             <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff" }}>
+                <SelectType className="select-type" style={{ marginTop: '4rem' }}>
+                    <Type style={{ borderBottom: `4px solid ${params?.category == 'change' ? theme.color.background1 : '#fff'}`, color: `${params?.category == 'change' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/card/change`) }}>본인카드 등록 및 변경</Type>
+                    <Type style={{ borderBottom: `4px solid ${params?.category == 'family' ? theme.color.background1 : '#fff'}`, color: `${params?.category == 'family' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/card/family`) }}>타인카드 등록 및 변경</Type>
+                </SelectType>
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', margin: `${isSeeCard ? 'auto' : '1rem auto'}`, paddingTop: '4rem' }}
+                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', margin: `${isSeeCard ? 'auto' : '1rem auto'}` }}
                 >
-
                     {loading ?
                         <>
                             <Loading />
                         </>
                         :
                         <>
-                            <ContentWrappers style={{ marginTop: '2rem' }}>
-                                {params?.category == 'family' ?
-                                    <>
+                            {params?.category == 'family' ?
+                                <>
+                                    <ContentWrappers style={{ margin: '1rem auto' }}>
+
                                         <div style={{ fontSize: theme.size.font4, color: theme.color.red }}>
                                             ※ 가족 외에 타인카드는 등록불가합니다.<br /><br />
 
@@ -470,13 +473,11 @@ const ChangeCard = () => {
                                             3. 휴대폰번호, 성명 등의 개인정보를 수집합니다.<br />
                                             4. 경우에 따라 본인(카드주)에게 전화를 드릴 수 있습니다.<br />
                                         </div>
-
-                                    </>
-                                    :
-                                    <>
-                                    </>}
-                            </ContentWrappers>
-
+                                    </ContentWrappers>
+                                </>
+                                :
+                                <>
+                                </>}
                             {isSeeCard ?
                                 <>
                                     <CardWrapper style={{ marginTop: '1rem' }}>

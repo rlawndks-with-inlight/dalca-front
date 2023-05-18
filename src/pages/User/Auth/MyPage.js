@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { borderButtonStyle, HalfTitle, ShadowContainer, TextButton, Title, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { borderButtonStyle, HalfTitle, SelectType, ShadowContainer, TextButton, Title, Type, Wrappers } from "../../../components/elements/UserContentTemplete";
 import { backUrl } from "../../../data/Data";
 import defaultImg from '../../../assets/images/icon/default-profile.png'
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MdEdit } from 'react-icons/md';
 import theme from "../../../styles/theme";
 import ContentTable from "../../../components/ContentTable";
@@ -70,6 +70,7 @@ font-size:12px;
 `
 const MyPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [auth, setAuth] = useState({})
     const [isWebView, setIsWebView] = useState(false);
     const [bagList, setBagList] = useState();
@@ -134,7 +135,10 @@ const MyPage = () => {
     return (
         <>
             <Wrappers className="wrapper" style={{ maxWidth: '800px' }}>
-                <HalfTitle>마이페이지</HalfTitle>
+                <SelectType>
+                    <Type style={{ borderBottom: `4px solid ${location.pathname == '/mypage' ? theme.color.background1 : '#fff'}`, color: `${location.pathname == '/mypage' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/mypage`) }}>내정보</Type>
+                    <Type style={{ borderBottom: `4px solid ${location.pathname == '/history/point' ? theme.color.background1 : '#fff'}`, color: `${location.pathname == '/history/point' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/history/point`) }}>포인트 적립내역 및 사용하기</Type>
+                </SelectType>
                 <div style={{ margin: '2rem 0 1rem auto', color: `${theme.color.font2}`, fontSize: theme.size.font4, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center' }} onClick={() => { navigate('/editmyinfo') }}>
                     <div style={{ paddingRight: '8px' }}>내정보 수정하기</div>
                     <MdEdit />
@@ -182,7 +186,7 @@ const MyPage = () => {
                             <Category>상세주소</Category>
                             <Result>{auth?.address_detail}</Result>
                         </Content>
-                       
+
 
                     </Container>
                 </MyCard>

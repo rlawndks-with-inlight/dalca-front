@@ -57,6 +57,7 @@ const Contract = () => {
         realtor_pk: 0,
         pay_type: 0,
         deposit: 0,
+        down_payment: 0,
         monthly: 0,
         address: '',
         address_detail: '',
@@ -103,6 +104,7 @@ const Contract = () => {
             }
             obj['monthly'] = obj['monthly'] / 10000;
             obj['deposit'] = obj['deposit'] / 10000;
+            obj['down_payment'] = obj['down_payment'] / 10000;
 
             let img_list = JSON.parse(obj['document_src']);
             for (var i = 0; i < img_list.length; i++) {
@@ -224,6 +226,17 @@ const Contract = () => {
                                     class_name='deposit'
                                     is_divider={true}
                                     value={values.deposit}
+                                    icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
+                                />
+                                <InputComponent
+                                    label={'계약금'}
+                                    input_type={{
+                                        placeholder: '숫자를 입력해 주세요.',
+                                        disabled: "true"
+                                    }}
+                                    class_name='down_payment'
+                                    is_divider={true}
+                                    value={values.down_payment}
                                     icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                 />
                                 <InputComponent

@@ -1,5 +1,5 @@
 import { BiEditAlt } from "react-icons/bi";
-import { getPayStatus, getUserLevelByNumber } from "../../functions/format";
+import { getPayStatus, getUserLevelByNumber, getUserLevelColorByNumber } from "../../functions/format";
 import { commarNumber, dateFormat, getKoPayCategoryByNum } from "../../functions/utils";
 import theme from "../../styles/theme";
 import { AiFillCreditCard, AiOutlineUnorderedList } from "react-icons/ai";
@@ -32,6 +32,12 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         }
     } else if (type == 'percent') {
         result = `${commarNumber(data[`${column}`] ?? 0)}%`;
+    } else if (type == 'commission_percent') {
+        if (data?.user_level == 10) {
+            result = `${commarNumber(data[`${column}`] ?? 0)}%`;
+        } else {
+            result = '---';
+        }
     } else if (type == 'minus_number') {
         result = commarNumber((data[`${column}`] ?? 0) * (-1));
     } else if (type == 'date') {
@@ -52,6 +58,9 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         }
     } else if (type == 'level') {
         result = getUserLevelByNumber(data[`${column}`])
+        if (is_list) {
+            result = <div style={{color:getUserLevelColorByNumber(data[`${column}`])}}>{getUserLevelByNumber(data[`${column}`])}</div>
+        }
     } else if (type == 'is_auto_pay') {
         if (data[`is_auto`] == 0) {
             result = '일반납부'
@@ -83,7 +92,7 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
     } else if (type == 'status') {
         let flag = true;
         if (column == 'is_agree_brokerage_fee') {
-            if(data?.user_level != 10){
+            if (data?.user_level != 10) {
                 flag = false;
             }
         }

@@ -232,6 +232,36 @@ const ReturnSecondOptionContentBySchema = (props) => {
             </>
         )
     }
+    if (schema == 'commission') {
+        return (
+            <>
+                <OptionCardWrappers>
+                    <Row style={{flexWrap:'wrap'}}>
+                        <RowContent>
+                            <AddButton style={{ margin: '0 0 0 0' }} onClick={() => onClickDate(-1)}>어제</AddButton>
+                            <AddButton style={{ margin: '0 0 0 12px' }} onClick={() => onClickDate(1)}>당일</AddButton>
+                            <AddButton style={{ margin: '0 0 0 12px' }} onClick={() => onClickDate(3)}>3일전</AddButton>
+                            <AddButton style={{ margin: '0 0 0 12px' }} onClick={() => onClickDate(30)}>1개월</AddButton>
+                        </RowContent>
+                        <RowContent>
+                            <Input className="start_date" type={'date'} style={{ margin: '0 0 0 0' }} onChange={onChangeType} defaultValue={startDate} />
+                            <div style={{ margin: '0 0 0 12px', display: 'flex' }}>
+                                ~
+                            </div>
+                            <Input className="end_date" type={'date'} style={{ margin: '0 0 0 12px' }} onChange={onChangeType} defaultValue={endDate} />
+                        </RowContent>
+                        <RowContent>
+                            <Select className="status" style={{ margin: '0 0 0 0' }} onChange={onChangeType}>
+                                <option value={'all'}>전체발생현황</option>
+                                <option value={1}>발생</option>
+                                <option value={-1}>취소</option>
+                            </Select>
+                        </RowContent>
+                    </Row>
+                </OptionCardWrappers>
+            </>
+        )
+    }
     if (schema == 'contract') {
         return (
             <>

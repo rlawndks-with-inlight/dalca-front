@@ -58,7 +58,7 @@ export const commarNumber = (num) => {
         return "0.00";
     }
     if (!num && num != 0) {
-        return undefined;
+        return '0';
     }
     let str = "";
     if (typeof num == "string") {

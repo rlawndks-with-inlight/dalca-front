@@ -264,6 +264,7 @@ text-align:center;
 padding:8px 0;
 margin-right:auto;
 max-width:250px;
+font-size:${props => props.theme.size.font5};
 border-bottom: 2px solid ${props => props.theme.color.background1};
 `
 export const LogoHeader = (props) => {
@@ -640,6 +641,20 @@ export const SliderDiv = styled.div`
 display:none;
 @media screen and (max-width:602px) { 
     display:flex;
+}
+`
+export const Type = styled.div`
+width:50%;
+text-align:center;
+padding: 0.75rem 0;
+font-weight:bold;
+cursor:pointer;
+font-size:1rem;
+@media screen and (max-width:700px) {
+    font-size:0.8rem;
+}
+@media screen and (max-width:350px) {
+    font-size:0.65rem;
 }
 `
 export const ViewerContainer = styled.div`

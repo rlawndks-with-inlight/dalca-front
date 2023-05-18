@@ -26,6 +26,7 @@ export const zSidebar = [
     sidebarContentFormat('운영관리', [
         sidebarObjListFormat('계약관리', '/manager/list/contract', 40, ['/manager/list/contract']),//list
         sidebarObjListFormat('결제관리', '/manager/list/pay', 40, ['/manager/list/pay']),//list
+        sidebarObjListFormat('공인중개사 정산관리', '/manager/list/commission', 40, ['/manager/list/commission']),//list
         sidebarObjListFormat('부동산관리', '/manager/list/real_estate', 40, ['/manager/list/real_estate']),//list
         sidebarObjListFormat('카드수수료관리', '/manager/edit/card_percent_setting/1', 40, ['/manager/edit/card_percent_setting/1']),//list
         sidebarObjListFormat('포인트관리', '/manager/edit/point_setting/1', 40, ['/manager/edit/point_setting/1']),//list
@@ -69,6 +70,7 @@ export const objManagerListContent = {
             columnObjFormat('로그인시간', '', 'text', 'last_login'),
             columnObjFormat('승인여부', '', 'status', 'status'),
             columnObjFormat('복비승인여부', '', 'status', 'is_agree_brokerage_fee'),
+            columnObjFormat('결제수수료', '', 'commission_percent', 'commission_percent'),
             columnObjFormat('결제카드', '', 'pay_card', 'pay_card'),
             columnObjFormat('결제내역', '', 'user_pay_list', 'user_pay_list'),
             columnObjFormat('수정', '', 'edit', 'edit'),
@@ -122,6 +124,22 @@ export const objManagerListContent = {
         [],
         false,
         false),
+    commission: sidebarObjFormat(
+        '정산 관리',
+        'commission',
+        [
+            columnObjFormat('공인중개사아이디', '', 'text', 'user_id'),
+            columnObjFormat('공인중개사명', '', 'text', 'user_name'),
+            columnObjFormat('금액', '', 'number', 'price'),
+            columnObjFormat('퍼센트', '', 'percent', 'percent'),
+            columnObjFormat('비고', '', 'text', 'note'),
+            columnObjFormat('생성일', '', 'text', 'date'),
+            columnObjFormat('삭제', '', 'delete', 'delete'),
+        ],
+        ['order=pk', 'start_date=', 'end_date=', 'status='],
+        true,
+        false,
+        '100%'),
     contract: sidebarObjFormat(
         '계약 관리',
         'contract',
@@ -130,6 +148,7 @@ export const objManagerListContent = {
             columnObjFormat('주소', '', 'text', 'address'),
             columnObjFormat('상세주소', '', 'text', 'address_detail'),
             columnObjFormat('보증금', '', 'number', 'deposit'),
+            columnObjFormat('계약금', '', 'number', 'down_payment'),
             columnObjFormat('월세', '', 'number', 'monthly'),
             columnObjFormat('부동산중개수수료', '', 'number', 'brokerage_fee'),
             columnObjFormat('임차인아이디', '', 'text', 'lessee_id'),
@@ -153,6 +172,7 @@ export const objManagerListContent = {
         '결제 내역 관리',
         'pay',
         [
+            columnObjFormat('결제고유번호', '', 'number', 'pk'),
             columnObjFormat('계약고유번호', '', 'number', 'contract_pk'),
             columnObjFormat('임차인아이디', '', 'text', 'lessee_id'),
             columnObjFormat('임차인명(결제인명)', '', 'text', 'lessee_name'),

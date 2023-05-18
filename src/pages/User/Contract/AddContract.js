@@ -65,6 +65,7 @@ const AddContract = () => {
         lessee: {},
         realtor_pk: 0,
         deposit: 0,
+        down_payment: 0,
         monthly: 0,
         brokerage_fee: 0,
         address: '',
@@ -116,6 +117,7 @@ const AddContract = () => {
         let obj = response?.data;
         obj['monthly'] = obj['monthly'] / 10000;
         obj['deposit'] = obj['deposit'] / 10000;
+        obj['down_payment'] = obj['down_payment'] / 10000;
 
         let img_list = JSON.parse(obj['document_src'] ?? '[]');
         for (var i = 0; i < img_list.length; i++) {
@@ -261,6 +263,7 @@ const AddContract = () => {
                 zip_code: values?.zip_code,
                 address_detail: values?.address_detail,
                 deposit: parseInt(values?.deposit) * 10000,
+                down_payment: parseInt(values?.down_payment) * 10000,
                 monthly: parseInt(values?.monthly) * 10000,
                 brokerage_fee: parseInt(values?.brokerage_fee),
                 start_date: values?.start_date,
@@ -491,6 +494,18 @@ const AddContract = () => {
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
                                         <InputComponent
+                                            label={'계약금'}
+                                            input_type={{
+                                                placeholder: '숫자를 입력해 주세요.'
+                                            }}
+                                            class_name='down_payment'
+                                            is_divider={true}
+                                            onChange={(e) => handleChange(e, 'down_payment')}
+                                            value={values.down_payment}
+                                            icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
+                                        />
+                                        <Explain style={{margin:'0'}}>보증금 - 계약금 = 잔금 입니다.</Explain>
+                                        <InputComponent
                                             label={'월세'}
                                             input_type={{
                                                 placeholder: '숫자를 입력해 주세요.'
@@ -548,7 +563,7 @@ const AddContract = () => {
                                             value={values.brokerage_fee}
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>원</div>}
                                         />
-                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>이미지업로드</CategoryName>
+                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서 업로드(jpeg파일)</CategoryName>
                                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                             {imgList.map((item, idx) => (
                                                 <>
@@ -607,7 +622,7 @@ const AddContract = () => {
                                         <div>
                                             <input type="file" id={`document_src`} onChange={addFile} style={{ display: 'none' }} />
                                         </div>
-                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF업로드</CategoryName>
+                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서 업로드(pdf파일)</CategoryName>
                                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                                             {pdfList.map((item, idx) => (
                                                 <>

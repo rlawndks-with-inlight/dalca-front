@@ -51,6 +51,7 @@ const PayReady = () => {
         realtor_pk: 0,
         pay_type: 0,
         deposit: 0,
+        down_payment: 0,
         monthly: 0,
         address: '',
         address_detail: '',

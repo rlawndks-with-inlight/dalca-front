@@ -68,6 +68,7 @@ const MContactEdit = () => {
                 $('.zip_code').val(response.data.zip_code)
                 //$('.pay_type').val(response.data.pay_type)
                 $('.deposit').val(response.data.deposit)
+                $('.down_payment').val(response.data.down_payment)
                 $('.monthly').val(response.data.monthly)
                 $('.brokerage_fee').val(response.data.brokerage_fee)
                 $('.start_date').val(response.data.start_date)
@@ -92,6 +93,7 @@ const MContactEdit = () => {
             !$(`.address_detail`).val() || 
             //!$(`.pay_type`).val() || 
             !$(`.deposit`).val() || 
+            !$(`.down_payment`).val() || 
             !$(`.monthly`).val() || 
             !$(`.brokerage_fee`).val() || 
             !$(`.start_date`).val() || 
@@ -112,6 +114,7 @@ const MContactEdit = () => {
                 //pay_type: $(`.pay_type`).val(),
                 is_auto_pay: $(`.is_auto_pay`).val(),
                 deposit: $(`.deposit`).val(),
+                down_payment: $(`.down_payment`).val(),
                 monthly: $(`.monthly`).val(),
                 brokerage_fee: $(`.brokerage_fee`).val(),
                 start_date: $(`.start_date`).val(),
@@ -242,6 +245,10 @@ const MContactEdit = () => {
                     <Col>
                         <Title>보증금</Title>
                         <Input className='deposit' placeholder='숫자를 입력해 주세요.' />
+                    </Col>
+                    <Col>
+                        <Title>계약금</Title>
+                        <Input className='down_payment' placeholder='숫자를 입력해 주세요.' />
                     </Col>
                     <Col>
                         <Title>월세</Title>
