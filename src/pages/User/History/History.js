@@ -93,11 +93,11 @@ const returnTopContent = (data, func) => {
                 <Row>
                     <Col>
                         <Title style={{ margin: '0.5rem 1rem 0.5rem 0' }}>시작일</Title>
-                        <Input type={'date'} className="start_date" style={{ margin: '0 1rem 0 0' }} />
+                        <Input type={'date'} className="start_date" style={{ margin: '0 1rem 0 0' }} onChange={onChangeType}/>
                     </Col>
                     <Col>
                         <Title style={{ margin: '0.5rem 1rem 0.5rem 0' }}>종료일</Title>
-                        <Input type={'date'} className="end_date" style={{ margin: '0 1rem 0 0' }} />
+                        <Input type={'date'} className="end_date" style={{ margin: '0 1rem 0 0' }} onChange={onChangeType}/>
                     </Col>
                     <ButtonContainer>
                         <Button sx={{ ...colorButtonStyle, height: '35px' }} onClick={() => {
