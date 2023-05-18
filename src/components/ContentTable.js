@@ -15,7 +15,7 @@ import { getLocalStorage } from "../functions/LocalStorage";
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { getPayCategory, getPayStatus, getPointHistoryByNum } from "../functions/format";
+import { getPayCategory, getPayStatus, getPointHistoryByNum, getUserLevelByNumber } from "../functions/format";
 const Table = styled.table`
 font-size:${props => props.theme.size.font4};
 width:100%;
@@ -403,6 +403,10 @@ const ContentTable = (props) => {
                                                     null}
                                                 {column.type == 'pay_category' ?
                                                     getKoPayCategoryByNum(item?.pay_category) ?? "---"
+                                                    :
+                                                    null}
+                                                {column.type == 'level' ?
+                                                    getUserLevelByNumber(item[column.column])
                                                     :
                                                     null}
                                                 {column.type == 'date' ?

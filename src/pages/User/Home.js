@@ -163,7 +163,8 @@ const Home = () => {
                                         <ContentTable
                                             columns={objHistoryListContent[`point`] ?? []}
                                             data={post?.point ?? []}
-                                            schema={'point'}
+                                            schema={`point_${userData?.user_level}`}
+                                            table={'point'}
                                         />
                                     </>
                                     :

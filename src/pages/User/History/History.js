@@ -75,6 +75,8 @@ const History = () => {
             setSchema(`contract_${user_data?.user_level}`);
         } else if (params?.category == 'pay') {
             setSchema(`pay_${user_data?.user_level}`);
+        } else if (params?.category == 'point') {
+            setSchema(`point_${user_data?.user_level}`);
         } else {
             setSchema(params?.category);
         }
@@ -158,8 +160,6 @@ const History = () => {
                     <>
                     </>}
                 <HalfTitle style={{ maxWidth: '1050px' }}>{getTitle(params?.category)}</HalfTitle>
-                {location?.pathname.includes('/list/') ?
-                    <>
                         <InputComponent
                             label={'검색어를 입력해 주세요.'}
                             input_type={{
@@ -179,11 +179,6 @@ const History = () => {
                                 changePage(1)
                             }}
                         />
-                    </>
-                    :
-                    <>
-                    </>
-                }
                 {loading ?
                     <>
                         <Loading />

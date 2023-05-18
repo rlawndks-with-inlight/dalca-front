@@ -26,7 +26,10 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
     if (type == 'text') {
         result = data[`${column}`] ?? "---";
     } else if (type == 'number') {
-        result = commarNumber(data[`${column}`] ?? 0);
+        result = data[`${column}`] ?? 0;
+        if (is_list) {
+            result = commarNumber(data[`${column}`] ?? 0);
+        }
     } else if (type == 'percent') {
         result = `${commarNumber(data[`${column}`] ?? 0)}%`;
     } else if (type == 'minus_number') {

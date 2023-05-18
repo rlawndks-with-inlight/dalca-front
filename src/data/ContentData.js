@@ -58,10 +58,28 @@ export const zSidebarMenu = [
     { name: '포인트 적립내역 및 사용', link: '/history/point', level_list: [0, 10, ...zManagerLevel] },
 ]
 export const objHistoryListContent = {
-    point: {
+    point_0: {
         title: "포인트",
         columns: [
             columnObjFormat('날짜', '', 'date', 'date'),
+            columnObjFormat('포인트', '', 'number', 'price'),
+            columnObjFormat('비고', '', 'text', 'user_note'),
+        ]
+    },
+    point_5: {
+        title: "포인트",
+        columns: [
+            columnObjFormat('날짜', '', 'date', 'date'),
+            columnObjFormat('포인트', '', 'number', 'price'),
+            columnObjFormat('비고', '', 'text', 'user_note'),
+        ]
+    },
+    point_10: {
+        title: "포인트",
+        columns: [
+            columnObjFormat('날짜', '', 'date', 'date'),
+            columnObjFormat('고객레벨', '', 'level', 'user_level'),
+            columnObjFormat('고객명', '', 'number', 'user_name'),
             columnObjFormat('포인트', '', 'number', 'price'),
             columnObjFormat('비고', '', 'text', 'user_note'),
         ]

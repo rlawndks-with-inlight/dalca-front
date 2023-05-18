@@ -111,6 +111,7 @@ const MUserEdit = () => {
                 office_address: user?.office_address,
                 office_address_detail: user?.office_address_detail,
                 office_phone: user?.office_phone,
+                commission_percent: user?.commission_percent,
             }
             if (params?.pk > 0) {
                 obj['pk'] = params.pk;
@@ -127,6 +128,7 @@ const MUserEdit = () => {
                         'office_src',
                         'bank_book_src',
                         'id_number_src',
+                        'office_name',
                         'office_address',
                         'office_zip_code',
                         'office_lat',
@@ -299,12 +301,17 @@ const MUserEdit = () => {
                             <Col>
                                 <Title style={{ margintop: '32px' }}>복비 카드결제 승인여부</Title>
                                 <Select defaultValue={user?.is_agree_brokerage_fee} onChange={(e) => { setUser({ ...user, is_agree_brokerage_fee: e.target.value }) }}>
-                                <option value={1}>승인</option>
-                                <option value={0}>승인안함</option>
+                                    <option value={1}>승인</option>
+                                    <option value={0}>승인안함</option>
                                 </Select>
                             </Col>
                         </Row>
-
+                        <Row>
+                            <Col>
+                                <Title style={{ margintop: '32px' }}>월세 결제시 지급되는 수수료</Title>
+                                <Input className='commission_percent' defaultValue={user?.commission_percent} type='number' onChange={(e) => { setUser({ ...user, commission_percent: e.target.value }) }} />
+                            </Col>
+                        </Row>
                         <Row>
                             <Col>
                                 <Title>사업자등록증사진</Title>
