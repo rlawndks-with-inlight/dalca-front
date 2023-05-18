@@ -367,7 +367,7 @@ const MUserCardEdit = () => {
                                     <MenuItem value={6}>자녀</MenuItem>
                                 </CustomSelect>
                             </FormControl>
-                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>카드 일부분 사진</CategoryName>
+                            <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>카드 일부분 사진</CategoryName>
                             <ImageContainer for={`card_src`} style={{ margin: 'auto' }}>
 
                                 {cardSrc ?

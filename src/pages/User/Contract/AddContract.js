@@ -548,7 +548,7 @@ const AddContract = () => {
                                             value={values.brokerage_fee}
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>원</div>}
                                         />
-                                        <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>이미지업로드</CategoryName>
+                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>이미지업로드</CategoryName>
                                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                             {imgList.map((item, idx) => (
                                                 <>
@@ -607,7 +607,7 @@ const AddContract = () => {
                                         <div>
                                             <input type="file" id={`document_src`} onChange={addFile} style={{ display: 'none' }} />
                                         </div>
-                                        <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF업로드</CategoryName>
+                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF업로드</CategoryName>
                                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                                             {pdfList.map((item, idx) => (
                                                 <>

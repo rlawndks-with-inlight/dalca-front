@@ -332,7 +332,7 @@ const Contract = () => {
                                 />
                                 {imgList.length > 0 ?
                                     <>
-                                        <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서이미지</CategoryName>
+                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서이미지</CategoryName>
                                         <div style={{ display: 'flex', overflowX: 'auto' }}>
                                             {imgList.map((item, idx) => (
                                                 <>
@@ -363,7 +363,7 @@ const Contract = () => {
 
                                 {pdfList.length > 0 ?
                                     <>
-                                        <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF 파일</CategoryName>
+                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF 파일</CategoryName>
                                         <div style={{ display: 'flex', flexDirection:'column' }}>
                                             {pdfList.map((item, idx) => (
                                                 <>

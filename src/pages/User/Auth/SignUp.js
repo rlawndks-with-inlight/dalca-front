@@ -693,7 +693,7 @@ useEffect(()=>{
                                                 onChange={(e) => handleChange(e, 'office_phone')}
                                                 value={values.office_phone}
                                             />
-                                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>사업자등록증사진</CategoryName>
+                                            <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>사업자등록증사진</CategoryName>
                                             <ImageContainer for={`company_number_src`} style={{ margin: 'auto' }}>
 
                                                 {values?.company_number_src ?
@@ -713,7 +713,7 @@ useEffect(()=>{
                                             <div>
                                                 <input type="file" id={`company_number_src`} name={'company_number_src'} onChange={addFile} style={{ display: 'none' }} />
                                             </div>
-                                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>중개업소등록증사진</CategoryName>
+                                            <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>중개업소등록증사진</CategoryName>
                                             <ImageContainer for={`office_src`} style={{ margin: 'auto' }}>
 
                                                 {values?.office_src ?
@@ -766,7 +766,7 @@ useEffect(()=>{
                                         :
                                         <>
                                         </>}
-                                    <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>통장사본사진</CategoryName>
+                                    <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>통장사본사진</CategoryName>
                                     <ImageContainer for={`bank_book_src`} style={{ margin: 'auto' }}>
 
                                         {values?.bank_book_src ?
@@ -788,7 +788,7 @@ useEffect(()=>{
                                     </div>
                                     {params?.user_level == 10 ?
                                         <>
-                                            <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>신분증사진</CategoryName>
+                                            <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>신분증사진</CategoryName>
                                             <ImageContainer for={`id_number_src`} style={{ margin: 'auto' }}>
 
                                                 {values?.id_number_src ?
