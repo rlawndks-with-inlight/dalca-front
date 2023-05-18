@@ -56,6 +56,7 @@ export const zSidebarMenu = [
     { name: '문의하기', link: '/list/request', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '마이페이지', link: '/mypage', level_list: [0, 5, 10, ...zManagerLevel] },
     { name: '포인트 적립내역 및 사용', link: '/history/point', level_list: [0, 10, ...zManagerLevel] },
+    { name: '정산내역', link: '/history/commission', level_list: [10, ...zManagerLevel] },
 ]
 export const objHistoryListContent = {
     point_0: {
@@ -210,6 +211,14 @@ export const objHistoryListContent = {
             columnObjFormat('생년월일', '', 'text', 'birth'),
             columnObjFormat('수정', '', 'edit', 'edit'),
             columnObjFormat('삭제', '', 'delete', 'delete'),
+        ]
+    },
+    commission: {
+        title: "정산내역",
+        columns: [
+            columnObjFormat('날짜', '', 'text', 'date'),
+            columnObjFormat('금액', '', 'number', 'price'),
+            columnObjFormat('비고', '', 'text', 'note'),
         ]
     },
 };

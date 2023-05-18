@@ -45,6 +45,8 @@ const getTitle = (param_category) => {
         return '공지사항'
     else if (param_category == 'faq')
         return '자주 하는 질문'
+    else if(param_category == 'commission')
+        return '정산내역'
 }
 
 const History = () => {
@@ -160,25 +162,25 @@ const History = () => {
                     <>
                     </>}
                 <HalfTitle style={{ maxWidth: '1050px' }}>{getTitle(params?.category)}</HalfTitle>
-                        <InputComponent
-                            label={'검색어를 입력해 주세요.'}
-                            input_type={{
-                                placeholder: ''
-                            }}
-                            class_name='keyword'
-                            is_divider={true}
-                            icon_label={
-                                <Icon icon='ic:outline-search' style={{ cursor: 'pointer', marginBottom: '8px' }} />
-                            }
-                            onChange={(e) => setSearchKeyword(e)}
-                            value={searchKeyword}
-                            onClickIcon={() => {
-                                changePage(1)
-                            }}
-                            onKeyPress={() => {
-                                changePage(1)
-                            }}
-                        />
+                <InputComponent
+                    label={'검색어를 입력해 주세요.'}
+                    input_type={{
+                        placeholder: ''
+                    }}
+                    class_name='keyword'
+                    is_divider={true}
+                    icon_label={
+                        <Icon icon='ic:outline-search' style={{ cursor: 'pointer', marginBottom: '8px' }} />
+                    }
+                    onChange={(e) => setSearchKeyword(e)}
+                    value={searchKeyword}
+                    onClickIcon={() => {
+                        changePage(1)
+                    }}
+                    onKeyPress={() => {
+                        changePage(1)
+                    }}
+                />
                 {loading ?
                     <>
                         <Loading />
