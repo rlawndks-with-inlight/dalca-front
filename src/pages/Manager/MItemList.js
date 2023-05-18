@@ -57,6 +57,7 @@ const MItemList = () => {
         'comment'
     ]
     const use_user_pk_list = [];
+    const use_contract_pk_list = ['contract_pay'];
     const use_pay_user_pk_list = ['pay'];
     useEffect(() => {
         socket.on('message', (msg) => {
@@ -112,6 +113,9 @@ const MItemList = () => {
         }
         if (use_pay_user_pk_list.includes(params?.table) && params?.pk) {
             obj['pay_user_pk'] = params?.pk;
+        }
+        if (use_contract_pk_list.includes(params?.table) && params?.pk) {
+            obj['contract_pk'] = params?.pk;
         }
         for (var i = 0; i < objManagerListContent[`${params.table}`].queries.length; i++) {
             if (objManagerListContent[`${params.table}`].queries[i].split("=")[1]) {

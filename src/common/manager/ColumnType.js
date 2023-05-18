@@ -137,7 +137,7 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         result = "---";
         if (is_list) {
             result = <>
-                <AiOutlineUnorderedList style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() => navigate(`/manager/list/pay/${data.pk}`, { state: { breadcrumb: data.title + ' 결제 내역' } })} />
+                <AiOutlineUnorderedList style={{ cursor: 'pointer', color: '#546de5', fontSize: theme.size.font3 }} onClick={() => navigate(`/manager/list/contract_pay/${data.pk}`, { state: { breadcrumb: data.title + ' 결제 내역' } })} />
 
             </>
         }

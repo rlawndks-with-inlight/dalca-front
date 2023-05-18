@@ -576,7 +576,7 @@ export const twoOfThreeButtonStyle = {
     width: '70%',
     maxWidth: '400px',
     borderRadius: '10px',
-    minWidth: '220px',
+    minWidth: '250px',
     fontSize: `${theme.size.font5}`,
     fontWeight: 'bold',
     '&:hover': {

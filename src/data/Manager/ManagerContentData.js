@@ -176,6 +176,33 @@ export const objManagerListContent = {
         true,
         false,
         '100%'),
+    contract_pay: sidebarObjFormat(
+        '결제 내역 관리',
+        'pay',
+        [
+            columnObjFormat('계약고유번호', '', 'number', 'contract_pk'),
+            columnObjFormat('임차인아이디', '', 'text', 'lessee_id'),
+            columnObjFormat('임차인명(결제인명)', '', 'text', 'lessee_name'),
+            columnObjFormat('임대인아이디', '', 'text', 'landlord_id'),
+            columnObjFormat('임대인명', '', 'text', 'landlord_name'),
+            columnObjFormat('공인중개사아이디', '', 'text', 'realtor_id'),
+            columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
+            columnObjFormat('결제예정일', '', 'text', 'day'),
+            columnObjFormat('생성일', '', 'text', 'date'),
+            columnObjFormat('금액', '', 'number', 'price'),
+            columnObjFormat('카드수수료', '', 'percent', 'card_percent'),
+            columnObjFormat('종류', '', 'pay_category', 'pay_category'),
+            columnObjFormat('납부종류', '', 'is_auto_pay', 'is_auto_pay'),
+            columnObjFormat('납부현황', '', 'pay_status', 'pay_status'),
+            columnObjFormat('취소요청현황', '', 'want_pay_cancel', 'want_pay_cancel'),
+            columnObjFormat('취소', '', 'pay_cancel', 'pay_cancel'),
+            columnObjFormat('수정', '', 'pay_edit', 'pay_edit'),
+            columnObjFormat('삭제', '', 'delete', 'delete'),
+        ],
+        ['status=', 'order=pk', 'start_date=', 'end_date=', 'pay_category=', 'is_auto='],
+        true,
+        false,
+        '100%'),
     point: sidebarObjFormat(
         '포인트 내역 관리',
         'point',
@@ -198,7 +225,7 @@ export const objManagerListContent = {
         [
             columnObjFormat('문의자아이디', '', 'text', 'id'),
             columnObjFormat('문의자명', '', 'text', 'name'),
-           // columnObjFormat('문의자주민번호', '', 'text', 'id_number'),
+            // columnObjFormat('문의자주민번호', '', 'text', 'id_number'),
             columnObjFormat('제목', '', 'text', 'title'),
             columnObjFormat('확인여부', '', 'request_status', 'request_status'),
             columnObjFormat('문의날짜', '', 'text', 'date'),
@@ -466,7 +493,7 @@ export const objManagerEditContent = {
             ],
         ],
     },
-   
+
     notice: {
         schema: 'notice',
         breadcrumb: '공지사항',

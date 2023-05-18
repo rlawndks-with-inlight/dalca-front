@@ -3,9 +3,7 @@
 import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 // ** React Imports
 import { useState } from 'react'
-
 // ** MUI Imports
-
 import Button from '@mui/material/Button'
 
 import { styled } from '@mui/material/styles'
@@ -38,9 +36,10 @@ import { objHistoryListContent } from "../../../data/ContentData";
 import Loading from "../../../components/Loading";
 import { FormControl, InputLabel, MenuItem } from "@mui/material";
 import { ImageContainer } from "../../../components/elements/ManagerTemplete";
-import { backUrl } from "../../../data/Data";
+import { backUrl, frontUrl } from "../../../data/Data";
 import { AiFillFileImage } from "react-icons/ai";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
+import { useRef } from "react";
 const CreditCardWrapper = styled(Box)(({ }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -78,6 +77,8 @@ const ChangeCard = () => {
     const params = useParams();
     const navigate = useNavigate();
 
+    const cardIdRef = useRef([]);
+
     const [user, setUser] = useState({});
 
     const [name, setName] = useState('')
@@ -100,12 +101,50 @@ const ChangeCard = () => {
     const [phoneCheck, setPhoneCheck] = useState("")
     const [isSendSms, setIsSendSms] = useState(false);
     const [randNum, setRandNum] = useState("");
-    const [myAutoCard, setMyAutoCard] = useState({});
+
+    const [saveCardInfo, setSaveCardInfo] = useState({});
+    const [openConfirmCardId, setOpenConfirmCardId] = useState(false);
     useEffect(() => {
         setLoading(true);
         getCard(1);
 
     }, [])
+
+    const getCardIdentificationInfo = async () => {
+        const { data: response } = await axios.post('/api/gcii');
+        setSaveCardInfo(response?.data);
+        setOpenConfirmCardId(true);
+    }
+    useEffect(() => {
+        let flag = true;
+        for (var i = 0; i < cardIdRef.current.length; i++) {
+            console.log(cardIdRef.current[i].value)
+            if (!cardIdRef.current[i].value) {
+                flag = false;
+            }
+        }
+        if (flag && openConfirmCardId) {
+            openWindow()
+            setOpenConfirmCardId(false);
+        }
+    }, [cardIdRef.current.map(item => { return item?.value })])
+    function openWindow(){
+
+		/*
+		 * 해당 로직은 팝업창 구현으로
+		 * 가맹점측에서 알맞게 팝업창 구현 해주시면 됩니다.
+		 */
+        console.log(1)
+		var contents;
+		var OpenOption = 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=420,height=800,top=100,left=100,';
+
+		contents = window.open("", "contents", OpenOption);
+
+		document.reqfrm.action = "https://cas.inicis.com/casapp/ui/cardauthreq";
+		document.reqfrm.target = "contents"; 
+		document.reqfrm.submit();
+
+	}
     const getCard = async (num) => {
         setEditPk(0);
         setPage(num);
@@ -202,7 +241,7 @@ const ChangeCard = () => {
             console.log(e)
         }
     }
-    const onChangeMyCard = (pk) => {
+    const onChangeMyCard = () => {
         if (
             !cardNumber ||
             !name ||
@@ -295,8 +334,6 @@ const ChangeCard = () => {
         setExpiry(data?.card_expire ?? "");
         setBirth(data?.birth ?? "");
         setPassword(data?.card_password ?? "");
-
-
         if (!is_mine) {
             setFamilyType(data?.family_type);
             setCardSrc(data?.card_src);
@@ -306,7 +343,6 @@ const ChangeCard = () => {
             setIsSeeCard(true);
             setIsSendSms(false);
         }
-
     }
     const sendSms = async () => {
         if (!phone) {
@@ -400,8 +436,16 @@ const ChangeCard = () => {
             }
         }
     }
+
     return (
         <>
+            <form name="reqfrm" id="reqfrm" method="post" style={{ display: 'none' }}>
+                <input type="hidden" id="mid" name="mid" value={saveCardInfo?.mid} ref={el => cardIdRef.current[0] = el}/>
+                <input type="hidden" id="Siteurl" name="Siteurl" value={frontUrl.replace('https://', '').replace('http://', '')} ref={el => cardIdRef.current[1] = el}/>
+                <input type="hidden" id="Tradeid" name="Tradeid" value={saveCardInfo?.Tradeid} ref={el => cardIdRef.current[2] = el}/>
+                <input type="hidden" id="Closeurl" name="Closeurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[3] = el}/>
+                <input type="hidden" id="Okurl" name="Okurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[4] = el}/>
+            </form>
             <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff" }}>
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -547,8 +591,8 @@ const ChangeCard = () => {
                                                         <MenuItem value={6}>자녀</MenuItem>
                                                     </CustomSelect>
                                                 </FormControl>
-                                                <CategoryName style={{ width: '100%', maxWidth: '700px', marginBottom: '0.5rem', fontWeight: 'bold' }}>카드 일부분 사진</CategoryName>
-                                                <ImageContainer for={`card_src`} style={{ margin: 'auto' }}>
+                                                <CategoryName style={{ width: '98%', marginBottom: '0.5rem', fontWeight: 'bold', maxWidth: '1000px' }}>카드 일부분 사진</CategoryName>
+                                                <ImageContainer for={`card_src`} style={{ margin: 'auto', width: '98%' }}>
 
                                                     {cardSrc ?
                                                         <>
@@ -605,17 +649,18 @@ const ChangeCard = () => {
                                             <div />
                                             <div style={{ display: 'flex' }}>
                                                 <Button
-                                                    sx={{ ...colorButtonStyle }}
-                                                    startIcon={<Icon icon="line-md:confirm" />}
-                                                    onClick={onChangeMyCard}
-                                                >저장</Button>
-                                                <Button
-                                                    sx={{ ...colorButtonStyle, marginLeft: '0.5rem' }}
+                                                    sx={{ ...colorButtonStyle, marginRight: '0.5rem' }}
                                                     startIcon={<Icon icon="akar-icons:arrow-cycle" />}
                                                     onClick={() => {
                                                         onClickEditButton({}, 0, true)
                                                     }}
-                                                >변경</Button>
+                                                >초기화</Button>
+                                                <Button
+                                                    sx={{ ...colorButtonStyle }}
+                                                    startIcon={<Icon icon="line-md:confirm" />}
+                                                    onClick={getCardIdentificationInfo}
+                                                >저장</Button>
+
                                             </div>
                                         </div>
                                     </>
