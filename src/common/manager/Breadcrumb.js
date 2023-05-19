@@ -101,12 +101,7 @@ const Breadcrumb = (props) => {
         socket.on('message', (msg) => {
             if (msg?.site == 'manager') {
                 if (msg?.table == 'user' && msg?.signup_user_level == 10) {
-                    setBellList([...[{
-                        pk: msg?.signup_user_pk,
-                        id: msg?.signup_user_id,
-                        date: returnMoment()
-                    }], ...bellList]);
-                    setBellCount(bellCount + 1);
+                    getBellContent();
                     toast.success(`새로운 공인중개사가 회원가입 하였습니다.`);
                 }
             }
@@ -188,14 +183,22 @@ const Breadcrumb = (props) => {
                                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                             >
                                 <div style={{ display: '-webkit-flex', flexDirection: 'column', padding: '0 0.5rem', maxHeight: '300px', overflowY: 'auto' }} className='none-scroll'>
-                                    {bellList.map((item, idx) => (
+                                    {bellList.length > 0 ?
                                         <>
-                                            <BellContent href={`/manager/edit/user/${item?.pk}`} className={`user-${item?.pk}`}>
-                                                <div style={{ fontSize: theme.size.font5 }}>{item?.id} 공인중개사 {item?.status == 1 ? '승인 완료 되었습니다.' : '승인 대기중입니다.'}</div>
-                                                <div style={{ marginLeft: 'auto', fontSize: theme.size.font6, color: theme.color.font3 }}>{item?.date}</div>
-                                            </BellContent>
+                                            {bellList.map((item, idx) => (
+                                                <>
+                                                    <BellContent href={`/manager/edit/user/${item?.pk}`} className={`user-${item?.pk}`}>
+                                                        <div style={{ fontSize: theme.size.font5 }}>{item?.id} 공인중개사 {item?.status == 1 ? '승인 완료 되었습니다.' : '승인 대기중입니다.'}</div>
+                                                        <div style={{ marginLeft: 'auto', fontSize: theme.size.font6, color: theme.color.font3 }}>{item?.date}</div>
+                                                    </BellContent>
+                                                </>
+                                            ))}
                                         </>
-                                    ))}
+                                        :
+                                        <>
+                                        알림이 없습니다.
+                                        </>}
+
                                 </div>
                             </Menu>
                         </Fragment>
