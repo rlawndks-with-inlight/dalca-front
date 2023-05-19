@@ -108,7 +108,7 @@ const SignUp = () => {
         } else if (params?.user_level == 10) {
             setValues({ ...defaultObj, ...realtorObj });
             setTitle('공인중개사');
-
+            
         } else {
             toast.error('잘못된 접근입니다.');
             navigate(-1);
@@ -377,7 +377,9 @@ useEffect(()=>{
         const { data: response } = await axios.post('/api/adduser', obj);
         if (response?.result > 0) {
             socket.emit('message', {
-                signup_user_level: params?.user_level
+                signup_user_level: params?.user_level,
+                signup_user_id: obj?.id,
+                signup_user_pk: response?.data?.pk,
             });
             toast.success(response?.message);
             navigate('/login');
@@ -397,13 +399,12 @@ useEffect(()=>{
         window.scrollTo(0, 0);
     }
     const onNextStep = () => {
-        if (step == 0 && !isConfirmId) {
-            getIdentificationInfo();
-            return;
-        }
+        // if (step == 0 && !isConfirmId) {
+        //     getIdentificationInfo();
+        //     return;
+        // }
         if (params?.user_level == 10 || params?.user_level == 5) {
             setStep(step + 1);
-
         } else {
             setStep(step + 2);
         }

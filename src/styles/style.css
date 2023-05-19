@@ -25,7 +25,6 @@
 }
 .swal2-popup .swal2-styled:focus {
     box-shadow: none !important;
-
 }
 .swal-input{
     height: auto !important;
@@ -55,6 +54,15 @@ body::-webkit-scrollbar-thumb {
     /* Chrome, Safari, Opera*/
     background: #3250D255;
 }
+
+.none-scroll {
+    -ms-overflow-style: none !important; /* IE and Edge */
+    scrollbar-width: none !important; /* Firefox */
+}
+.none-scroll::-webkit-scrollbar {
+    display: none !important; /* Chrome, Safari, Opera*/
+}
+
 .ql-editor{
     -ms-overflow-style: none;
     /* IE and Edge */

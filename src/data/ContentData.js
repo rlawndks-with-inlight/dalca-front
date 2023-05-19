@@ -96,6 +96,23 @@ export const objHistoryListContent = {
             columnObjFormat('취소요청', '', 'want_cancel', 'want_cancel'),
         ]
     },
+    pay_0_detail: {
+        title: "결제",
+        columns: [
+            //columnObjFormat('선택', '74px', 'pay_check', 'pay_check'),
+            columnObjFormat('계약고유번호', '74px', 'number', 'contract_pk'),
+            columnObjFormat('임대인명', '', 'text', 'landlord_name'),
+            columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
+            columnObjFormat('종류', '', 'pay_category', 'pay_category'),
+            columnObjFormat('금액', '', 'number', 'price'),
+            columnObjFormat('실결제금액', '', 'card_percent_add_price', 'card_percent_add_price'),
+            columnObjFormat('계약생성일', '', 'text', 'day'),
+            columnObjFormat('납부일', '', 'text', 'trade_day'),
+            columnObjFormat('납부현황', '', 'pay_status', 'status'),
+            columnObjFormat('납부하기', '', 'go_pay', 'go_pay'),
+            columnObjFormat('취소요청', '', 'want_cancel', 'want_cancel'),
+        ]
+    },
     pay_5: {
         title: "결제",
         columns: [

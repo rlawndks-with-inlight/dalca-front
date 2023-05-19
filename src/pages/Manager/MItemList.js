@@ -26,7 +26,6 @@ import ManagerContentWrappers from '../../components/elements/ManagerContentWrap
 import OptionBox from './OptionBox';
 import { toast } from 'react-hot-toast';
 import Swal from 'sweetalert2';
-import { socket } from '../../data/Data';
 const OptionCardWrappers = styled.div`
 width:95%;
 margin:0.5rem auto;
@@ -59,15 +58,7 @@ const MItemList = () => {
     const use_user_pk_list = [];
     const use_contract_pk_list = ['contract_pay'];
     const use_pay_user_pk_list = ['pay'];
-    useEffect(() => {
-        socket.on('message', (msg) => {
-            if (msg?.site == 'manager') {
-                if (msg?.table == 'user' && msg?.signup_user_level == 10) {
-                    toast.success(`새로운 공인중개사가 회원가입 하였습니다.`)
-                }
-            }
-        });
-    }, [])
+    
     useEffect(() => {
         setZColumn(objManagerListContent[`${params.table}`].zColumn ?? {})
         async function fetchPost() {

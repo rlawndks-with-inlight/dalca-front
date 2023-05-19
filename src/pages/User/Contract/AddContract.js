@@ -504,7 +504,7 @@ const AddContract = () => {
                                             value={values.down_payment}
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
-                                        <Explain style={{margin:'0'}}>보증금 - 계약금 = 잔금 입니다.</Explain>
+                                        {/* <Explain style={{margin:'0'}}>보증금 - 계약금 = 잔금 입니다.</Explain> */}
                                         <InputComponent
                                             label={'월세'}
                                             input_type={{

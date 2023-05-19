@@ -1,6 +1,6 @@
 //계약생성
 
-import { colorButtonStyle, ContentWrappers, InputComponent, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, InputComponent, postCodeStyle, ShadowContainer, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -33,6 +33,16 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
 
+const GetContent = (props) => {
+    const { title, content } = props;
+
+    return (
+        <>
+            <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>{title}</CategoryName>
+            <div>{content}</div>
+        </>
+    )
+}
 const Contract = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -184,242 +194,143 @@ const Contract = () => {
                                 animate={{ opacity: 1 }}
                                 style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                             >
-                                <div onClick={() => {
-                                }}>
-                                    <InputComponent
-                                        label={'계약주소* '}
-                                        input_type={{
-                                            placeholder: '',
-                                            disabled: "true"
-                                        }}
-                                        class_name='address'
-                                        is_divider={true}
-                                        value={values.address}
+                                <ShadowContainer style={{padding:'16px'}}>
+                                    <GetContent
+                                        title={'계약주소'}
+                                        content={values.address}
                                     />
-                                </div>
-                                <InputComponent
-                                    label={'상세주소'}
-                                    input_type={{
-                                        placeholder: '',
-                                        disabled: "true"
-                                    }}
-                                    class_name='address_detail'
-                                    is_divider={true}
-                                    value={values.address_detail}
-                                />
-                                {/* <InputComponent
-                                    label={'전/월세'}
-                                    input_type={{
-                                        placeholder: '',
-                                        disabled: "true"
-                                    }}
-                                    class_name='pay_type'
-                                    is_divider={true}
-                                    value={values.pay_type == 0 ? '월세' : '전세'}
-                                /> */}
-                                <InputComponent
-                                    label={'보증금'}
-                                    input_type={{
-                                        placeholder: '숫자를 입력해 주세요.',
-                                        disabled: "true"
-                                    }}
-                                    class_name='deposit'
-                                    is_divider={true}
-                                    value={values.deposit}
-                                    icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
-                                />
-                                <InputComponent
-                                    label={'계약금'}
-                                    input_type={{
-                                        placeholder: '숫자를 입력해 주세요.',
-                                        disabled: "true"
-                                    }}
-                                    class_name='down_payment'
-                                    is_divider={true}
-                                    value={values.down_payment}
-                                    icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
-                                />
-                                <InputComponent
-                                    label={'월세'}
-                                    input_type={{
-                                        placeholder: '숫자를 입력해 주세요.',
-                                        disabled: "true"
-                                    }}
-                                    class_name='monthly'
-                                    is_divider={true}
-                                    value={values.monthly}
-                                    icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
-                                />
-                                <InputComponent
-                                    label={'계약 시작일'}
-                                    input_type={{
-                                        placeholder: '',
-                                        type: 'date',
-                                        disabled: "true"
-                                    }}
-                                    class_name='start_date'
-                                    is_divider={true}
-                                    value={values.start_date}
-                                />
-                                <InputComponent
-                                    label={'계약 종료일'}
-                                    input_type={{
-                                        placeholder: '',
-                                        type: 'date',
-                                        disabled: "true"
-                                    }}
-                                    class_name='end_date'
-                                    is_divider={true}
-                                    value={values.end_date}
-                                />
-                                <InputComponent
-                                    label={'월세 납부일'}
-                                    input_type={{
-                                        placeholder: '',
-                                        disabled: "true"
-                                    }}
-                                    class_name='pay_day'
-                                    is_divider={true}
-                                    value={values.pay_day}
-                                    icon_label={<div style={{ fontSize: theme.size.font4 }}>일</div>}
-                                />
-                                <InputComponent
-                                    label={'임대인'}
-                                    input_type={{
-                                        placeholder: '숫자를 입력해 주세요.',
-                                        disabled: "true"
-                                    }}
-                                    class_name='landlord'
-                                    is_divider={true}
-                                    value={values.landlord?.name}
-                                />
-                                <InputComponent
-                                    label={'임대인 전화번호'}
-                                    input_type={{
-                                        placeholder: '숫자를 입력해 주세요.',
-                                        disabled: "true"
-                                    }}
-                                    class_name='landlord_phone'
-                                    is_divider={true}
-                                    value={values.landlord?.phone}
-                                />
-                                <InputComponent
-                                    label={'임차인'}
-                                    input_type={{
-                                        placeholder: '숫자를 입력해 주세요.',
-                                        disabled: "true"
-                                    }}
-                                    class_name='lessee'
-                                    is_divider={true}
-                                    value={values.lessee?.name}
-                                />
-                                <InputComponent
-                                    label={'임차인 전화번호'}
-                                    input_type={{
-                                        placeholder: '숫자를 입력해 주세요.',
-                                        disabled: "true"
-                                    }}
-                                    class_name='lessee_phone'
-                                    is_divider={true}
-                                    value={values.lessee?.phone}
-                                />
-                                <InputComponent
-                                    label={'공인중개사'}
-                                    input_type={{
-                                        placeholder: '숫자를 입력해 주세요.',
-                                        disabled: "true"
-                                    }}
-                                    class_name='realtor'
-                                    is_divider={true}
-                                    value={values.realtor?.name}
-                                />
-                                <InputComponent
-                                    label={'공인중개사 전화번호'}
-                                    input_type={{
-                                        placeholder: '숫자를 입력해 주세요.',
-                                        disabled: "true"
-                                    }}
-                                    class_name='realtor_phone'
-                                    is_divider={true}
-                                    value={values.realtor?.phone}
-                                />
-                                {imgList.length > 0 ?
-                                    <>
-                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서이미지</CategoryName>
-                                        <div style={{ display: 'flex', overflowX: 'auto' }}>
-                                            {imgList.map((item, idx) => (
-                                                <>
-                                                    <div style={{
-                                                        margin: 'auto 0',
-                                                        position: 'relative'
-                                                    }}
+                                    <GetContent
+                                        title={'상세주소'}
+                                        content={values.address_detail}
+                                    />
+                                    <GetContent
+                                        title={'보증금'}
+                                        content={values.deposit + ' 만원'}
+                                    />
+                                    <GetContent
+                                        title={'계약금'}
+                                        content={values.down_payment + ' 만원'}
+                                    />
+                                    <GetContent
+                                        title={'월세'}
+                                        content={values.monthly + ' 만원'}
+                                    />
+                                    <GetContent
+                                        title={'계약 시작일'}
+                                        content={values.start_date}
+                                    />
+                                    <GetContent
+                                        title={'계약 종료일'}
+                                        content={values.end_date}
+                                    />
 
-                                                    >
-                                                        <img src={item?.url} alt="#"
-                                                            style={{
-                                                                height: '8rem', width: 'auto',
-                                                                cursor: 'pointer'
-                                                            }}
-                                                            onClick={() => {
-                                                                setWantSeeImg(item?.url)
-                                                            }}
-                                                        />
-                                                    </div>
+                                    <GetContent
+                                        title={'월세 납부일'}
+                                        content={values.pay_day}
+                                    />
+                                    <GetContent
+                                        title={'임대인'}
+                                        content={values.landlord?.name}
+                                    />
+                                    <GetContent
+                                        title={'임대인 전화번호'}
+                                        content={values.landlord?.phone}
+                                    />
+                                    <GetContent
+                                        title={'임차인'}
+                                        content={values.lessee?.name}
+                                    />
+                                    <GetContent
+                                        title={'임차인 전화번호'}
+                                        content={values.lessee?.phone}
+                                    />
+                                    <GetContent
+                                        title={'공인중개사'}
+                                        content={values.realtor?.name}
+                                    />
+                                    <GetContent
+                                        title={'공인중개사 전화번호'}
+                                        content={values.realtor?.phone}
+                                    />
+                                    {imgList.length > 0 ?
+                                        <>
+                                            <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서이미지</CategoryName>
+                                            <div style={{ display: 'flex', overflowX: 'auto' }}>
+                                                {imgList.map((item, idx) => (
+                                                    <>
+                                                        <div style={{
+                                                            margin: 'auto 0',
+                                                            position: 'relative'
+                                                        }}
 
-                                                </>
-                                            ))}
-                                        </div>
-                                    </>
-                                    :
-                                    <>
-                                    </>}
+                                                        >
+                                                            <img src={item?.url} alt="#"
+                                                                style={{
+                                                                    height: '8rem', width: 'auto',
+                                                                    cursor: 'pointer'
+                                                                }}
+                                                                onClick={() => {
+                                                                    setWantSeeImg(item?.url)
+                                                                }}
+                                                            />
+                                                        </div>
 
-                                {pdfList.length > 0 ?
-                                    <>
-                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF 파일</CategoryName>
-                                        <div style={{ display: 'flex', flexDirection:'column' }}>
-                                            {pdfList.map((item, idx) => (
-                                                <>
-                                                    <div style={{
-                                                        margin: 'auto 0.25rem',
-                                                        position: 'relative',
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        cursor: 'pointer',
-                                                        color: theme.color.background1,
-                                                    }}
-                                                    >
-                                                        <a href={item?.url} download={item?.content?.name || item?.name} style={{ textDecoration: 'none', color: theme.color.background1 }}>
-                                                            {item?.content?.name || item?.name}
-                                                        </a>
-                                                    </div>
+                                                    </>
+                                                ))}
+                                            </div>
+                                        </>
+                                        :
+                                        <>
+                                        </>}
 
-                                                </>
-                                            ))}
-                                        </div>
-                                    </>
-                                    :
-                                    <>
-                                    </>}
+                                    {pdfList.length > 0 ?
+                                        <>
+                                            <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>PDF 파일</CategoryName>
+                                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                {pdfList.map((item, idx) => (
+                                                    <>
+                                                        <div style={{
+                                                            margin: 'auto 0.25rem',
+                                                            position: 'relative',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            cursor: 'pointer',
+                                                            color: theme.color.background1,
+                                                        }}
+                                                        >
+                                                            <a href={item?.url} download={item?.content?.name || item?.name} style={{ textDecoration: 'none', color: theme.color.background1 }}>
+                                                                {item?.content?.name || item?.name}
+                                                            </a>
+                                                        </div>
 
-                                <div style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    width: '100%',
-                                    marginTop: '1rem',
-                                }}>
-                                    <div />
-                                    <Button
-                                        sx={{ ...colorButtonStyle, cursor: `${values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? '' : 'pointer'}` }}
-                                        startIcon={values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? <Icon icon="line-md:confirm" /> : <Icon icon="material-symbols:approval-delegation" />}
-                                        onClick={() => {
-                                            if (values[`${getEnLevelByNum(userData?.user_level)}_appr`] != 1) {
-                                                confirmContractAppr();
-                                            }
-                                        }}
-                                        disabled={values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? true : false}
-                                    >{values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? '수락완료' : `${getKoLevelByNum(userData?.user_level)} 수락`}</Button>
-                                </div>
+                                                    </>
+                                                ))}
+                                            </div>
+                                        </>
+                                        :
+                                        <>
+                                        </>}
+
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        width: '100%',
+                                        marginTop: '1rem',
+                                    }}>
+                                        <div />
+                                        <Button
+                                            sx={{ ...colorButtonStyle, cursor: `${values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? '' : 'pointer'}` }}
+                                            startIcon={values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? <Icon icon="line-md:confirm" /> : <Icon icon="material-symbols:approval-delegation" />}
+                                            onClick={() => {
+                                                if (values[`${getEnLevelByNum(userData?.user_level)}_appr`] != 1) {
+                                                    confirmContractAppr();
+                                                }
+                                            }}
+                                            disabled={values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? true : false}
+                                        >{values[`${getEnLevelByNum(userData?.user_level)}_appr`] == 1 ? '수락완료' : `${getKoLevelByNum(userData?.user_level)} 수락`}</Button>
+                                    </div>
+                                </ShadowContainer>
+
                             </motion.div>
                             {wantSeeImg ?
                                 <>

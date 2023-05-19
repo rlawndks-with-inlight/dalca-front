@@ -28,7 +28,8 @@ export const zSidebar = [
         sidebarObjListFormat('결제관리', '/manager/list/pay', 40, ['/manager/list/pay']),//list
         sidebarObjListFormat('공인중개사 정산관리', '/manager/list/commission', 40, ['/manager/list/commission']),//list
         sidebarObjListFormat('부동산관리', '/manager/list/real_estate', 40, ['/manager/list/real_estate']),//list
-        sidebarObjListFormat('카드수수료관리', '/manager/edit/card_percent_setting/1', 40, ['/manager/edit/card_percent_setting/1']),//list
+        sidebarObjListFormat('카드수수료관리', '/manager/edit/card_percent_setting/1', 40, ['/manager/edit/card_percent_setting/1']),
+        sidebarObjListFormat('공인중개사수수료관리', '/manager/edit/commission_percent_setting/1', 40, ['/manager/edit/commission_percent_setting/1']),//commission_percent_setting
         sidebarObjListFormat('포인트관리', '/manager/edit/point_setting/1', 40, ['/manager/edit/point_setting/1']),//list
         sidebarObjListFormat('포인트내역관리', '/manager/list/point', 40, ['/manager/list/point']),//list
     ], <RiMoneyDollarCircleLine />),
@@ -434,30 +435,6 @@ export const objManagerEditContent = {
             [
                 editColumnObjFormat('링크', 'input', { placeholder: 'https://example.com' }, 'home_banner_link_1'),
             ],
-            // [
-            //     editColumnObjFormat('슬라이드 이미지 2 (500x150)', 'img', { field_name: 'content2' }, 'home_banner_img_2'),
-            // ],
-            // [
-            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_2'),
-            // ],
-            // [
-            //     editColumnObjFormat('슬라이드 이미지 3 (500x150)', 'img', { field_name: 'content3' }, 'home_banner_img_3'),
-            // ],
-            // [
-            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_3'),
-            // ],
-            // [
-            //     editColumnObjFormat('슬라이드 이미지 4 (500x150)', 'img', { field_name: 'content4' }, 'home_banner_img_4'),
-            // ],
-            // [
-            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_4'),
-            // ],
-            // [
-            //     editColumnObjFormat('슬라이드 이미지 5 (500x150)', 'img', { field_name: 'content5' }, 'home_banner_img_5'),
-            // ],
-            // [
-            //     editColumnObjFormat('링크', 'input', { placeholder: '/home' }, 'home_banner_link_5'),
-            // ],
         ],
     },
     point_setting: {
@@ -477,6 +454,16 @@ export const objManagerEditContent = {
         columns: [
             [
                 editColumnObjFormat('카드수수료 (%)', 'input', { placeholder: '숫자를 입력해 주세요 0~100' }, 'card_percent'),
+            ],
+        ],
+    },
+    commission_percent_setting: {
+        schema: 'setting',
+        breadcrumb: '공인중개사 수수료 설정',
+        add_list: [],
+        columns: [
+            [
+                editColumnObjFormat('수수료 (%)', 'input', { placeholder: '숫자를 입력해 주세요 0~100' }, 'commission_percent'),
             ],
         ],
     },

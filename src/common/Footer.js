@@ -22,7 +22,7 @@ const Post = styled.div`
 border-right:1px solid ${props => props.theme.color.font1};
 padding:0 8px;
 transition: 0.3s;
-font-size:${props => props.theme.size.font5};
+font-size:${props => props.theme.size.font6};
 // &:hover{  
 //     color : ${props => props.theme.color.background1};
 //   }

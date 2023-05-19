@@ -312,6 +312,10 @@ const ContentTable = (props) => {
                                                     <input type={'checkbox'} id={`${schema}-${item?.pk}`} name={`${schema}-check`} onChange={(e) => checkOnlyOne(e.target)} />
                                                     :
                                                     null}
+                                                {column.type == 'pay_check' ?
+                                                    <input type={'checkbox'} id={`${schema}-${item?.pk}`} name={`${schema}-check`} onChange={(e) => checkOnlyOne(e.target)} />
+                                                    :
+                                                    null}
                                                 {column.type == 'go_pay' ?
                                                     <>
                                                         {item?.lessee_pk == getLocalStorage('auth')?.pk ?

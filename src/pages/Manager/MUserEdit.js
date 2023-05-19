@@ -134,14 +134,16 @@ const MUserEdit = () => {
                         'office_lat',
                         'office_lng',
                         'is_agree_brokerage_fee',
+                        'status'
                     ];
                     let realtor_src_obj = {};
                     if ($(`.level`).val() == 10) {
-
                         let num = 1;
                         for (var i = 0; i < realtor_src_list.length; i++) {
-                            if (typeof user[realtor_src_list[i]] == 'string' || typeof user[realtor_src_list[i]] == 'number') {
-                                realtor_src_obj[realtor_src_list[i]] = user[realtor_src_list[i]]
+                            if (typeof user[realtor_src_list[i]] == 'string') {
+                                realtor_src_obj[realtor_src_list[i]] = user[realtor_src_list[i]] ?? ""
+                            } else if (typeof user[realtor_src_list[i]] == 'number') {
+                                realtor_src_obj[realtor_src_list[i]] = user[realtor_src_list[i]] ?? 0
                             } else {
                                 let formData = new FormData();
                                 formData.append(`content${num}`, user[realtor_src_list[i]]);
@@ -285,6 +287,15 @@ const MUserEdit = () => {
                 </Row>
                 {userLevel == 10 ?
                     <>
+                        <Row>
+                            <Col>
+                                <Title style={{ margintop: '32px' }}>승인여부</Title>
+                                <Select defaultValue={user?.status} onChange={(e) => { setUser({ ...user, status: e.target.value }) }}>
+                                    <option value={0}>승인안함</option>
+                                    <option value={1}>승인</option>
+                                </Select>
+                            </Col>
+                        </Row>
                         <Row>
                             <Col>
                                 <Title style={{ margintop: '32px' }}>중개업소명칭</Title>

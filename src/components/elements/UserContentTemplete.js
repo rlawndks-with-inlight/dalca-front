@@ -457,7 +457,7 @@ export const InputComponent = (props) => {
                                 style={{
                                     position: 'absolute',
                                     top: '60px',
-                                    maxWidth: '560px',
+                                    maxWidth: '1000px',
                                     width: '92%',
                                     padding: '4%',
                                     background: '#fff',
@@ -465,6 +465,7 @@ export const InputComponent = (props) => {
                                     boxShadow: theme.boxShadow,
                                     height: '130px',
                                     overflowY: 'auto',
+                                    zIndex:'2'
                                 }}>
                                 {autoCompleteList.map((item, idx) => (
                                     <>

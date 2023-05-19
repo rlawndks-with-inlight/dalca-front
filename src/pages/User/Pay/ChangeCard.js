@@ -445,8 +445,8 @@ const ChangeCard = () => {
                 <input type="hidden" id="Closeurl" name="Closeurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[3] = el} />
                 <input type="hidden" id="Okurl" name="Okurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[4] = el} />
             </form>
-            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff" }}>
-                <SelectType className="select-type" style={{ marginTop: '4rem' }}>
+            <Wrappers>
+                <SelectType className="select-type">
                     <Type style={{ borderBottom: `4px solid ${params?.category == 'change' ? theme.color.background1 : '#fff'}`, color: `${params?.category == 'change' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/card/change`) }}>본인카드 등록 및 변경</Type>
                     <Type style={{ borderBottom: `4px solid ${params?.category == 'family' ? theme.color.background1 : '#fff'}`, color: `${params?.category == 'family' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/card/family`) }}>타인카드 등록 및 변경</Type>
                 </SelectType>

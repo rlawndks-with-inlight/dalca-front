@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Card } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -6,7 +6,7 @@ import { backUrl } from "../data/Data";
 import { commarNumber, getKoPayCategoryByNum, getMoneyByCardPercent, makeQueryObj } from "../functions/utils";
 import theme from "../styles/theme";
 import AddButton from "./elements/button/AddButton";
-import { borderButtonStyle, colorButtonStyle, HalfTitle, TextButton, TextFillButton } from "./elements/UserContentTemplete";
+import { borderButtonStyle, colorButtonStyle, HalfTitle, ShadowContainer, TextButton, TextFillButton } from "./elements/UserContentTemplete";
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 import $ from 'jquery';
@@ -14,33 +14,31 @@ const Container = styled.div`
 display: flex; 
 padding: 32px 0;
 width: 100%;
-height: 120px;
+min-height: 120px;
+flex-direction:column;
 @media screen and (max-width:550px) { 
-    flex-direction:column;
     height:auto;
 }
 `
 const ContentContainer = styled.div`
 display:flex;
-width:60%;
+width:100%;
+flex-direction:column;
 @media screen and (max-width:550px) { 
     width:100%;
     border-right:none;
-    padding-bottom:16px;
 }
 `
 const PriceContainer = styled.div`
 display: flex;
 flex-direction: column;
-width:40%;
-height:120px;
+width:100%;
 @media screen and (max-width:550px) {  
-    width:100%;
     margin-left:auto;
 }
 `
 const PayItemCard = (props) => {
-    let { item, is_detail, not_price, column, user, setting } = props;
+    let { item, is_detail, not_price, column, user, setting, payList } = props;
 
     const navigate = useNavigate();
 
@@ -81,7 +79,7 @@ const PayItemCard = (props) => {
                     // }
                 }
             })
-        } else if (item?.status == 1) {
+        } else {
             navigate('/history/pay')
         }
     }
@@ -126,20 +124,46 @@ const PayItemCard = (props) => {
     return (
         <>
             <HalfTitle>결제 상세내용</HalfTitle>
-            <Container style={{ paddingBottom: `${not_price ? '16px' : ''}` }}>
-                <ContentContainer style={{ flexDirection: `${(column && window.innerWidth <= 550) ? 'column' : ''}` }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px', width: 'auto' }}>
-                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>계약고유번호: {commarNumber(item?.contract_pk)}</div>
-                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {getKoPayCategoryByNum(item?.pay_category)}</div>
-                        {item?.pay_category == 0 ?
-                            <>
-                                <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>결제예정일: {item?.day}</div>
-                            </>
-                            :
-                            <>
-                            </>}
-                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(getMoneyByCardPercent(item?.price, setting?.card_percent))}원</div>
-                    </div>
+            <Container>
+                <ContentContainer>
+                    {payList && payList.length > 0 ?
+                        <>
+                            {payList.map((itm, idx) => (
+                                <>
+                                    <ShadowContainer style={{
+                                        display: 'flex', height: '150px', alignItems: 'center', margin: '0 auto 1rem auto', width: '98%'
+                                    }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px', width: 'auto' }}>
+                                            <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>계약고유번호: {commarNumber(itm?.contract_pk)}</div>
+                                            <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {getKoPayCategoryByNum(itm?.pay_category)}</div>
+                                            {itm?.pay_category == 0 ?
+                                                <>
+                                                    <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>결제예정일: {itm?.day}</div>
+                                                </>
+                                                :
+                                                <>
+                                                </>}
+                                            <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(getMoneyByCardPercent(itm?.price, setting?.card_percent))}원</div>
+                                        </div>
+                                    </ShadowContainer>
+                                </>
+                            ))}
+                        </>
+                        :
+                        <>
+                            <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px', width: 'auto' }}>
+                                <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>계약고유번호: {commarNumber(item?.contract_pk)}</div>
+                                <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {getKoPayCategoryByNum(item?.pay_category)}</div>
+                                {item?.pay_category == 0 ?
+                                    <>
+                                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>결제예정일: {item?.day}</div>
+                                    </>
+                                    :
+                                    <>
+                                    </>}
+                                <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(getMoneyByCardPercent(item?.price, setting?.card_percent))}원</div>
+                            </div>
+                        </>}
                 </ContentContainer>
                 {not_price ?
                     <>
@@ -147,16 +171,8 @@ const PayItemCard = (props) => {
                     :
                     <>
                         <PriceContainer>
-                            <div style={{ display: "flex", margin: 'auto 0 0 auto' }}>
-                                {item?.status == 0 || item?.status == 1 ?
-                                    <>
-                                        <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={() => onPayByDirect()}>{returnPayStatus()}</Button>
-
-                                    </>
-                                    :
-                                    <>
-                                    </>}
-
+                            <div style={{ display: "flex", margin: '0 0 0 auto' }}>
+                                <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={() => onPayByDirect()}>{returnPayStatus()}</Button>
                                 {/* {item?.status == -1 || item?.status == 1 ?
                                     <>
                                         <Button sx={{ ...borderButtonStyle, width: '81px', marginLeft: '1rem' }} onClick={() => onPayCancel()}>{item?.status == 1 ? '결제취소' : '취소완료'}</Button>

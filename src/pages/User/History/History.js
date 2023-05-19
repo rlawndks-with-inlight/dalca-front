@@ -93,11 +93,11 @@ const returnTopContent = (data, func) => {
                 <Row>
                     <Col>
                         <Title style={{ margin: '0.5rem 1rem 0.5rem 0' }}>시작일</Title>
-                        <Input type={'date'} className="start_date" style={{ margin: '0 1rem 0 0' }} onChange={onChangeType}/>
+                        <Input type={'date'} className="start_date" style={{ margin: '0 1rem 0 0' }} onChange={onChangeType} />
                     </Col>
                     <Col>
                         <Title style={{ margin: '0.5rem 1rem 0.5rem 0' }}>종료일</Title>
-                        <Input type={'date'} className="end_date" style={{ margin: '0 1rem 0 0' }} onChange={onChangeType}/>
+                        <Input type={'date'} className="end_date" style={{ margin: '0 1rem 0 0' }} onChange={onChangeType} />
                     </Col>
                     <ButtonContainer>
                         <Button sx={{ ...colorButtonStyle, height: '35px' }} onClick={() => {
@@ -124,13 +124,23 @@ const returnTopContent = (data, func) => {
 }
 const returnOptionBox = (data, func) => {
     let { table, optionObj } = data;
-    console.log(optionObj)
+    const { goToManyPayReady } = func;
     if (table == 'commission') {
         return (
             <>
                 <div style={{ marginLeft: 'auto' }}>
                     {optionObj?.pay_sum?.title}: {optionObj?.pay_sum?.content}
                 </div>
+            </>
+        )
+    }
+    if (table == 'pay') {
+        return (
+            <>
+                {/* <div style={{ marginLeft: 'auto' }}>
+                    <Button sx={{ ...colorButtonStyle }} onClick={goToManyPayReady}
+                    >선택한 계약 일괄 결제하기</Button>
+                </div> */}
             </>
         )
     }
@@ -163,7 +173,11 @@ const History = () => {
         if (params?.category == 'contract') {
             setSchema(`contract_${user_data?.user_level}`);
         } else if (params?.category == 'pay') {
-            setSchema(`pay_${user_data?.user_level}`);
+            if (user_data?.user_level == 0) {
+                setSchema(`pay_${user_data?.user_level}_detail`);
+            } else {
+                setSchema(`pay_${user_data?.user_level}`);
+            }
         } else if (params?.category == 'point') {
             setSchema(`point_${user_data?.user_level}`);
         } else {
@@ -270,6 +284,23 @@ const History = () => {
             return <HalfTitle style={{ maxWidth: '1050px' }}>{getTitle(params?.category)}</HalfTitle>
         }
     }
+    const checkOnlyOne = (e) => {
+    }
+    const goToManyPayReady = () => {
+        let pay_list = [];
+        for (var i = 0; i < data.length; i++) {
+            console.log(data[i]?.pk)
+            console.log($(`#${schema}-${data[i]?.pk}`).is(':checked'))
+            if ($(`#${schema}-${data[i]?.pk}`).is(':checked') && data[i]?.status == 0) {
+                pay_list.push(data[i]);
+            }
+        }
+        navigate(`/payready`, {
+            state: {
+                pay_list
+            }
+        })
+    }
     return (
         <>
             <Wrappers>
@@ -323,7 +354,8 @@ const History = () => {
                             optionObj,
                             table: params?.category
                         }, {
-                            onChangeType
+                            onChangeType,
+                            goToManyPayReady
                         })}
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -337,6 +369,7 @@ const History = () => {
                                 schema={schema}
                                 pageSetting={getAuth}
                                 table={params?.category}
+                                checkOnlyOne={checkOnlyOne}
                             />
                         </motion.div>
                     </>}
