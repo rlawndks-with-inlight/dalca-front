@@ -391,14 +391,19 @@ const AddContract = () => {
 
     const addFile = (e) => {
         let { id, files } = e.target;
-        if (e.target.files[0]) {
-            let img_list = [...imgList];
-            img_list.push({
-                url: URL.createObjectURL(e.target.files[0]),
-                content: e.target.files[0]
-            })
-            setImgList(img_list);
+        let img_list = [...imgList];
+
+        for (var i = 0; i < files.length; i++) {
+            if (files[i]) {
+                img_list.push({
+                    url: URL.createObjectURL(files[i]),
+                    content: files[i]
+                })
+            }
         }
+
+        setImgList(img_list);
+
         $(`#${id}`).val("");
     };
     const addPdf = (e) => {
@@ -620,7 +625,7 @@ const AddContract = () => {
                                             </label>
                                         </div>
                                         <div>
-                                            <input type="file" id={`document_src`} onChange={addFile} style={{ display: 'none' }} />
+                                            <input type="file" id={`document_src`} onChange={addFile} style={{ display: 'none' }} multiple />
                                         </div>
                                         <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서 업로드(pdf파일)</CategoryName>
                                         <div style={{ display: 'flex', flexDirection: 'column' }}>
