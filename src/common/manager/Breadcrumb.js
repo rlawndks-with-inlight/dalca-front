@@ -101,7 +101,6 @@ const Breadcrumb = (props) => {
         socket.on('message', (msg) => {
             if (msg?.site == 'manager') {
                 if (msg?.table == 'user' && msg?.signup_user_level == 10) {
-                    console.log(msg)
                     setBellList([...[{
                         pk: msg?.signup_user_pk,
                         id: msg?.signup_user_id,

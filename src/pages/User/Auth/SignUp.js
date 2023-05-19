@@ -108,7 +108,7 @@ const SignUp = () => {
         } else if (params?.user_level == 10) {
             setValues({ ...defaultObj, ...realtorObj });
             setTitle('공인중개사');
-            
+
         } else {
             toast.error('잘못된 접근입니다.');
             navigate(-1);
@@ -137,27 +137,27 @@ const SignUp = () => {
             setOpenConfirmId(false);
         }
     }, [idRef.current.map(item => { return item?.value })])
-useEffect(()=>{
-    if((popupContent?.location && !popupContent?.closed)){
-        try{
-            if(popupContent.location.href == `${frontUrl}/api/returnidurl`){
-                let json = popupContent.document.body.innerText;
-                json = JSON.parse(json);
-                popupContent.close();
-                if(json?.result>0){
-                    toast.success("성공적으로 인증 되었습니다.");
-                    setIsConfirmId(true);
-                }else{
-                    toast.error(json?.message);
+    useEffect(() => {
+        if ((popupContent?.location && !popupContent?.closed)) {
+            try {
+                if (popupContent.location.href == `${frontUrl}/api/returnidurl`) {
+                    let json = popupContent.document.body.innerText;
+                    json = JSON.parse(json);
+                    popupContent.close();
+                    if (json?.result > 0) {
+                        toast.success("성공적으로 인증 되었습니다.");
+                        setIsConfirmId(true);
+                    } else {
+                        toast.error(json?.message);
+                    }
                 }
+            } catch (err) {
+                console.log(err)
             }
-        }catch(err){
-            console.log(err)
+        } else {
+            setTimeLeft(0);
         }
-    }else{
-        setTimeLeft(0);
-    }
-},[timeLeft])
+    }, [timeLeft])
 
 
     function callSa() {
@@ -399,10 +399,10 @@ useEffect(()=>{
         window.scrollTo(0, 0);
     }
     const onNextStep = () => {
-        // if (step == 0 && !isConfirmId) {
-        //     getIdentificationInfo();
-        //     return;
-        // }
+        if (step == 0 && !isConfirmId) {
+            getIdentificationInfo();
+            return;
+        }
         if (params?.user_level == 10 || params?.user_level == 5) {
             setStep(step + 1);
         } else {

@@ -117,7 +117,6 @@ const ChangeCard = () => {
     useEffect(() => {
         let flag = true;
         for (var i = 0; i < cardIdRef.current.length; i++) {
-            console.log(cardIdRef.current[i].value)
             if (!cardIdRef.current[i].value) {
                 flag = false;
             }
@@ -133,7 +132,6 @@ const ChangeCard = () => {
          * 해당 로직은 팝업창 구현으로
          * 가맹점측에서 알맞게 팝업창 구현 해주시면 됩니다.
          */
-        console.log(1)
         var contents;
         var OpenOption = 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=420,height=800,top=100,left=100,';
 

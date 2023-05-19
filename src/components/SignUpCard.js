@@ -149,7 +149,6 @@ const SignUpCard = () => {
     }
     const onSignUp = async () => {
         try {
-            console.log(JSON.stringify(state))
             if (!$('.id').val()&&!state?.id ) {
                     alert('아이디를 입력해주세요.');
             } else if (!$('.name').val() &&!state.name) {

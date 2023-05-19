@@ -289,8 +289,6 @@ const History = () => {
     const goToManyPayReady = () => {
         let pay_list = [];
         for (var i = 0; i < data.length; i++) {
-            console.log(data[i]?.pk)
-            console.log($(`#${schema}-${data[i]?.pk}`).is(':checked'))
             if ($(`#${schema}-${data[i]?.pk}`).is(':checked') && data[i]?.status == 0) {
                 pay_list.push(data[i]);
             }
