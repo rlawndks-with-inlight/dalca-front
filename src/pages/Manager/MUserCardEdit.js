@@ -258,6 +258,25 @@ const MUserCardEdit = () => {
             }
         })
     }
+    const onCancelAutoCard = async () =>{
+        Swal.fire({
+            title: `정기결제 사용을 취소 하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const {data:response} = await axios.post('/api/cancelautocard',{
+                    user_pk: params?.pk
+                })
+                if (response?.result > 0) {
+                    toast.success("성공적으로 정기결제 사용 취소 되었습니다.");
+                } else {
+                    toast.error(response?.message);
+                }
+            }
+        })
+    }
     return (
         <>
             <Breadcrumb title={`${user?.id} 회원 카드 수정`} nickname={myNick} />
@@ -441,6 +460,19 @@ const MUserCardEdit = () => {
                             startIcon={<Icon icon="line-md:confirm" />}
                             onClick={registerAutoCard}
                         >정기결제카드 저장</Button>
+                    </div>
+                     <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        margin: '1rem 0',
+                    }}>
+                        <div />
+                        <Button
+                            sx={{ ...colorButtonStyle }}
+                            startIcon={<Icon icon="line-md:cancel" />}
+                            onClick={onCancelAutoCard}
+                        >정기결제 사용취소</Button>
                     </div>
                 </ContentWrappers>
             </Card>

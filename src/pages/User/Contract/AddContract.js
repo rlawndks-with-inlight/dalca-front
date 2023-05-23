@@ -275,6 +275,7 @@ const AddContract = () => {
             if (params?.pk) {
                 obj['pk'] = params?.pk;
             }
+            console.log(obj)
             const { data: response } = await axios.post(`/api/${params?.pk ? 'update' : 'add'}contract`, obj);
             if (response?.result > 0) {
                 if (!params?.pk) {

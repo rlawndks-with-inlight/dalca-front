@@ -344,7 +344,6 @@ const OptionBox = (props) => {
             }
         }
         const { data: response } = await axios.post(apiStr, obj);
-        console.log(response)
         //setPosts(response?.data);
         await excelDownload(response.data ?? [], objManagerListContent, schema);
     }

@@ -425,6 +425,23 @@ const ChangeCard = () => {
             }
         })
     }
+    const onCancelAutoCard = async () => {
+        Swal.fire({
+            title: `정기결제 사용을 취소 하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const { data: response } = await axios.post('/api/cancelautocard')
+                if (response?.result > 0) {
+                    toast.success("성공적으로 정기결제 사용 취소 되었습니다.");
+                } else {
+                    toast.error(response?.message);
+                }
+            }
+        })
+    }
     const checkOnlyOne = (checkThis) => {
         const checkboxes = document.getElementsByName('user_card-check')
         for (let i = 0; i < checkboxes.length; i++) {
@@ -716,9 +733,18 @@ const ChangeCard = () => {
                                     :
                                     <>
                                     </>}
+
                                 {user?.user_level == 0 ?
                                     <>
+                                        <div style={{margin:'0.5rem auto',maxWidth:'400px',fontSize:theme.size.font5}}>현재 등록된 카드로 매월 정기적으로 월세납부를 원하시면 아래 버튼을 눌러주세요.</div>
                                         <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 월세 정기결제 신청' : '월세 정기결제 카드등록'}</Button>
+                                    </>
+                                    :
+                                    <>
+                                    </>}
+                                {user?.user_level == 0 ?
+                                    <>
+                                        <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '1rem' }} onClick={onCancelAutoCard}>{'정기 결제 사용안함'}</Button>
                                     </>
                                     :
                                     <>

@@ -135,10 +135,17 @@ const MyPage = () => {
     return (
         <>
             <Wrappers className="wrapper" style={{ maxWidth: '800px' }}>
-                <SelectType>
-                    <Type style={{ borderBottom: `4px solid ${location.pathname == '/mypage' ? theme.color.background1 : '#fff'}`, color: `${location.pathname == '/mypage' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/mypage`) }}>내정보</Type>
-                    <Type style={{ borderBottom: `4px solid ${location.pathname == '/history/point' ? theme.color.background1 : '#fff'}`, color: `${location.pathname == '/history/point' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/history/point`) }}>포인트 적립내역 및 사용하기</Type>
-                </SelectType>
+                {auth?.user_level == 10 ?
+                    <>
+                        <SelectType>
+                            <Type style={{ borderBottom: `4px solid ${location.pathname == '/mypage' ? theme.color.background1 : '#fff'}`, color: `${location.pathname == '/mypage' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/mypage`) }}>내정보</Type>
+                            <Type style={{ borderBottom: `4px solid ${location.pathname == '/history/point' ? theme.color.background1 : '#fff'}`, color: `${location.pathname == '/history/point' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/history/point`) }}>포인트 적립내역 및 사용하기</Type>
+                        </SelectType>
+                    </>
+                    :
+                    <>
+                    </>}
+
                 <div style={{ margin: '2rem 0 1rem auto', color: `${theme.color.font2}`, fontSize: theme.size.font4, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center' }} onClick={() => { navigate('/editmyinfo') }}>
                     <div style={{ paddingRight: '8px' }}>내정보 수정하기</div>
                     <MdEdit />
