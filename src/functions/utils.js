@@ -329,7 +329,7 @@ export const excelDownload = async (excelData, objManagerListContent, schema, na
         }
     }
     const ws = XLSX.utils.aoa_to_sheet([
-        ['퍼스트 아카데미']
+        ['달카페이']
         , []
         , name_list
     ]);
