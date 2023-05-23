@@ -67,7 +67,13 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         } else if (data[`is_auto`] == 1) {
             result = '정기납부'
         }
-    } else if (type == 'pay_category') {
+    }else if (type == 'is_appr') {
+        if (data[`${column}`] == 0) {
+            result = '동의안함'
+        } else if (data[`${column}`] == 1) {
+            result = '동의'
+        }
+    }  else if (type == 'pay_category') {
         result = getKoPayCategoryByNum(data?.pay_category)
     } else if (type == 'img') {
         result = data[`${column}`];
