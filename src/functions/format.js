@@ -60,6 +60,16 @@ export const getPayStatus = (data) => {
   else
     return "---"
 }
+export const getPayStatusColor = (data) => {
+  if (data?.status == 0)
+    return "red"
+  else if (data?.status == 1)
+    return "blue"
+  else if (data?.status == -1)
+    return "orange"
+  else
+    return "---"
+}
 export const getLoginTypeByNumber = (num) => {
   if (num == 0) {
     return "일반";

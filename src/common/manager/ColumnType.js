@@ -1,5 +1,5 @@
 import { BiEditAlt } from "react-icons/bi";
-import { getPayStatus, getUserLevelByNumber, getUserLevelColorByNumber } from "../../functions/format";
+import { getPayStatus, getPayStatusColor, getUserLevelByNumber, getUserLevelColorByNumber } from "../../functions/format";
 import { commarNumber, dateFormat, getKoPayCategoryByNum } from "../../functions/utils";
 import theme from "../../styles/theme";
 import { AiFillCreditCard, AiOutlineUnorderedList } from "react-icons/ai";
@@ -59,7 +59,7 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
     } else if (type == 'level') {
         result = getUserLevelByNumber(data[`${column}`])
         if (is_list) {
-            result = <div style={{color:getUserLevelColorByNumber(data[`${column}`])}}>{getUserLevelByNumber(data[`${column}`])}</div>
+            result = <div style={{ color: getUserLevelColorByNumber(data[`${column}`]) }}>{getUserLevelByNumber(data[`${column}`])}</div>
         }
     } else if (type == 'is_auto_pay') {
         if (data[`is_auto`] == 0) {
@@ -67,13 +67,13 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         } else if (data[`is_auto`] == 1) {
             result = '정기납부'
         }
-    }else if (type == 'is_appr') {
+    } else if (type == 'is_appr') {
         if (data[`${column}`] == 0) {
             result = '동의안함'
         } else if (data[`${column}`] == 1) {
             result = '동의'
         }
-    }  else if (type == 'pay_category') {
+    } else if (type == 'pay_category') {
         result = getKoPayCategoryByNum(data?.pay_category)
     } else if (type == 'img') {
         result = data[`${column}`];
@@ -214,6 +214,9 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         }
     } else if (type == 'pay_status') {
         result = getPayStatus(data);
+        if (is_list) {
+            result = <div style={{ color: getPayStatusColor(data) }}>{getPayStatus(data)}</div>
+        }
     }
     return result;
 }
