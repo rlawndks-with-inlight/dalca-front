@@ -135,7 +135,7 @@ const MyPage = () => {
     return (
         <>
             <Wrappers className="wrapper" style={{ maxWidth: '800px' }}>
-                {auth?.user_level == 10 ?
+                {auth?.user_level == 0 ?
                     <>
                         <SelectType>
                             <Type style={{ borderBottom: `4px solid ${location.pathname == '/mypage' ? theme.color.background1 : '#fff'}`, color: `${location.pathname == '/mypage' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/mypage`) }}>내정보</Type>
