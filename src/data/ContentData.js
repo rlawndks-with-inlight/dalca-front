@@ -182,26 +182,23 @@ export const objHistoryListContent = {
     request: {
         title: "문의",
         columns: [
-            columnObjFormat('제목', '', 'text', 'title'),
+            columnObjFormat('제목', '', 'title_link', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('자세히보기', '', 'link', ''),
             columnObjFormat('답변상태', '', 'is_request_com', ''),
         ]
     },
     notice: {
         title: "공지사항",
         columns: [
-            columnObjFormat('제목', '', 'text', 'title'),
+            columnObjFormat('제목', '', 'title_link', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('자세히보기', '', 'link', ''),
         ]
     },
     faq: {
         title: "자주 하는 질문",
         columns: [
-            columnObjFormat('제목', '', 'text', 'title'),
+            columnObjFormat('제목', '', 'title_link', 'title'),
             columnObjFormat('등록일', '', 'date', 'date'),
-            columnObjFormat('자세히보기', '', 'link', ''),
         ]
     },
     real_estate: {

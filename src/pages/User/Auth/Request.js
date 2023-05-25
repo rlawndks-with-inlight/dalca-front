@@ -74,17 +74,17 @@ const Request = () => {
                     <Title>문의하기</Title>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>제목</div>
-                        <Input style={{ margin: '0 0 0 8px', width: '80%', maxWidth: '650px', padding: '14px 8px' }} className='title_' disabled={params?.pk > 0 ? true : false} />
+                        <Input style={{ margin: '0 0 0 8px', width: '80%', maxWidth: '700px', padding: '14px 8px' }} className='title_' disabled={params?.pk > 0 ? true : false} />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
                         <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>내용</div>
-                        <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '600px' }} className='note' disabled={params?.pk > 0 ? true : false} />
+                        <Textarea style={{ margin: '0 0 0 8px', width: '80%', height: '360px', maxWidth: '700px' }} className='note' disabled={params?.pk > 0 ? true : false} />
                     </div>
                     {post?.status == 1 ?
                         <>
                             <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
                                 <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>답변</div>
-                                <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '600px' }} className='reply' disabled={params?.pk > 0 ? true : false} />
+                                <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '700px' }} className='reply' disabled={params?.pk > 0 ? true : false} />
                             </div>
                             <div style={{ display: "flex", marginTop: '16px', marginLeft: 'auto' }}>
                                 <Button sx={borderButtonStyle} onClick={() => navigate(-1)}>뒤로가기</Button>

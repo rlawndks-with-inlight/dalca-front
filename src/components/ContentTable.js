@@ -300,6 +300,15 @@ const ContentTable = (props) => {
 
                                                     :
                                                     null}
+                                                {column.type == 'title_link' ?
+                                                    <>
+                                                        <div style={{ textAlign: 'left', padding: '0.5rem', cursor: 'pointer', }} onClick={()=>{
+                                                            goToLink(item)
+                                                        }}>{item.title}</div>
+                                                    </>
+                                                    :
+                                                    <>
+                                                    </>}
                                                 {column.type == 'link' ?
                                                     <IconButton onClick={() => {
                                                         goToLink(item)
