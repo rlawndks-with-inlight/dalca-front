@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { commarNumber, formatPhoneNumber, getKoLevelByNum, getKoPayCategoryByNum } from "../functions/utils";
 import { RiDeleteBinLine } from 'react-icons/ri'
 import axios from "axios";
-import { backUrl } from "../data/Data";
+import { backUrl, socket } from "../data/Data";
 import AddButton from "./elements/button/AddButton";
 import theme from "../styles/theme";
 import { useEffect, useState } from "react";
@@ -210,6 +210,12 @@ const ContentTable = (props) => {
                     pay_pk: pk
                 })
                 if (response?.result > 0) {
+                    socket.emit('message', {
+                        method: 'want_pay_cancel',
+                        data: {
+                            pk:pk
+                        }
+                    });
                     toast.success('취소요청이 성공적으로 발송되었습니다.');
                 } else {
                     toast.error(response?.message);

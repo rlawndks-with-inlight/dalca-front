@@ -2,6 +2,7 @@
     --background1:#3250D2;
     --background2:#FFDC00;
 }
+
 .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active{
     color: var(--background2) !important;
 }
@@ -62,7 +63,11 @@ body::-webkit-scrollbar-thumb {
 .none-scroll::-webkit-scrollbar {
     display: none !important; /* Chrome, Safari, Opera*/
 }
+@font-face {
 
+}
+.sidebar-menu-list{
+}
 .ql-editor{
     -ms-overflow-style: none;
     /* IE and Edge */

@@ -377,9 +377,12 @@ const SignUp = () => {
         const { data: response } = await axios.post('/api/adduser', obj);
         if (response?.result > 0) {
             socket.emit('message', {
-                signup_user_level: params?.user_level,
-                signup_user_id: obj?.id,
-                signup_user_pk: response?.data?.pk,
+                method: 'signup_user_level_10',
+                data: {
+                    signup_user_level: params?.user_level,
+                    signup_user_id: obj?.id,
+                    signup_user_pk: response?.data?.pk,
+                }
             });
             toast.success(response?.message);
             navigate('/login');

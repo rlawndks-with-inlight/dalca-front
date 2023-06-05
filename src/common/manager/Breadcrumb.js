@@ -97,28 +97,38 @@ const Breadcrumb = (props) => {
         }
     }, [])
     useEffect(() => {
-        getBellContent();
         socket.on('message', (msg) => {
-            if (msg?.site == 'manager') {
-                if (msg?.table == 'user' && msg?.signup_user_level == 10) {
+            let method = msg?.method;
+            let data = msg?.data;
+            if (method == 'signup_user_level_10') {
+                if (data?.site == 'manager') {
                     getBellContent();
                     toast.success(`새로운 공인중개사가 회원가입 하였습니다.`);
                 }
             }
+            if (method == 'add_request') {
+                if (data?.site == 'manager') {
+                    getBellContent();
+                    toast.success(`문의하기 요청이 들어왔습니다.`);
+                }
+            }
+            if (method == 'want_pay_cancel') {
+                if (data?.site == 'manager') {
+                    getBellContent();
+                    toast.success(`결제취소 요청이 들어왔습니다.`);
+                }
+            }
         });
     }, [])
+    useEffect(()=>{
+        getBellContent();
+    },[location.pathname])
     const getBellContent = async () => {
-        let three_day_ago = returnMoment(-3).substring(0, 10);
-        const { data: response } = await axios.get(`/api/items?table=user&level=10&order=pk&start_date=${three_day_ago}`)
-        let bell_list = response?.data;
-        let bell_count = 0;
-        for (var i = 0; i < bell_list.length; i++) {
-            if (bell_list[i]?.status != 1) {
-                bell_count++;
-            }
-        }
+        const { data: response } = await axios.get(`/api/getbellcontent`)
+        let bell_list = response?.data?.data;
+        let bell_count = response?.data?.bell_count;
         setBellCount(bell_count)
-        setBellList(response?.data);
+        setBellList(bell_list);
     }
     useEffect(() => {
         if (!localStorage.getItem('auth')) {
@@ -187,8 +197,8 @@ const Breadcrumb = (props) => {
                                         <>
                                             {bellList.map((item, idx) => (
                                                 <>
-                                                    <BellContent href={`/manager/edit/user/${item?.pk}`} className={`user-${item?.pk}`}>
-                                                        <div style={{ fontSize: theme.size.font5 }}>{item?.id} 공인중개사 {item?.status == 1 ? '승인 완료 되었습니다.' : '승인 대기중입니다.'}</div>
+                                                    <BellContent href={item?.link}>
+                                                        <div style={{ fontSize: theme.size.font5 }}>{item?.note}</div>
                                                         <div style={{ marginLeft: 'auto', fontSize: theme.size.font6, color: theme.color.font3 }}>{item?.date}</div>
                                                     </BellContent>
                                                 </>
@@ -196,7 +206,7 @@ const Breadcrumb = (props) => {
                                         </>
                                         :
                                         <>
-                                        알림이 없습니다.
+                                            알림이 없습니다.
                                         </>}
 
                                 </div>

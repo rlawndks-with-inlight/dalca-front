@@ -9,6 +9,7 @@ import { Button } from "@mui/material";
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
+import { socket } from "../../../data/Data";
 const Request = () => {
     const navigate = useNavigate();
     const params = useParams();
@@ -56,6 +57,12 @@ const Request = () => {
                 note: $('.note').val(),
             })
             if (response?.result > 0) {
+                socket.emit('message', {
+                    method: 'add_request',
+                    data: {
+                        title: $('.title_').val(),
+                    }
+                });
                 toast.success("성공적으로 저장되었습니다.");
                 navigate('/history/request', { state: { type_num: 1 } })
             } else {
