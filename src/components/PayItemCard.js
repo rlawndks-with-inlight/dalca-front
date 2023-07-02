@@ -62,7 +62,7 @@ const PayItemCard = (props) => {
                         is_mobile: window.innerWidth >= 700 ? 0 : 1
                     }
                     let query = Object.entries(obj).map(e => e.join('=')).join('&');
-                    window.location.href = `https://worker1.payvery.kr/payment/welcome/auth?${query}`;
+                    window.location.href = `https://worker1.payvery.kr/payment/kcp/${window.innerWidth >= 700 ? 'pc' : 'mobile'}/order?${query}`;
                     // const { data: response } = await axios.post('/api/paydirect', {
                     //     item_pk: item?.pk
                     // });
