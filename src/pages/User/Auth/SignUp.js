@@ -901,7 +901,7 @@ const SignUp = () => {
                                 </>
                                 :
                                 <>
-                                    <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={onNextStep}>임시저장</Button>
+                                    <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={onNextStep}>다음단계로</Button>
                                 </>}
                         </>}
                 </ContentWrappers>
