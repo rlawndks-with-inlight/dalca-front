@@ -183,6 +183,7 @@ export const objManagerListContent = {
             columnObjFormat('공인중개사명', '', 'text', 'realtor_name'),
             columnObjFormat('결제예정일', '', 'text', 'day'),
             columnObjFormat('생성일', '', 'text', 'date'),
+            columnObjFormat('결제일', '', 'text', 'trade_date'),
             columnObjFormat('금액', '', 'number', 'price'),
             columnObjFormat('카드수수료', '', 'percent', 'card_percent'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
