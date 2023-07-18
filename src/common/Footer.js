@@ -56,7 +56,12 @@ const Footer = () => {
                 </>
                 :
                 <>
+
                     <Wrappers className="footer">
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Post onClick={() => navigate('/policy/0')} style={{ cursor: 'pointer', marginLeft: '96px' }}>이용약관</Post>
+                            <Post onClick={() => navigate('/policy/1')} style={{ cursor: 'pointer', borderRight: 'none' }}>개인정보처리방침</Post>
+                        </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Img src={logoSrc} alt="footer" />
                             <Post>주식회사 오앤유페이먼츠</Post>

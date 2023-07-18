@@ -59,7 +59,7 @@ const getTitle = (param_category) => {
 }
 
 const returnTopContent = (data, func) => {
-    let { userData, table } = data;
+    let { userData, table, optionObj } = data;
     const { onChangeType } = func;
     const onClickDate = (num) => {
         if (num == 1) {
@@ -121,6 +121,16 @@ const returnTopContent = (data, func) => {
             </>
         )
     }
+    if (table == 'point') {
+        return (
+            <>
+             <Row>
+             <div> 총 포인트: </div>
+             <div style={{marginLeft:'0.5rem'}}>{commarNumber(optionObj?.point_sum)}P</div>
+             </Row>
+            </>
+        )
+    }
 }
 const returnOptionBox = (data, func) => {
     let { table, optionObj } = data;
@@ -169,6 +179,7 @@ const History = () => {
     const getAuth = async () => {
         setLoading(true);
         let user_data = getLocalStorage('auth');
+
         setUserData(user_data);
         if (params?.category == 'contract') {
             setSchema(`contract_${user_data?.user_level}`);
@@ -216,6 +227,7 @@ const History = () => {
         if (response?.result < 0) {
             toast.error(response?.message);
         } else {
+            console.log(response.data.option_obj)
             setOptionObj(response?.data?.option_obj)
             setData(response?.data?.data);
             setPageList(range(1, response?.data?.maxPage ?? 0));
@@ -318,29 +330,34 @@ const History = () => {
                 {getTitleForm()}
                 {returnTopContent({
                     userData,
-                    table: params?.category
+                    table: params?.category,
+                    optionObj
                 }, {
                     onChangeType
                 })}
-                <InputComponent
-                    label={'검색어를 입력해 주세요.'}
-                    input_type={{
-                        placeholder: ''
-                    }}
-                    class_name='keyword'
-                    is_divider={true}
-                    icon_label={
-                        <Icon icon='ic:outline-search' style={{ cursor: 'pointer', marginBottom: '8px' }} />
-                    }
-                    onChange={(e) => setSearchKeyword(e)}
-                    value={searchKeyword}
-                    onClickIcon={() => {
-                        changePage(1)
-                    }}
-                    onKeyPress={() => {
-                        changePage(1)
-                    }}
-                />
+                {params?.category != 'point' &&
+                    <>
+                        <InputComponent
+                            label={'검색어를 입력해 주세요.'}
+                            input_type={{
+                                placeholder: ''
+                            }}
+                            class_name='keyword'
+                            is_divider={true}
+                            icon_label={
+                                <Icon icon='ic:outline-search' style={{ cursor: 'pointer', marginBottom: '8px' }} />
+                            }
+                            onChange={(e) => setSearchKeyword(e)}
+                            value={searchKeyword}
+                            onClickIcon={() => {
+                                changePage(1)
+                            }}
+                            onKeyPress={() => {
+                                changePage(1)
+                            }}
+                        />
+                    </>}
+
                 {loading ?
                     <>
                         <Loading />
