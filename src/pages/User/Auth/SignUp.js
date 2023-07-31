@@ -115,15 +115,9 @@ const SignUp = () => {
         }
     }, []);
     const getIdentificationInfo = async () => {
-        const { data: response } = await axios.post(`/api/gii`, {
-            level: params?.user_level,
-            name: values.name,
-            phone: values.phone,
-            birth: values.id_number_front
-        });
-        setIdInfo(response?.data)
-
-        setOpenConfirmId(true);
+        const { form } = document;
+        const {data:response} = await axios.post('/api/nice-token');
+        console.log(response)
     }
     useEffect(() => {
         let flag = true;
@@ -465,19 +459,11 @@ const SignUp = () => {
 
     return (
         <>
-            <form name="saForm" style={{ display: 'none' }}>
-                <input type="text" name="mid" value={idInfo?.mid} ref={el => idRef.current[0] = el} /><br />
-                <input type="text" name="reqSvcCd" value={idInfo?.reqSvcCd} ref={el => idRef.current[1] = el} /><br />
-                <input type="text" name="mTxId" value={idInfo?.mTxId} ref={el => idRef.current[2] = el} /><br />
-                <input type="text" name="authHash" value={idInfo?.authHash} ref={el => idRef.current[3] = el} /><br />
-                <input type="text" name="flgFixedUser" value={idInfo?.flgFixedUser} ref={el => idRef.current[4] = el} /><br />
-                <input type="text" name="userName" value={idInfo?.userName} ref={el => idRef.current[5] = el} /><br />
-                <input type="text" name="userPhone" value={idInfo?.userPhone} ref={el => idRef.current[6] = el} /><br />
-                <input type="text" name="userBirth" value={idInfo?.userBirth} ref={el => idRef.current[7] = el} /><br />
-                <input type="text" name="userHash" value={idInfo?.userHash} ref={el => idRef.current[8] = el} /><br />
-                <input type="text" name="reservedMsg" value={idInfo?.reservedMsg} ref={el => idRef.current[9] = el} /><br />
-                <input type="text" name="successUrl" value={frontUrl + '/api/returnidurl'} ref={el => idRef.current[10] = el} /><br />
-                <input type="text" name="failUrl" value={frontUrl + '/api/returnidurl'} ref={el => idRef.current[11] = el} /><br />
+            <form name="form" id="form" action="https://nice.checkplus.co.kr/CheckPlusSafeModel/service.cb" style={{ display: 'none' }}>
+                <input type="hidden" id="m" name="m" value="service" />
+                <input type="hidden" id="token_version_id" name="token_version_id" value="" />
+                <input type="hidden" id="enc_data" name="enc_data" />
+                <input type="hidden" id="integrity_value" name="integrity_value" />
             </form>
             <FakeHeaders label='회원가입' />
             <Wrappers className="wrapper">
