@@ -122,7 +122,7 @@ const SignUp = () => {
 
         if (rtnRef.current[0].value && rtnRef.current[1].value && rtnRef.current[2].value) {
             const form = document.getElementById('form_chk');
-            if(window.innerWidth > 1000){
+            if(window.innerWidth > 1000){ // pc
                 const left = window.screen.width / 2 - 500 / 2;
                 const top = window.screen.height / 2 - 800 / 2;
                 const option = `status=no, menubar=no, toolbar=no, resizable=no, width=500, height=600, left=${left}, top=${top}`;
@@ -132,7 +132,7 @@ const SignUp = () => {
                 form.enc_data.value =  rtnRef.current[1].value;
                 form.integrity_value.value = rtnRef.current[2].value;
                 form.submit();
-            }else{
+            }else{ //mobile
 
             }
         }
@@ -140,7 +140,7 @@ const SignUp = () => {
     const getIdentificationInfo = async () => {
         const { data: response } = await axios.post('/api/nice-token', {
             level: params?.user_level,
-            return_url:`${window.location.origin}/${location.pathname}`
+            return_url:`${window.location.origin}${location.pathname}`
         });
         if (response?.result > 0) {
             setRtn(response?.data)
