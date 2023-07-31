@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { GrFormPrevious } from "react-icons/gr";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ContentWrappers, FakeHeaders, HalfTitle, InputComponent, RowContent, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import theme from "../../../styles/theme";
@@ -40,6 +40,7 @@ function Countdown({ seconds, timeLeft, setTimeLeft }) {
 
 const SignUp = () => {
     const params = useParams();
+    const location = useLocation();
     const navigate = useNavigate();
 
     const rtnRef = useRef([]);
@@ -118,15 +119,28 @@ const SignUp = () => {
         }
     }, []);
     useEffect(() => {
-   
-        if(rtnRef.current[1].value && rtnRef.current[2].value){
+
+        if (rtnRef.current[0].value && rtnRef.current[1].value && rtnRef.current[2].value) {
             const form = document.getElementById('form_chk');
-            form.submit();
+            if(window.innerWidth > 1000){
+                const left = window.screen.width / 2 - 500 / 2;
+                const top = window.screen.height / 2 - 800 / 2;
+                const option = `status=no, menubar=no, toolbar=no, resizable=no, width=500, height=600, left=${left}, top=${top}`;
+                window.open('', 'nicePopup', option);
+                form.target = 'nicePopup';
+                form.token_version_id.value = rtnRef.current[0].value;
+                form.enc_data.value =  rtnRef.current[1].value;
+                form.integrity_value.value = rtnRef.current[2].value;
+                form.submit();
+            }else{
+
+            }
         }
-    }, [rtnRef.current.map(item=>{return item.value})])
+    }, [rtnRef.current.map(item => { return item.value })])
     const getIdentificationInfo = async () => {
         const { data: response } = await axios.post('/api/nice-token', {
-            level: params?.user_level
+            level: params?.user_level,
+            return_url:`${window.location.origin}/${location.pathname}`
         });
         if (response?.result > 0) {
             setRtn(response?.data)
