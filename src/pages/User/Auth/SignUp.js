@@ -43,9 +43,6 @@ const SignUp = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const rtnRef = useRef([]);
-
-
     const [title, setTitle] = useState("");
     const [signUpCount, setSignUpCount] = useState(0);
     const [isSeePostCode, setIsSeePostCode] = useState(false);
@@ -62,7 +59,6 @@ const SignUp = () => {
     const [openConfirmId, setOpenConfirmId] = useState(false);
     const [popupContent, setPopupContent] = useState(undefined)
     const [timeLeft, setTimeLeft] = useState(0);
-    const [rtn, setRtn] = useState({});
 
     const defaultObj = {
         id: '',
@@ -118,32 +114,25 @@ const SignUp = () => {
             navigate(-1);
         }
     }, []);
-    useEffect(() => {
-
-        if (rtnRef.current[0].value && rtnRef.current[1].value && rtnRef.current[2].value) {
-            const form = document.getElementById('form_chk');
-            if(window.innerWidth > 1000){ // pc
-                const left = window.screen.width / 2 - 500 / 2;
-                const top = window.screen.height / 2 - 800 / 2;
-                const option = `status=no, menubar=no, toolbar=no, resizable=no, width=500, height=600, left=${left}, top=${top}`;
-                window.open('', 'nicePopup', option);
-                form.target = 'nicePopup';
-                form.token_version_id.value = rtnRef.current[0].value;
-                form.enc_data.value =  rtnRef.current[1].value;
-                form.integrity_value.value = rtnRef.current[2].value;
-                form.submit();
-            }else{ //mobile
-
-            }
-        }
-    }, [rtnRef.current.map(item => { return item.value })])
     const getIdentificationInfo = async () => {
+        const { form } = document;
+        const left = window.screen.width / 2 - 500 / 2;
+        const top = window.screen.height / 2 - 800 / 2;
+        const option = `status=no, menubar=no, toolbar=no, resizable=no, width=500, height=600, left=${left}, top=${top}`;
+
         const { data: response } = await axios.post('/api/nice-token', {
             level: params?.user_level,
-            return_url:`${window.location.origin}${location.pathname}`
+            return_url: `${backUrl}/api/nice-result`
         });
-        if (response?.result > 0) {
-            setRtn(response?.data)
+        if (response?.result > 0 && form) {
+            const { enc_data, integrity_value, token_version_id } = response?.data;
+            window.open('', 'nicePopup', option);
+
+            form.target = 'nicePopup';
+            form.enc_data.value = enc_data;
+            form.token_version_id.value = token_version_id;
+            form.integrity_value.value = integrity_value;
+            form.submit();
         }
     }
     useEffect(() => {
@@ -167,28 +156,6 @@ const SignUp = () => {
             setTimeLeft(0);
         }
     }, [timeLeft])
-
-
-    function callSa() {
-        let newWindow = popupCenter();
-        setPopupContent(newWindow);
-        setTimeLeft(300);
-        if (newWindow != undefined && newWindow != null) {
-            document.saForm.setAttribute("target", "sa_popup");
-            document.saForm.setAttribute("post", "post");
-            document.saForm.setAttribute("action", "https://sa.inicis.com/auth");
-            document.saForm.submit();
-        }
-    }
-
-    function popupCenter() {
-        let _width = 400;
-        let _height = 620;
-        var xPos = (document.body.offsetWidth / 2) - (_width / 2); // 가운데 정렬
-        xPos += window.screenLeft; // 듀얼 모니터일 때
-
-        return window.open("", "sa_popup", "width=" + _width + ", height=" + _height + ", left=" + xPos + ", menubar=yes, status=yes, titlebar=yes, resizable=yes");
-    }
 
     useEffect(() => {
         if (step == 1 && params?.user_level == 10) {
@@ -474,13 +441,11 @@ const SignUp = () => {
 
     return (
         <>
-            <form name="form_chk" id="form_chk" method="get" action="https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb" style={{
-                display: 'none'
-            }}>
+            <form name="form" id="form" action="https://nice.checkplus.co.kr/CheckPlusSafeModel/service.cb" style={{display:'none'}}>
                 <input type="hidden" id="m" name="m" value="service" />
-                <input type="hidden" id="token_version_id" name="token_version_id" value={rtn?.token_version_id} ref={(e) => (rtnRef.current[0] = e)} />
-                <input type="hidden" id="enc_data" name="enc_data" value={rtn?.enc_data} ref={(e) => (rtnRef.current[1] = e)} />
-                <input type="hidden" id="integrity_value" name="integrity_value" value={rtn?.integrity_value} ref={(e) => (rtnRef.current[2] = e)} />
+                <input type="hidden" id="token_version_id" name="token_version_id" value="" />
+                <input type="hidden" id="enc_data" name="enc_data" />
+                <input type="hidden" id="integrity_value" name="integrity_value" />
             </form>
             <FakeHeaders label='회원가입' />
             <Wrappers className="wrapper">
