@@ -42,7 +42,8 @@ const SignUp = () => {
     const params = useParams();
     const navigate = useNavigate();
 
-    const idRef = useRef([]);
+    const rtnRef = useRef([]);
+
 
     const [title, setTitle] = useState("");
     const [signUpCount, setSignUpCount] = useState(0);
@@ -60,6 +61,8 @@ const SignUp = () => {
     const [openConfirmId, setOpenConfirmId] = useState(false);
     const [popupContent, setPopupContent] = useState(undefined)
     const [timeLeft, setTimeLeft] = useState(0);
+    const [rtn, setRtn] = useState({});
+
     const defaultObj = {
         id: '',
         pw: '',
@@ -114,23 +117,21 @@ const SignUp = () => {
             navigate(-1);
         }
     }, []);
-    const getIdentificationInfo = async () => {
-        const { form } = document;
-        const {data:response} = await axios.post('/api/nice-token');
-        console.log(response)
-    }
     useEffect(() => {
-        let flag = true;
-        for (var i = 0; i < idRef.current.length; i++) {
-            if (!idRef.current[i].value) {
-                flag = false;
-            }
+   
+        if(rtnRef.current[1].value && rtnRef.current[2].value){
+            const form = document.getElementById('form_chk');
+            form.submit();
         }
-        if (flag && openConfirmId) {
-            callSa()
-            setOpenConfirmId(false);
+    }, [rtnRef.current.map(item=>{return item.value})])
+    const getIdentificationInfo = async () => {
+        const { data: response } = await axios.post('/api/nice-token', {
+            level: params?.user_level
+        });
+        if (response?.result > 0) {
+            setRtn(response?.data)
         }
-    }, [idRef.current.map(item => { return item?.value })])
+    }
     useEffect(() => {
         if ((popupContent?.location && !popupContent?.closed)) {
             try {
@@ -459,11 +460,13 @@ const SignUp = () => {
 
     return (
         <>
-            <form name="form" id="form" action="https://nice.checkplus.co.kr/CheckPlusSafeModel/service.cb" style={{ display: 'none' }}>
+            <form name="form_chk" id="form_chk" method="get" action="https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb" style={{
+                display: 'none'
+            }}>
                 <input type="hidden" id="m" name="m" value="service" />
-                <input type="hidden" id="token_version_id" name="token_version_id" value="" />
-                <input type="hidden" id="enc_data" name="enc_data" />
-                <input type="hidden" id="integrity_value" name="integrity_value" />
+                <input type="hidden" id="token_version_id" name="token_version_id" value={rtn?.token_version_id} ref={(e) => (rtnRef.current[0] = e)} />
+                <input type="hidden" id="enc_data" name="enc_data" value={rtn?.enc_data} ref={(e) => (rtnRef.current[1] = e)} />
+                <input type="hidden" id="integrity_value" name="integrity_value" value={rtn?.integrity_value} ref={(e) => (rtnRef.current[2] = e)} />
             </form>
             <FakeHeaders label='회원가입' />
             <Wrappers className="wrapper">
