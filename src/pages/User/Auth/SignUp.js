@@ -21,6 +21,7 @@ import Policy from "../Policy/Policy";
 import { PAY_INFO } from "../../../data/ContentData";
 import { backUrl, frontUrl, socket } from "../../../data/Data";
 import Loading from "../../../components/Loading";
+import { getUserLevelByNumber } from "../../../functions/format";
 
 
 const SignUp = () => {
@@ -82,21 +83,49 @@ const SignUp = () => {
             $(`.id_number_back`).focus();
         }
     }
-    useEffect(() => {
-        if (params?.user_level == 0) {
-            setValues(defaultObj);
-            setTitle('임차인');
-        } else if (params?.user_level == 5) {
-            setValues({ ...defaultObj, ...landlordObj });
-            setTitle('임대인');
-        } else if (params?.user_level == 10) {
-            setValues({ ...defaultObj, ...realtorObj });
-            setTitle('공인중개사');
-
-        } else {
-            toast.error('잘못된 접근입니다.');
-            navigate(-1);
+    function searchToObject(search) {
+        var pairs = search.substring(1).split("&"),
+          obj = {},
+          pair,
+          i;
+        for ( i in pairs ) {
+          if ( pairs[i] === "" ) continue;
+      
+          pair = pairs[i].split("=");
+          obj[ decodeURIComponent( pair[0] ) ] = decodeURIComponent( pair[1] );
         }
+      
+        return obj;
+      }
+    useEffect(() => {
+        let query_object = searchToObject(decodeURIComponent(location.search));
+        if(query_object?.name && query_object?.mobileno){
+            query_object['receivedata'] = JSON.parse(query_object?.receivedata);
+            setValues({
+                ...query_object?.receivedata,
+                phone:query_object?.mobileno,
+                name:query_object?.name,
+                id_number:query_object?.birthdate,
+            })
+            setIsCheckId(query_object?.receivedata?.isCheckId);
+            setTitle(getUserLevelByNumber(query_object?.receivedata?.user_level));
+        }else{
+            if (params?.user_level == 0) {
+                setValues(defaultObj);
+                setTitle('임차인');
+            } else if (params?.user_level == 5) {
+                setValues({ ...defaultObj, ...landlordObj });
+                setTitle('임대인');
+            } else if (params?.user_level == 10) {
+                setValues({ ...defaultObj, ...realtorObj });
+                setTitle('공인중개사');
+    
+            } else {
+                toast.error('잘못된 접근입니다.');
+                navigate(-1);
+            }
+        }
+        
     }, []);
     const getIdentificationInfo = async () => {
         const { form } = document;
@@ -117,14 +146,21 @@ const SignUp = () => {
         setReturnUrl(return_url);
         if (response?.result > 0 && form) {
             const { enc_data, integrity_value, token_version_id } = response?.data;
-            let popup = window.open('', 'nicePopup', option);
-            setPopupContent(popup);
-            form.target = 'nicePopup';
-            form.enc_data.value = enc_data;
-            form.token_version_id.value = token_version_id;
-            form.integrity_value.value = integrity_value;
-            form.submit();
-
+            if (device_type == 'pc') {
+                let popup = window.open('', 'nicePopup', option);
+                setPopupContent(popup);
+                form.target = 'nicePopup';
+                form.enc_data.value = enc_data;
+                form.token_version_id.value = token_version_id;
+                form.integrity_value.value = integrity_value;
+                form.submit();
+            } else {
+                form.target = 'nicePopup';
+                form.enc_data.value = enc_data;
+                form.token_version_id.value = token_version_id;
+                form.integrity_value.value = integrity_value;
+                form.submit();
+            }
         }
     }
 
@@ -145,7 +181,9 @@ const SignUp = () => {
             let json = popupContent.document.body.innerText;
             json = JSON.parse(json);
             let resData = json?.data;
+            console.log(json);
             setValues({ ...values, ['name']: resData?.name, ['phone']: resData?.mobileno, ['id_number']: resData?.birthdate, });
+            console.log(currentUrl);
             if (json?.result > 0) {
                 toast.success("성공적으로 인증 되었습니다.");
             } else {
@@ -380,7 +418,7 @@ const SignUp = () => {
                 toast.error('비밀번호 정규식을 지켜주세요.');
                 return;
             }
-            if (values?.pw != values?.pw_check) {
+            if(values?.pw != values?.pw_check){
                 toast.error("비밀번호가 일치하지 않습니다.");
                 return;
             }
@@ -419,6 +457,7 @@ const SignUp = () => {
             </form>
             <FakeHeaders label='회원가입' />
             <Wrappers className="wrapper">
+
                 <ContentWrappers>
                     {loading ?
                         <>
