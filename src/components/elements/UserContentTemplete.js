@@ -154,7 +154,7 @@ export const FakeHeaders = (props) => {
         <>
             <HeaderContainer>
                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '90%', margin: 'auto' }}>
-                    <GrFormPrevious style={{ fontSize: theme.size.font2, cursor: 'pointer' }} onClick={() => navigate(-1)} />
+                    <GrFormPrevious style={{ fontSize: theme.size.font2, cursor: 'pointer' }} onClick={() => navigate('/')} />
                     <div style={{ fontWeight: 'bold' }}>{label}</div>
                     <div style={{ width: '25px' }} />
                 </div>

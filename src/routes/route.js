@@ -67,7 +67,6 @@ const zManagerRoute = [
 ];
 const zUserRoute = [
     { link: '/home', element: <Home />, title: "홈" },
-    { link: '/insert-info', element: <InsertInfo />, title: "정보등록" },
     { link: '/post/:table/:pk', element: <Post />, title: "게시물" },
     { link: '/addcontract', element: <AddContract />, title: "" },
     { link: '/addcontract/:pk', element: <AddContract />, title: "" },
