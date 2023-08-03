@@ -90,15 +90,15 @@ const SignUp = () => {
           i;
         for ( i in pairs ) {
           if ( pairs[i] === "" ) continue;
-      
           pair = pairs[i].split("=");
-          obj[ decodeURIComponent( pair[0] ) ] = decodeURIComponent( pair[1] );
+          obj[ decodeURIComponent( pair[0] ) ] = decodeURIComponent( pair[1] ).replaceAll('+', ' ');
         }
       
         return obj;
       }
     useEffect(() => {
         let query_object = searchToObject(decodeURIComponent(location.search));
+        console.log(query_object)
         if(query_object?.name && query_object?.mobileno){
             query_object['receivedata'] = JSON.parse(query_object?.receivedata);
             setValues({
@@ -155,7 +155,7 @@ const SignUp = () => {
                 form.integrity_value.value = integrity_value;
                 form.submit();
             } else {
-                form.target = 'nicePopup';
+                form.target = '_self';
                 form.enc_data.value = enc_data;
                 form.token_version_id.value = token_version_id;
                 form.integrity_value.value = integrity_value;
@@ -163,7 +163,6 @@ const SignUp = () => {
             }
         }
     }
-
     useEffect(() => {
         if (!popupContent) {
             return;
