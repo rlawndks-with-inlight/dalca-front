@@ -22,21 +22,6 @@ import { PAY_INFO } from "../../../data/ContentData";
 import { backUrl, frontUrl, socket } from "../../../data/Data";
 import Loading from "../../../components/Loading";
 
-function Countdown({ seconds, timeLeft, setTimeLeft }) {
-
-
-    useEffect(() => {
-        // 1초마다 timeLeft 값을 1씩 감소시킵니다.
-        const timer = setInterval(() => {
-            setTimeLeft((prevTime) => prevTime - 1);
-        }, 1000);
-
-        // 컴포넌트가 언마운트되면 타이머를 정리합니다.
-        return () => clearInterval(timer);
-    }, [seconds]);
-
-    return <div></div>;
-}
 
 const SignUp = () => {
     const params = useParams();
@@ -57,6 +42,7 @@ const SignUp = () => {
     const [idInfo, setIdInfo] = useState({});
     const [isConfirmId, setIsConfirmId] = useState(false);
     const [openConfirmId, setOpenConfirmId] = useState(false);
+    const [returnUrl, setReturnUrl] = useState("");
     const [popupContent, setPopupContent] = useState(undefined)
     const [timeLeft, setTimeLeft] = useState(0);
 
@@ -66,10 +52,8 @@ const SignUp = () => {
         pw_check: '',
         address: '',
         address_detail: '',
-        id_number_front: '',
-        id_number_back: '',
+        id_number: '',
         phone: '',
-        phoneCheck: '',
         name: '',
         user_level: params?.user_level
     }
@@ -119,44 +103,58 @@ const SignUp = () => {
         const left = window.screen.width / 2 - 500 / 2;
         const top = window.screen.height / 2 - 800 / 2;
         const option = `status=no, menubar=no, toolbar=no, resizable=no, width=500, height=600, left=${left}, top=${top}`;
-
+        let device_type = window.innerWidth > 800 ? 'pc' : 'mobile';
+        let return_url = `${window.location.origin}/api/nice-result`;
         const { data: response } = await axios.post('/api/nice-token', {
             level: params?.user_level,
-            return_url: `${backUrl}/api/nice-result`
+            return_url: return_url,
+            receive_data: JSON.stringify({
+                ...values,
+                device_type: device_type,
+                isCheckId: isCheckId,
+            })
         });
+        setReturnUrl(return_url);
         if (response?.result > 0 && form) {
             const { enc_data, integrity_value, token_version_id } = response?.data;
-            window.open('', 'nicePopup', option);
-
+            let popup = window.open('', 'nicePopup', option);
+            setPopupContent(popup);
             form.target = 'nicePopup';
             form.enc_data.value = enc_data;
             form.token_version_id.value = token_version_id;
             form.integrity_value.value = integrity_value;
             form.submit();
+
         }
     }
-    useEffect(() => {
-        if ((popupContent?.location && !popupContent?.closed)) {
-            try {
-                if (popupContent.location.href == `${frontUrl}/api/returnidurl`) {
-                    let json = popupContent.document.body.innerText;
-                    json = JSON.parse(json);
-                    popupContent.close();
-                    if (json?.result > 0) {
-                        toast.success("성공적으로 인증 되었습니다.");
-                        setIsConfirmId(true);
-                    } else {
-                        toast.error(json?.message);
-                    }
-                }
-            } catch (err) {
-                console.log(err)
-            }
-        } else {
-            setTimeLeft(0);
-        }
-    }, [timeLeft])
 
+    useEffect(() => {
+        if (!popupContent) {
+            return;
+        }
+        const timer = setInterval(() => {
+            if (!popupContent) {
+                timer && clearInterval(timer);
+                return;
+            }
+            const currentUrl = popupContent.location.href;
+
+            if (!currentUrl) {
+                return;
+            }
+            let json = popupContent.document.body.innerText;
+            json = JSON.parse(json);
+            let resData = json?.data;
+            setValues({ ...values, ['name']: resData?.name, ['phone']: resData?.mobileno, ['id_number']: resData?.birthdate, });
+            if (json?.result > 0) {
+                toast.success("성공적으로 인증 되었습니다.");
+            } else {
+                toast.error(json?.message);
+            }
+            popupContent.close();
+            clearInterval(timer)
+        }, 500)
+    }, [popupContent]);
     useEffect(() => {
         if (step == 1 && params?.user_level == 10) {
             setTitle('중개업확인')
@@ -247,25 +245,11 @@ const SignUp = () => {
             setStep(0);
             return;
         }
-        // if (!values.address && !params?.user_level != 10) {
-        //     toast.error('주소를 입력해 주세요.');
-        //     setStep(0);
-        //     return;
-        // }
-        // if (!$('.id_number').val()) {
-        //     alert('주민등록번호를 입력해 주세요.');
-        //     return;
-        // }
         if (!values.phone) {
             toast.error('휴대폰 번호를 입력해 주세요.');
             setStep(0);
             return;
         }
-        // if (values.phoneCheck != randNum) {
-        //     toast.error('휴대폰 인증번호가 일치하지 않습니다.');
-        //     setStep(0);
-        //     return;
-        // }
         if (!values.name) {
             toast.error('이름을 입력해 주세요.');
             setStep(0);
@@ -349,7 +333,7 @@ const SignUp = () => {
         }
         obj = { ...obj, ...add_obj };
 
-        obj = { ...obj, ['id_number']: obj?.id_number_front + '-' + obj?.id_number_back }
+        obj = { ...obj }
         const { data: response } = await axios.post('/api/adduser', obj);
         if (response?.result > 0) {
             socket.emit('message', {
@@ -378,9 +362,36 @@ const SignUp = () => {
         window.scrollTo(0, 0);
     }
     const onNextStep = () => {
-        if (step == 0 && !isConfirmId) {
-            getIdentificationInfo();
-            return;
+        if (step == 0) {
+            if (!isCheckId) {
+                toast.error("아이디 중복확인을 완료해 주세요.");
+                return;
+            }
+            if (
+                !values?.pw ||
+                !values?.pw_check ||
+                !values?.address ||
+                !values?.address_detail
+            ) {
+                toast.error("필수값을 입력해 주세요.");
+                return;
+            }
+            if (!regExp('pw', values.pw)) {
+                toast.error('비밀번호 정규식을 지켜주세요.');
+                return;
+            }
+            if (values?.pw != values?.pw_check) {
+                toast.error("비밀번호가 일치하지 않습니다.");
+                return;
+            }
+            if (
+                !values?.name ||
+                !values?.phone ||
+                !values?.id_number
+            ) {
+                toast.error("휴대폰 인증을 완료해 주세요.");
+                return;
+            }
         }
         if (params?.user_level == 10 || params?.user_level == 5) {
             setStep(step + 1);
@@ -389,48 +400,7 @@ const SignUp = () => {
         }
         window.scrollTo(0, 0);
     }
-    const sendSms = async () => {
-        if (!values.phone) {
-            toast.error("핸드폰 번호를 입력해주세요.")
-            return;
-        }
 
-        setIsCheckPhone(false);
-        let fix_phone = values.phone;
-        for (var i = 0; i < fix_phone.length; i++) {
-            if (isNaN(parseInt(fix_phone[i]))) {
-                alert("전화번호는 숫자만 입력해 주세요.");
-                return;
-            }
-        }
-        fix_phone = fix_phone.replaceAll('-', '');
-        fix_phone = fix_phone.replaceAll(' ', '');
-        setValues({ ...values, phone: fix_phone });
-        let content = "";
-        for (var i = 0; i < 6; i++) {
-            content += Math.floor(Math.random() * 10).toString();
-        }
-
-        let string = `\n인증번호를 입력해주세요 ${content}.\n\n-달카페이-`;
-        try {
-            const { data: response } = await axios.post(`/api/sendsms`, {
-                receiver: [fix_phone, formatPhoneNumber(fix_phone)],
-                content: string
-            })
-            if (response?.result > 0) {
-                toast.success('인증번호가 발송되었습니다.');
-
-                setIsSendSms(true)
-                setRandNum(content);
-                $('phone-check').focus();
-            } else {
-                setIsSendSms(false)
-            }
-        } catch (e) {
-            console.log(e)
-        }
-        //console.log(response)
-    }
     const addFile = (e) => {
         let { name, files } = e.target;
         if (files[0]) {
@@ -441,7 +411,7 @@ const SignUp = () => {
 
     return (
         <>
-            <form name="form" id="form" action="https://nice.checkplus.co.kr/CheckPlusSafeModel/service.cb" style={{display:'none'}}>
+            <form name="form" id="form" action="https://nice.checkplus.co.kr/CheckPlusSafeModel/service.cb" style={{ display: 'none' }}>
                 <input type="hidden" id="m" name="m" value="service" />
                 <input type="hidden" id="token_version_id" name="token_version_id" value="" />
                 <input type="hidden" id="enc_data" name="enc_data" />
@@ -526,7 +496,6 @@ const SignUp = () => {
                                                 }}
                                                 class_name='address_detail'
                                                 is_divider={true}
-                                                onKeyPress={() => $('.id_number').focus()}
                                                 onChange={(e) => handleChange(e, 'address_detail')}
                                                 value={values.address_detail}
                                             />
@@ -534,71 +503,44 @@ const SignUp = () => {
                                         :
                                         <>
                                         </>}
-
-                                    <RowContent style={{ margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <InputComponent
-                                            label={'주민등록번호 앞자리'}
-                                            input_type={{
-                                                placeholder: ''
-                                            }}
-                                            disabled={isConfirmId}
-                                            class_name='id_number_front'
-                                            is_divider={true}
-                                            onKeyPress={() => $('.id_number_back').focus()}
-                                            onChange={(e) => handleChange(e, 'id_number_front')}
-                                            value={values.id_number_front}
-                                            divStyle={{ width: '47%', margin: '0' }}
-                                        />
-                                        <div>
-                                            -
-                                        </div>
-                                        <InputComponent
-                                            label={'뒷자리'}
-                                            input_type={{
-                                                placeholder: '',
-                                                type: 'password'
-                                            }}
-                                            class_name='id_number_back'
-                                            is_divider={true}
-                                            onKeyPress={() => $('.phone').focus()}
-                                            onChange={(e) => handleChange(e, 'id_number_back')}
-                                            value={values.id_number_back}
-                                            divStyle={{ width: '47%', margin: '0' }}
-                                            isSeeButton={true}
-                                        />
-                                    </RowContent>
-                                    <InputComponent
-                                        label={'휴대폰번호*'}
-                                        input_type={{
-                                            placeholder: '-없이 숫자만 입력',
-                                        }}
-                                        disabled={isConfirmId}
-                                        class_name='phone'
-                                        onChange={(e) => handleChange(e, 'phone')}
-                                        value={values.phone}
-                                    />
-                                    <InputComponent
-                                        label={'성명*'}
-                                        input_type={{
-                                            placeholder: ''
-                                        }}
-                                        disabled={isConfirmId}
-                                        class_name='name'
-                                        is_divider={true}
-                                        onChange={(e) => handleChange(e, 'name')}
-                                        value={values.name}
-                                    />
-                                    {timeLeft > 0 ?
+                                    {(values?.name && values?.id_number && values?.phone) ?
                                         <>
-                                            <Countdown
-                                                seconds={300}
-                                                timeLeft={timeLeft}
-                                                setTimeLeft={setTimeLeft}
+                                            <InputComponent
+                                                label={'휴대폰번호'}
+                                                input_type={{
+                                                    placeholder: ''
+                                                }}
+                                                class_name='phone'
+                                                is_divider={true}
+                                                disabled={true}
+                                                value={values.phone}
+                                            />
+                                            <InputComponent
+                                                label={'이름'}
+                                                input_type={{
+                                                    placeholder: ''
+                                                }}
+                                                class_name='name'
+                                                is_divider={true}
+                                                disabled={true}
+                                                value={values.name}
+                                            />
+                                            <InputComponent
+                                                label={'생년월일'}
+                                                input_type={{
+                                                    placeholder: ''
+                                                }}
+                                                class_name='id_number'
+                                                is_divider={true}
+                                                disabled={true}
+                                                value={values.id_number}
                                             />
                                         </>
                                         :
                                         <>
-                                        </>}
+                                            <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={getIdentificationInfo}>휴대폰인증 하러가기</Button>
+                                        </>
+                                    }
                                 </>
                                 :
                                 <>
