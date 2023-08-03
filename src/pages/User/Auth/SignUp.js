@@ -407,9 +407,7 @@ const SignUp = () => {
             }
             if (
                 !values?.pw ||
-                !values?.pw_check ||
-                !values?.address ||
-                !values?.address_detail
+                !values?.pw_check
             ) {
                 toast.error("필수값을 입력해 주세요.");
                 return;
