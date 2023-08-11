@@ -12,7 +12,7 @@ const FindMyInfo = () => {
         <>
             <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '3rem auto', background: "#fff" }}>
                 <ContentWrappers style={{ margin: 'auto' }}>
-                    <img src={logoSrc} style={{ maxWidth: '500px', width: '90%', margin: 'auto auto 10vh auto' }} onClick={() => { navigate('/') }} />
+                    <img src={logoSrc} style={{ maxWidth: '250px', width: '50%', margin: 'auto auto 10vh auto' }} onClick={() => { navigate('/') }} />
                     <FindMyInfoCard />
                 </ContentWrappers>
             </Wrappers>

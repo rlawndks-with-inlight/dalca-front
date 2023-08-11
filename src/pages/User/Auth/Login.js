@@ -85,7 +85,7 @@ const Login = () => {
         <>
             <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff", height: '100vh' }}>
                 <ContentWrappers style={{ margin: 'auto', maxWidth: '750px' }}>
-                    <img src={logoSrc} style={{ maxWidth: '500px', width: '90%', margin: 'auto auto 10vh auto' }} onClick={() => { setSignUpCount(0) }} />
+                    <img src={logoSrc} style={{ maxWidth: '250px', width: '50%', margin: 'auto auto 10vh auto' }} onClick={() => { setSignUpCount(0) }} />
                     {signUpCount == 0 ?
                         <>
                             <InputComponent

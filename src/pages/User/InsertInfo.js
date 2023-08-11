@@ -6,15 +6,8 @@ import styled from "styled-components";
 import { ContentWrappers, FakeHeaders, HalfTitle, InputComponent, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../components/elements/UserContentTemplete";
 import theme from "../../styles/theme";
 import Button from '@mui/material/Button';
-import { Divider } from "@mui/material";
-import { toast } from "react-hot-toast";
-import Modal from '../../components/Modal';
-import DaumPostcode from 'react-daum-postcode';
 import $ from 'jquery';
-import axios from "axios";
-import { regExp } from "../../functions/utils";
-import Swal from "sweetalert2";
-import { logoSrc } from "../../data/Data";
+
 const InsertInfo = () => {
     const params = useParams();
     const navigate = useNavigate();

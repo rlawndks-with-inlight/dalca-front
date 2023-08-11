@@ -1,4 +1,4 @@
-import { logoSrc, backUrl } from "../Data";
+import { backUrl } from "../Data";
 import { EditorState } from "draft-js"
 import { columnObjFormat, editColumnObjFormat, editContentFormat, sidebarContentFormat, sidebarObjFormat, sidebarObjListFormat } from "./ManagerContentFormat";
 import { BsPerson, BsCameraVideo, BsAlarm } from 'react-icons/bs'
