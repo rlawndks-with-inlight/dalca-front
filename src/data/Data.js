@@ -17,7 +17,7 @@ import thumbActiveImg from '../assets/images/icon/thumb-active.svg';
 import menu5Icon from '../assets/images/icon/speaker.svg';
 import menu5IconWhite from '../assets/images/icon/speaker-white.svg';
 import menu5IconActive from '../assets/images/icon/speaker-active.svg';
-import logo from '../assets/images/test/logo.png'
+import logo from '../assets/images/test/logo2.svg'
 import logo_white from '../assets/images/test/logo-white.svg'
 import defaultImage from '../assets/images/test/default-image.png'
 import { EditorState } from "draft-js"
