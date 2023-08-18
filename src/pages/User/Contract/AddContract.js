@@ -395,6 +395,11 @@ const AddContract = () => {
 
     const addFile = (e) => {
         let { id, files } = e.target;
+        if(!(e.target.files[0].type.includes('png') || e.target.files[0].type.includes('jpg') || e.target.files[0].type.includes('jpeg'))){
+            toast.error('이미지 파일만 업로드 가능합니다.')
+            $(`#${id}`).val("");
+            return;
+        }
         let img_list = [...imgList];
 
         for (var i = 0; i < files.length; i++) {
@@ -577,7 +582,7 @@ const AddContract = () => {
                                             value={values.brokerage_fee}
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
-                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서 업로드(jpeg파일)</CategoryName>
+                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서 업로드(png, jpg, jpeg 파일)</CategoryName>
                                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                             {imgList.map((item, idx) => (
                                                 <>
