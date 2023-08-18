@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GiHamburgerMenu } from 'react-icons/gi'
-import { logoSrc } from '../../data/Data';
 import { BsPerson, BsCameraVideo, BsAlarm, BsGraphUp } from 'react-icons/bs'
 import { MdOutlineAccessTime, MdNotificationImportant, MdOutlineFeaturedPlayList, MdOutlineStickyNote2 } from 'react-icons/md'
 import { IoStatsChartSharp, IoLogoReact } from 'react-icons/io5'
@@ -17,6 +16,7 @@ import $ from 'jquery'
 import { GoRepoPush } from 'react-icons/go'
 import { zSidebar } from '../../data/Manager/ManagerContentData';
 import theme from '../../styles/theme';
+import { logoSrc } from '../../data/Data';
 const Wrappers = styled.div`
 display:flex;
 flex-direction:column;
@@ -159,7 +159,7 @@ const SideBar = () => {
                     <GiHamburgerMenu />
                 </HambergurContainer>
                 <LogoWrappers>
-                    <img src={logoSrc} alt="dalca-pay" style={{ height: '72px', width: 'auto', cursor: 'pointer' }}
+                    <img src={logoSrc} alt="dalca-pay" style={{ height: '40px', width: 'auto', cursor: 'pointer' }}
                         onClick={() => navigate('/manager/list/user')} />
                 </LogoWrappers>
                 <div style={{ maxHeight: '80vh', paddingBottom: '32px' }}>

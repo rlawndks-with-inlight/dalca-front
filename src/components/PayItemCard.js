@@ -10,6 +10,7 @@ import { borderButtonStyle, colorButtonStyle, HalfTitle, ShadowContainer, TextBu
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 import $ from 'jquery';
+import { useEffect, useState } from "react";
 const Container = styled.div`
 display: flex; 
 padding: 32px 0;
@@ -41,7 +42,16 @@ const PayItemCard = (props) => {
     let { item, is_detail, not_price, column, user, setting, payList } = props;
 
     const navigate = useNavigate();
+    console.log(item)
+    const [price, setPrice] = useState(0);
 
+    useEffect(() => {
+        if (item?.pay_category == 1 || item?.pay_category == 2) {
+            setPrice(item?.price)
+        } else {
+            setPrice(getMoneyByCardPercent(item?.price, setting?.card_percent))
+        }
+    }, [item])
     const onPayByDirect = () => {
         if (item?.status == 0) {
             Swal.fire({
@@ -56,7 +66,7 @@ const PayItemCard = (props) => {
                         temp: item?.pk,
                         ord_nm: `${user?.pk}${item?.pk}${new Date().getTime()}`,
                         name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} ` : ''} ${getKoPayCategoryByNum(item?.pay_category)}`,
-                        price: getMoneyByCardPercent(item?.price, setting?.card_percent),
+                        price: price,
                         buyer: user?.name,
                         tel: user?.phone,
                         is_mobile: window.innerWidth >= 700 ? 0 : 1
@@ -84,6 +94,9 @@ const PayItemCard = (props) => {
         }
     }
     const returnPayStatus = () => {
+        if (item?.pay_category == 1 || item?.pay_category == 2) {
+            return '결제불가'
+        }
         if (item?.status == 1) {
             return '결제완료'
         } else if (item?.status == 0) {
@@ -143,7 +156,7 @@ const PayItemCard = (props) => {
                                                 :
                                                 <>
                                                 </>}
-                                            <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(getMoneyByCardPercent(itm?.price, setting?.card_percent))}원</div>
+                                            <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(price)}원</div>
                                         </div>
                                     </ShadowContainer>
                                 </>
@@ -161,7 +174,7 @@ const PayItemCard = (props) => {
                                     :
                                     <>
                                     </>}
-                                <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(getMoneyByCardPercent(item?.price, setting?.card_percent))}원</div>
+                                <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(price)}원</div>
                             </div>
                         </>}
                 </ContentContainer>
@@ -172,7 +185,9 @@ const PayItemCard = (props) => {
                     <>
                         <PriceContainer>
                             <div style={{ display: "flex", margin: '0 0 0 auto' }}>
-                                <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={() => onPayByDirect()}>{returnPayStatus()}</Button>
+                                <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={() => onPayByDirect()}
+                                    disabled={item?.pay_category == 1 || item?.pay_category == 2}
+                                >{returnPayStatus()}</Button>
                                 {/* {item?.status == -1 || item?.status == 1 ?
                                     <>
                                         <Button sx={{ ...borderButtonStyle, width: '81px', marginLeft: '1rem' }} onClick={() => onPayCancel()}>{item?.status == 1 ? '결제취소' : '취소완료'}</Button>

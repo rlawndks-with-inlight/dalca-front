@@ -213,7 +213,7 @@ const ContentTable = (props) => {
                     socket.emit('message', {
                         method: 'want_pay_cancel',
                         data: {
-                            pk:pk
+                            pk: pk
                         }
                     });
                     toast.success('취소요청이 성공적으로 발송되었습니다.');
@@ -308,7 +308,7 @@ const ContentTable = (props) => {
                                                     null}
                                                 {column.type == 'title_link' ?
                                                     <>
-                                                        <div style={{ textAlign: 'left', padding: '0.5rem', cursor: 'pointer', }} onClick={()=>{
+                                                        <div style={{ textAlign: 'left', padding: '0.5rem', cursor: 'pointer', }} onClick={() => {
                                                             goToLink(item)
                                                         }}>{item.title}</div>
                                                     </>
@@ -348,7 +348,13 @@ const ContentTable = (props) => {
                                                     </>
                                                     :
                                                     null}
-                                                { }
+                                                {column.type == 'pay_type' ?
+                                                    item['type'] == 1 ?
+                                                        <div>현금</div>
+                                                        :
+                                                        <div>카드</div>
+                                                    :
+                                                    null}
                                                 {column.type == 'want_cancel' ?
                                                     <>
                                                         {item?.status == 1 && item?.is_want_cancel == 0 ?

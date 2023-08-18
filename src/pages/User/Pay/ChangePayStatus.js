@@ -28,7 +28,7 @@ const Container = styled.div`
 display: flex; 
 padding: 32px 0;
 width: 100%;
-height: 120px;
+height: 153px;
 @media screen and (max-width:550px) { 
     flex-direction:column;
     height:auto;
@@ -64,10 +64,18 @@ const ChangePayStatus = () => {
     const [userData, setUserData] = useState({})
     const [setting, setSetting] = useState({});
     const [payStatus, setPayStatus] = useState(undefined);
+    const [payType, setPayType] = useState(0);
+    const [price, setPrice] = useState(0);
     useEffect(() => {
         getPay();
     }, [])
-
+    useEffect(() => {
+        if (pay?.pay_category == 1 || pay?.pay_category == 2) {
+            setPrice(pay?.price)
+        } else {
+            setPrice(getMoneyByCardPercent(pay?.price, setting?.card_percent))
+        }
+    }, [pay])
     const getPay = async () => {
         setLoading(true);
         if (!location.state) {
@@ -84,11 +92,12 @@ const ChangePayStatus = () => {
             navigate('/home')
             return;
         }
-        setPay(response?.data)
+        let pay = response?.data;
+        setPay(pay)
         setPayStatus(response?.data?.status)
         setLoading(false);
     }
-    const onChangePayStatus =  async () =>{
+    const onChangePayStatus = async () => {
         Swal.fire({
             title: '저장 하시겠습니까?',
             showCancelButton: true,
@@ -96,19 +105,20 @@ const ChangePayStatus = () => {
             cancelButtonText: '취소',
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const {data:response} = await axios.post(`/api/changepaystatus`,{
-                    pay_pk:pay?.pk,
-                    status:payStatus
+                const { data: response } = await axios.post(`/api/changepaystatus`, {
+                    pay_pk: pay?.pk,
+                    status: payStatus,
+                    type: (pay?.pay_category == 1 || pay?.pay_category == 2) ? 1 : 0
                 })
-                if(response?.result>0){
+                if (response?.result > 0) {
                     toast.success("성공적으로 저장 되었습니다.");
                     navigate(-1);
-                }else{
-                    toast.error(response?.message); 
+                } else {
+                    toast.error(response?.message);
                 }
             }
         })
-       
+
     }
     return (
         <>
@@ -137,7 +147,7 @@ const ChangePayStatus = () => {
                                             :
                                             <>
                                             </>}
-                                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(getMoneyByCardPercent(pay?.price, setting?.card_percent))}원</div>
+                                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(price)}원</div>
                                         <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
                                             <InputLabel id="demo-select-small">납부상태</InputLabel>
                                             <CustomSelect
@@ -147,10 +157,11 @@ const ChangePayStatus = () => {
                                                 label="납부상태"
                                                 onChange={(e) => setPayStatus(e.target.value)}
                                             >
-                                                <MenuItem value={1}>납부함</MenuItem>
+                                                <MenuItem value={1}>납부함 {(pay?.pay_category == 1 || pay?.pay_category == 2) && '(현금)'}</MenuItem>
                                                 <MenuItem value={0}>납부안함</MenuItem>
                                             </CustomSelect>
                                         </FormControl>
+
                                     </div>
                                 </ContentContainer>
                             </Container>
