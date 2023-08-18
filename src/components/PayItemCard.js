@@ -42,7 +42,6 @@ const PayItemCard = (props) => {
     let { item, is_detail, not_price, column, user, setting, payList } = props;
 
     const navigate = useNavigate();
-    console.log(item)
     const [price, setPrice] = useState(0);
 
     useEffect(() => {
