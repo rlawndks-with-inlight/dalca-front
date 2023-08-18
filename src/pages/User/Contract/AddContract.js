@@ -118,6 +118,7 @@ const AddContract = () => {
         obj['monthly'] = obj['monthly'] / 10000;
         obj['deposit'] = obj['deposit'] / 10000;
         obj['down_payment'] = obj['down_payment'] / 10000;
+        obj['brokerage_fee'] = obj['brokerage_fee'] / 10000;
 
         let img_list = JSON.parse(obj['document_src'] ?? '[]');
         for (var i = 0; i < img_list.length; i++) {
@@ -262,10 +263,10 @@ const AddContract = () => {
                 pdf_list: JSON.stringify(pdf_list),
                 zip_code: values?.zip_code,
                 address_detail: values?.address_detail,
-                deposit: parseInt(values?.deposit) * 10000,
-                down_payment: parseInt(values?.down_payment) * 10000,
-                monthly: parseInt(values?.monthly) * 10000,
-                brokerage_fee: parseInt(values?.brokerage_fee),
+                deposit: parseFloat(values?.deposit) * 10000,
+                down_payment: parseFloat(values?.down_payment) * 10000,
+                monthly: parseFloat(values?.monthly) * 10000,
+                brokerage_fee: parseFloat(values?.brokerage_fee) * 10000,
                 start_date: values?.start_date,
                 end_date: values?.end_date,
                 pay_day: values?.pay_day,
@@ -567,7 +568,7 @@ const AddContract = () => {
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'brokerage_fee')}
                                             value={values.brokerage_fee}
-                                            icon_label={<div style={{ fontSize: theme.size.font4 }}>원</div>}
+                                            icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
                                         <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서 업로드(jpeg파일)</CategoryName>
                                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>

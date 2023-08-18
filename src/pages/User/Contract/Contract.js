@@ -68,6 +68,7 @@ const Contract = () => {
         pay_type: 0,
         deposit: 0,
         down_payment: 0,
+        brokerage_fee: 0,
         monthly: 0,
         address: '',
         address_detail: '',
@@ -115,6 +116,7 @@ const Contract = () => {
             obj['monthly'] = obj['monthly'] / 10000;
             obj['deposit'] = obj['deposit'] / 10000;
             obj['down_payment'] = obj['down_payment'] / 10000;
+            obj['brokerage_fee'] = obj['brokerage_fee'] / 10000;
 
             let img_list = JSON.parse(obj['document_src']);
             for (var i = 0; i < img_list.length; i++) {
@@ -214,6 +216,10 @@ const Contract = () => {
                                     <GetContent
                                         title={'월세'}
                                         content={values.monthly + ' 만원'}
+                                    />
+                                    <GetContent
+                                        title={'중개수수료'}
+                                        content={values.brokerage_fee + ' 만원'}
                                     />
                                     <GetContent
                                         title={'계약 시작일'}
