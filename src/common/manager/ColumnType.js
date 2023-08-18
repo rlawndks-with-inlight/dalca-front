@@ -95,6 +95,12 @@ export const returnColumn = (data_, type_, column_, schema, is_list, func) => {
         } else if (data[`${column}`] == 1) {
             result = "새창";
         }
+    } else if (type == 'pay_type') {
+        if (data[`${column}`] == 1) {
+            result = "현금";
+        } else if (data[`${column}`] == 0) {
+            result = "카드";
+        }
     } else if (type == 'status') {
         let flag = true;
         if (column == 'is_agree_brokerage_fee') {

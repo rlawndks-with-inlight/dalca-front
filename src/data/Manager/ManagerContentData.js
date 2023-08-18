@@ -185,6 +185,7 @@ export const objManagerListContent = {
             columnObjFormat('생성일', '', 'text', 'date'),
             columnObjFormat('결제일', '', 'text', 'trade_date'),
             columnObjFormat('금액', '', 'number', 'price'),
+            columnObjFormat('결제타입', '', 'pay_type', 'type'),
             columnObjFormat('카드수수료', '', 'percent', 'card_percent'),
             columnObjFormat('종류', '', 'pay_category', 'pay_category'),
             columnObjFormat('납부종류', '', 'is_auto_pay', 'is_auto_pay'),
