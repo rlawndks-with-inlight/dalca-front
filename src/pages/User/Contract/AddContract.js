@@ -247,8 +247,10 @@ const AddContract = () => {
             for (var i = 0; i < pdf_list.length; i++) {
                 if (pdf_list[i].content) {
                     let formData = new FormData();
+                    console.log(pdf_list[i].content)
                     formData.append('pdf', pdf_list[i].content);
                     const { data: response_image } = await axios.post('/api/addimageitems', formData);
+                    console.log(response_image)
                     if (!pdf_list[i]['name']) {
                         pdf_list[i]['name'] = pdf_list[i]['content']['name'];
                     }
@@ -410,6 +412,11 @@ const AddContract = () => {
     };
     const addPdf = (e) => {
         let { id, files } = e.target;
+        if(!e.target.files[0].type.includes('pdf')){
+            toast.error('pdf 만 업로드 가능합니다.')
+            $(`#${id}`).val("");
+            return;
+        }
         if (e.target.files[0]) {
             let pdf_list = [...pdfList];
             pdf_list.push({
@@ -681,7 +688,7 @@ const AddContract = () => {
                                             ))}
                                         </div>
                                         <div style={{ margin: '8px auto 0px 0px' }} for={`pdf_src`}>
-                                            <label style={{ ...colorButtonStyle, cursor: 'pointer', padding: '8px 16px', borderRadius: '4px' }} for={`pdf_src`}>
+                                            <label style={{ ...colorButtonStyle, cursor: 'pointer', padding: '8px 16px', borderRadius: '4px' }} for={`pdf_src`} multiple>
                                                 업로드
                                             </label>
                                         </div>
