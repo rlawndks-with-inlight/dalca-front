@@ -494,6 +494,7 @@ const ChangeCard = () => {
                                 </>
                                 :
                                 <>
+
                                 </>}
                             {isSeeCard ?
                                 <>
@@ -530,7 +531,7 @@ const ChangeCard = () => {
                                             autoComplete='off'
                                             onBlur={handleBlur}
                                             label='카드 사용자명'
-                                            placeholder='John Doe'
+                                            placeholder='홍길동'
                                             onChange={e => setName(e.target.value)}
                                             onFocus={e => setFocus(e.target.name)}
                                         />
