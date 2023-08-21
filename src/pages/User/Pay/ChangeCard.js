@@ -738,7 +738,7 @@ const ChangeCard = () => {
 
                                 {user?.user_level == 0 ?
                                     <>
-                                        <div style={{margin:'0.5rem auto',maxWidth:'400px',fontSize:theme.size.font5}}>현재 등록된 카드로 매월 정기적으로 월세납부를 원하시면 아래 버튼을 눌러주세요.</div>
+                                        <div style={{margin:'0.5rem auto',maxWidth:'400px',fontSize:theme.size.font5}}>현재 등록된 카드로 매월 정기적으로 월세납부를 원하시면 '저장' 버튼 클릭 후 아래 버튼을 눌러주세요.</div>
                                         <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 월세 정기결제 신청' : '월세 정기결제 카드등록'}</Button>
                                     </>
                                     :
