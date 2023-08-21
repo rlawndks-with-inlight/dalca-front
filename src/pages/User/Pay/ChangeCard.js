@@ -127,20 +127,23 @@ const ChangeCard = () => {
         }
     }, [cardIdRef.current.map(item => { return item?.value })])
     function openWindow() {
-
         /*
          * 해당 로직은 팝업창 구현으로
          * 가맹점측에서 알맞게 팝업창 구현 해주시면 됩니다.
          */
         var contents;
         var OpenOption = 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=420,height=800,top=100,left=100,';
-
-        contents = window.open("", "contents", OpenOption);
-
-        document.reqfrm.action = "https://cas.inicis.com/casapp/ui/cardauthreq";
-        document.reqfrm.target = "contents";
-        document.reqfrm.submit();
-
+        let device_type = window.innerWidth > 800 ? 'pc' : 'mobile';
+        if (device_type == 'pc') {
+            contents = window.open("", "contents", OpenOption);
+            document.reqfrm.action = "https://cas.inicis.com/casapp/ui/cardauthreq";
+            document.reqfrm.target = "contents";
+            document.reqfrm.submit();
+        }else{
+            document.reqfrm.action = "https://cas.inicis.com/casapp/ui/cardauthreq";
+            document.reqfrm.target = "_self";
+            document.reqfrm.submit();
+        }
     }
     const getCard = async (num) => {
         setEditPk(0);
@@ -196,7 +199,6 @@ const ChangeCard = () => {
             const { data: auto_card } = await axios.get('/api/myautocard');
             $(`#user_card-${auto_card?.data?.pk}`).prop('checked', true);
         }
-
     }
 
 
@@ -674,7 +676,7 @@ const ChangeCard = () => {
                                                 <Button
                                                     sx={{ ...colorButtonStyle }}
                                                     startIcon={<Icon icon="line-md:confirm" />}
-                                                    onClick={getCardIdentificationInfo}
+                                                    onClick={onChangeMyCard}
                                                 >저장</Button>
 
                                             </div>
