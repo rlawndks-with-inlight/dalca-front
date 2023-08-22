@@ -40,6 +40,7 @@ import { backUrl, frontUrl } from "../../../data/Data";
 import { AiFillFileImage } from "react-icons/ai";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
 import { useRef } from "react";
+
 const CreditCardWrapper = styled(Box)(({ }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -88,7 +89,6 @@ const ChangeCard = () => {
     const [expiry, setExpiry] = useState('')
     const [password, setPassword] = useState('')
     const [birth, setBirth] = useState('');
-    const [passwordCheck, setPasswordCheck] = useState('')
     const [page, setPage] = useState(1);
     const [pageList, setPageList] = useState([]);
     const [posts, setPosts] = useState([])
@@ -139,7 +139,7 @@ const ChangeCard = () => {
             document.reqfrm.action = "https://cas.inicis.com/casapp/ui/cardauthreq";
             document.reqfrm.target = "contents";
             document.reqfrm.submit();
-        }else{
+        } else {
             document.reqfrm.action = "https://cas.inicis.com/casapp/ui/cardauthreq";
             document.reqfrm.target = "_self";
             document.reqfrm.submit();
@@ -206,15 +206,58 @@ const ChangeCard = () => {
 
     const handleInputChange = ({ target }) => {
         if (target.name === 'cardNumber') {
-            target.value = formatCreditCardNumber(target.value, Payment)
-            setCardNumber(target.value)
+            let card_number = cardNumber;
+            if (card_number.length > target.value.length) {//줄어드는거
+                card_number = card_number.slice(0, card_number.length - 1);
+            } else {//늘어나는거
+                card_number += target.value[target.value.length - 1];
+
+            }
+            card_number = formatCreditCardNumber(card_number, Payment)
+            setCardNumber(card_number)
         } else if (target.name === 'expiry') {
             target.value = formatExpirationDate(target.value)
             setExpiry(target.value)
         } else if (target.name === 'cvc') {
-            target.value = formatCVC(target.value, cardNumber, Payment)
-            setCvc(target.value)
+            let cvc_number = cvc;
+            if (cvc_number.length > target.value.length) {//줄어드는거
+                cvc_number = cvc_number.slice(0, cvc_number.length - 1);
+            } else {//늘어나는거
+                cvc_number += target.value[target.value.length - 1];
+            }
+            cvc_number = formatCVC(cvc_number, cardNumber, Payment)
+            setCvc(cvc_number)
+        } else if (target.name === 'password') {
+            let password_number = password;
+            if (password_number.length > target.value.length) {//줄어드는거
+                password_number = password_number.slice(0, password_number.length - 1);
+            } else {//늘어나는거
+                password_number += target.value[target.value.length - 1];
+            }
+            setPassword(target.value)
         }
+    }
+    const returnCardInfoMask = (name, value) => {
+        let result = value;
+        if (name == 'cardNumber') {
+            if (result.length > 15) {
+                result = result.slice(0, 15);
+                for (var i = 15; i < value.length; i++) {
+                    result += '*';
+                }
+            }
+        } else if (name == 'cvc') {
+            result = "";
+            for (var i = 0; i < value.length; i++) {
+                result += '*';
+            }
+        } else if (name == 'password') {
+            result = "";
+            for (var i = 0; i < value.length; i++) {
+                result += '*';
+            }
+        }
+        return result;
     }
     const sendMessage = async () => {
         let string = `
@@ -372,7 +415,6 @@ const ChangeCard = () => {
             })
             if (response?.result > 0) {
                 toast.success('인증번호가 발송되었습니다.');
-
                 setIsSendSms(true)
                 setRandNum(content);
                 $('phone-check').focus();
@@ -499,7 +541,7 @@ const ChangeCard = () => {
                             {isSeeCard ?
                                 <>
                                     <CardWrapper style={{ marginTop: '1rem' }}>
-                                        <Cards cvc={cvc} focused={focus} expiry={expiry} name={name} number={cardNumber} />
+                                        <Cards cvc={cvc} focused={focus} expiry={expiry} name={name} number={returnCardInfoMask('cardNumber', cardNumber)} />
                                     </CardWrapper>
                                 </>
                                 :
@@ -514,12 +556,12 @@ const ChangeCard = () => {
                                             size="small"
                                             name='cardNumber'
                                             className="cardNumber"
-                                            value={cardNumber}
+                                            value={returnCardInfoMask('cardNumber', cardNumber)}
                                             autoComplete='off'
                                             label='카드 번호'
                                             onBlur={handleBlur}
                                             onChange={handleInputChange}
-                                            placeholder='0000 0000 0000 0000'
+                                            placeholder='0000 0000 0000 ****'
                                             onFocus={e => setFocus(e.target.name)}
                                         />
                                         <TextField
@@ -554,8 +596,7 @@ const ChangeCard = () => {
                                             name='cvc'
                                             className="cvc"
                                             label='CVC 번호'
-                                            value={cvc}
-                                            type='password'
+                                            value={returnCardInfoMask('cvc', cvc)}
                                             autoComplete='off'
                                             onBlur={handleBlur}
                                             onChange={handleInputChange}
@@ -582,12 +623,11 @@ const ChangeCard = () => {
                                             name='password'
                                             className="password"
                                             label='카드 비밀번호 앞 두자리'
-                                            value={password}
+                                            value={returnCardInfoMask('password', password)}
                                             autoComplete='off'
                                             onBlur={handleBlur}
-                                            type='password'
                                             inputProps={{ maxLength: '2' }}
-                                            onChange={e => setPassword(e.target.value)}
+                                            onChange={handleInputChange}
                                             onFocus={e => setFocus(e.target.name)}
                                         />
                                         {params?.category == 'family' ?
@@ -739,7 +779,7 @@ const ChangeCard = () => {
 
                                 {user?.user_level == 0 ?
                                     <>
-                                        <div style={{margin:'0.5rem auto',maxWidth:'400px',fontSize:theme.size.font5}}>현재 등록된 카드로 매월 정기적으로 월세납부를 원하시면 '저장' 버튼 클릭 후 아래 버튼을 눌러주세요.</div>
+                                        <div style={{ margin: '0.5rem auto', maxWidth: '400px', fontSize: theme.size.font5 }}>현재 등록된 카드로 매월 정기적으로 월세납부를 원하시면 '저장' 버튼 클릭 후 아래 버튼을 눌러주세요.</div>
                                         <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 월세 정기결제 신청' : '월세 정기결제 카드등록'}</Button>
                                     </>
                                     :
