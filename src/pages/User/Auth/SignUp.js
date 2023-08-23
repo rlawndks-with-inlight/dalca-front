@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { ContentWrappers, FakeHeaders, HalfTitle, InputComponent, RowContent, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import theme from "../../../styles/theme";
 import Button from '@mui/material/Button';
-import { Divider } from "@mui/material";
+import { Dialog, DialogContent, Divider } from "@mui/material";
 import { toast } from "react-hot-toast";
 import Modal from '../../../components/Modal';
 import DaumPostcode from 'react-daum-postcode';
@@ -22,6 +22,7 @@ import { PAY_INFO } from "../../../data/ContentData";
 import { backUrl, frontUrl, socket } from "../../../data/Data";
 import Loading from "../../../components/Loading";
 import { getUserLevelByNumber } from "../../../functions/format";
+import { onPostWebview } from "../../../functions/webview-connect";
 
 
 const SignUp = () => {
@@ -30,23 +31,19 @@ const SignUp = () => {
     const navigate = useNavigate();
 
     const [title, setTitle] = useState("");
-    const [signUpCount, setSignUpCount] = useState(0);
     const [isSeePostCode, setIsSeePostCode] = useState(false);
     const [isCheckId, setIsCheckId] = useState(false);
-    const [isCheckPhone, setIsCheckPhone] = useState(false);
-    const [isCheckNickname, setIsCheckNickname] = useState(false);
     const [step, setStep] = useState(0);
     const [values, setValues] = useState({});
     const [isSendSms, setIsSendSms] = useState(false)
     const [randNum, setRandNum] = useState("")
     const [loading, setLoading] = useState(false);
-    const [idInfo, setIdInfo] = useState({});
-    const [isConfirmId, setIsConfirmId] = useState(false);
-    const [openConfirmId, setOpenConfirmId] = useState(false);
     const [returnUrl, setReturnUrl] = useState("");
     const [popupContent, setPopupContent] = useState(undefined)
-    const [timeLeft, setTimeLeft] = useState(0);
-
+    const [openPhoneCheckType, setOpenPhoneCheckType] = useState(false);
+    const [phoneCheckType, setPhoneCheckType] = useState(1);//0인증,1pass
+    const [checkPhoneNum, setCheckPhoneNum] = useState("")//휴대폰번호 인증 인증번호 시퀀스일때 잠깐 사용할 번호 성공일시 유저 obj phone 으로 들어감
+    const [phoneCheckNum, setPhoneCheckNum] = useState("");
     const defaultObj = {
         id: '',
         pw: '',
@@ -85,31 +82,30 @@ const SignUp = () => {
     }
     function searchToObject(search) {
         var pairs = search.substring(1).split("&"),
-          obj = {},
-          pair,
-          i;
-        for ( i in pairs ) {
-          if ( pairs[i] === "" ) continue;
-          pair = pairs[i].split("=");
-          obj[ decodeURIComponent( pair[0] ) ] = decodeURIComponent( pair[1] ).replaceAll('+', ' ');
+            obj = {},
+            pair,
+            i;
+        for (i in pairs) {
+            if (pairs[i] === "") continue;
+            pair = pairs[i].split("=");
+            obj[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]).replaceAll('+', ' ');
         }
-      
         return obj;
-      }
+    }
     useEffect(() => {
         let query_object = searchToObject(decodeURIComponent(location.search));
         console.log(query_object)
-        if(query_object?.name && query_object?.mobileno){
+        if (query_object?.name && query_object?.mobileno) {
             query_object['receivedata'] = JSON.parse(query_object?.receivedata);
             setValues({
                 ...query_object?.receivedata,
-                phone:query_object?.mobileno,
-                name:query_object?.name,
-                id_number:query_object?.birthdate,
+                phone: query_object?.mobileno,
+                name: query_object?.name,
+                id_number: query_object?.birthdate,
             })
             setIsCheckId(query_object?.receivedata?.isCheckId);
             setTitle(getUserLevelByNumber(query_object?.receivedata?.user_level));
-        }else{
+        } else {
             if (params?.user_level == 0) {
                 setValues(defaultObj);
                 setTitle('임차인');
@@ -119,15 +115,16 @@ const SignUp = () => {
             } else if (params?.user_level == 10) {
                 setValues({ ...defaultObj, ...realtorObj });
                 setTitle('공인중개사');
-    
+
             } else {
                 toast.error('잘못된 접근입니다.');
                 navigate(-1);
             }
         }
-        
+
     }, []);
     const getIdentificationInfo = async () => {
+        setOpenPhoneCheckType(false);
         const { form } = document;
         const left = window.screen.width / 2 - 500 / 2;
         const top = window.screen.height / 2 - 800 / 2;
@@ -155,11 +152,15 @@ const SignUp = () => {
                 form.integrity_value.value = integrity_value;
                 form.submit();
             } else {
-                form.target = '_self';
-                form.enc_data.value = enc_data;
-                form.token_version_id.value = token_version_id;
-                form.integrity_value.value = integrity_value;
-                form.submit();
+                if (window.ReactNativeWebView) {
+                    onPostWebview('pass_auth', response?.data);
+                } else {
+                    form.target = '_self';
+                    form.enc_data.value = enc_data;
+                    form.token_version_id.value = token_version_id;
+                    form.integrity_value.value = integrity_value;
+                    form.submit();
+                }
             }
         }
     }
@@ -415,7 +416,7 @@ const SignUp = () => {
                 toast.error('비밀번호 정규식을 지켜주세요.');
                 return;
             }
-            if(values?.pw != values?.pw_check){
+            if (values?.pw != values?.pw_check) {
                 toast.error("비밀번호가 일치하지 않습니다.");
                 return;
             }
@@ -443,7 +444,56 @@ const SignUp = () => {
             $(`.${name}`).val("");
         }
     };
+    const sendSms = async () => {
+        if (!values.name) {
+            alert("이름을 입력해주세요.");
+            return;
+        }
+        if (!values.id_number) {
+            alert("생년월일을 입력해주세요.");
+            return;
+        }
+        if (!checkPhoneNum) {
+            alert("핸드폰 번호를 입력해주세요.");
+            return;
+        }
+        setValues({ ...values, phone: '' })
+        let fix_phone = checkPhoneNum.replaceAll('-', '');
+        let content = "";
+        for (var i = 0; i < 6; i++) {
+            content += Math.floor(Math.random() * 10).toString();
+        }
 
+        let string = `\n인증번호를 입력해주세요 ${content}.\n\n-달카페이-`;
+        try {
+            const { data: response } = await axios.post(`/api/sendsms`, {
+                receiver: [fix_phone, formatPhoneNumber(fix_phone)],
+                content: string
+            })
+            if (response?.result > 0) {
+                alert('인증번호가 발송되었습니다.');
+
+                setIsSendSms(true)
+                setRandNum(content);
+                $('phone-check').focus();
+            } else {
+                setIsSendSms(false)
+            }
+        } catch (e) {
+        }
+    }
+    const onCheckRandNum = () => {
+        if (phoneCheckNum == randNum) {
+            setValues({
+                ...values,
+                phone: checkPhoneNum
+            })
+            setOpenPhoneCheckType(false);
+            toast.success("휴대폰인증이 성공적으로 완료되었습니다.")
+        } else {
+            alert('인증번호가 일치하지 않습니다.')
+        }
+    }
     return (
         <>
             <form name="form" id="form" action="https://nice.checkplus.co.kr/CheckPlusSafeModel/service.cb" style={{ display: 'none' }}>
@@ -452,6 +502,83 @@ const SignUp = () => {
                 <input type="hidden" id="enc_data" name="enc_data" />
                 <input type="hidden" id="integrity_value" name="integrity_value" />
             </form>
+            <Dialog open={openPhoneCheckType} onClose={() => {
+                setOpenPhoneCheckType(false);
+                setTimeout(() => {
+                    setPhoneCheckType(1);
+                    setCheckPhoneNum("");
+                }, 500);
+            }}>
+                <DialogContent style={{ columnGap: '1rem', display: 'flex', width: `${window.innerWidth > 1000 ? '500px' : '70vw'}` }}>
+                    {phoneCheckType == 0 ?
+                        <>
+                            <ContentWrappers>
+                                <InputComponent
+                                    label={'이름'}
+                                    input_type={{
+                                        placeholder: ''
+                                    }}
+                                    class_name='name'
+                                    is_divider={true}
+                                    value={values.name}
+                                    onKeyPress={() => $('.id_number').focus()}
+                                    onChange={(e) => handleChange(e, 'name')}
+                                />
+                                <InputComponent
+                                    label={'생년월일'}
+                                    input_type={{
+                                        placeholder: '20220101'
+                                    }}
+                                    class_name='id_number'
+                                    is_divider={true}
+                                    value={values.id_number}
+                                    onKeyPress={() => { }}
+                                    onChange={(e) => handleChange(e, 'id_number')}
+                                />
+                                <InputComponent
+                                    label={'휴대폰번호*'}
+                                    input_type={{
+                                        placeholder: '하이픈제외(-)',
+                                        disabled: values?.phone
+                                    }}
+                                    class_name='id'
+                                    button_label={values?.phone ? '완료' : '인증발송'}
+                                    isButtonAble={!values?.phone}
+                                    is_divider={true}
+                                    onKeyPress={() => sendSms()}
+                                    onClickButton={() => sendSms()}
+                                    onChange={(e) => setCheckPhoneNum(e)}
+                                    value={checkPhoneNum}
+                                />
+                                <InputComponent
+                                    label={'휴대폰인증번호*'}
+                                    input_type={{
+                                        placeholder: '',
+                                    }}
+                                    class_name='id'
+                                    button_label={values?.phone ? '완료' : '인증확인'}
+                                    isButtonAble={!values?.phone}
+                                    is_divider={true}
+                                    onKeyPress={() => onCheckRandNum()}
+                                    onClickButton={() => onCheckRandNum()}
+                                    onChange={(e) => setPhoneCheckNum(e)}
+                                    value={phoneCheckNum}
+                                />
+                            </ContentWrappers>
+                        </>
+                        :
+                        <>
+                            <Button variant="outlined" style={{ width: `${window.innerWidth > 1000 ? '200px' : '30vw'}`, height: '72px', margin: `0 ${!window.ReactNativeWebView ? '0' : 'auto'} 0 auto`, fontWeight: 'bold' }} onClick={() => {
+                                setPhoneCheckType(0);
+                            }}>인증번호</Button>
+                            {!window.ReactNativeWebView &&
+                                <>
+                                    <Button variant="contained" style={{ width: `${window.innerWidth > 1000 ? '200px' : '30vw'}`, height: '72px', margin: `0 auto 0 auto`, fontWeight: 'bold' }} onClick={getIdentificationInfo}>PASS</Button>
+                                </>}
+                        </>}
+
+                </DialogContent>
+            </Dialog>
             <FakeHeaders label='회원가입' />
             <Wrappers className="wrapper">
 
@@ -574,7 +701,7 @@ const SignUp = () => {
                                         </>
                                         :
                                         <>
-                                            <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={getIdentificationInfo}>휴대폰인증 하러가기</Button>
+                                            <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '8px' }} onClick={() => setOpenPhoneCheckType(true)}>휴대폰인증 하러가기</Button>
                                         </>
                                     }
                                 </>
