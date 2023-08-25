@@ -128,17 +128,59 @@ const MUserCardEdit = () => {
 
     const handleInputChange = ({ target }) => {
         if (target.name === 'cardNumber') {
-            target.value = formatCreditCardNumber(target.value, Payment)
-            setCardNumber(target.value)
+            let card_number = cardNumber;
+            if (card_number.length > target.value.length) {//줄어드는거
+                card_number = card_number.slice(0, card_number.length - 1);
+            } else {//늘어나는거
+                card_number += target.value[target.value.length - 1];
+
+            }
+            card_number = formatCreditCardNumber(card_number, Payment)
+            setCardNumber(card_number)
         } else if (target.name === 'expiry') {
             target.value = formatExpirationDate(target.value)
             setExpiry(target.value)
         } else if (target.name === 'cvc') {
-            target.value = formatCVC(target.value, cardNumber, Payment)
-            setCvc(target.value)
+            let cvc_number = cvc;
+            if (cvc_number.length > target.value.length) {//줄어드는거
+                cvc_number = cvc_number.slice(0, cvc_number.length - 1);
+            } else {//늘어나는거
+                cvc_number += target.value[target.value.length - 1];
+            }
+            cvc_number = formatCVC(cvc_number, cardNumber, Payment)
+            setCvc(cvc_number)
+        } else if (target.name === 'password') {
+            let password_number = password;
+            if (password_number.length > target.value.length) {//줄어드는거
+                password_number = password_number.slice(0, password_number.length - 1);
+            } else {//늘어나는거
+                password_number += target.value[target.value.length - 1];
+            }
+            setPassword(target.value)
         }
     }
-
+    const returnCardInfoMask = (name, value) => {
+        let result = value;
+        if (name == 'cardNumber') {
+            if (result.length > 15) {
+                result = result.slice(0, 15);
+                for (var i = 15; i < value.length; i++) {
+                    result += '*';
+                }
+            }
+        } else if (name == 'cvc') {
+            result = "";
+            for (var i = 0; i < value.length; i++) {
+                result += '*';
+            }
+        } else if (name == 'password') {
+            result = "";
+            for (var i = 0; i < value.length; i++) {
+                result += '*';
+            }
+        }
+        return result;
+    }
     const onChangeMyCard = () => {
         Swal.fire({
             title: `저장 하시겠습니까?`,
@@ -282,7 +324,7 @@ const MUserCardEdit = () => {
             <Breadcrumb title={`${user?.id} 회원 카드 수정`} nickname={myNick} />
             <Card>
                 <CardWrapper>
-                    <Cards cvc={cvc} focused={focus} expiry={expiry} name={name} number={cardNumber} />
+                    <Cards cvc={cvc} focused={focus} expiry={expiry} name={name} number={returnCardInfoMask('cardNumber', cardNumber)} />
                 </CardWrapper>
                 <ContentWrappers style={{ marginTop: '1rem' }}>
                     <TextField
@@ -290,7 +332,7 @@ const MUserCardEdit = () => {
                         size="small"
                         name='cardNumber'
                         className="cardNumber"
-                        value={cardNumber}
+                        value={returnCardInfoMask('cardNumber', cardNumber)}
                         autoComplete='off'
                         label='카드 번호'
                         onBlur={handleBlur}
@@ -330,7 +372,7 @@ const MUserCardEdit = () => {
                         name='cvc'
                         className="cvc"
                         label='CVC 번호'
-                        value={cvc}
+                        value={returnCardInfoMask('cvc', cvc)}
                         autoComplete='off'
                         onBlur={handleBlur}
                         onChange={handleInputChange}
@@ -357,10 +399,9 @@ const MUserCardEdit = () => {
                         name='password'
                         className="password"
                         label='카드 비밀번호 앞 두자리'
-                        value={password}
+                        value={returnCardInfoMask('password', password)}
                         autoComplete='off'
                         onBlur={handleBlur}
-                        type='password'
                         inputProps={{ maxLength: '2' }}
                         onChange={e => setPassword(e.target.value)}
                         onFocus={e => setFocus(e.target.name)}
