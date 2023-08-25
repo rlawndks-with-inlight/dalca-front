@@ -27,7 +27,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getLocalStorage } from "../../../functions/LocalStorage";
-import { formatPhoneNumber, range } from "../../../functions/utils";
+import { formatPhoneNumber, range, returnCardInfoMask } from "../../../functions/utils";
 import ContentTable from "../../../components/ContentTable";
 import MBottomContent from "../../../components/elements/MBottomContent";
 import PageButton from "../../../components/elements/pagination/PageButton";
@@ -236,28 +236,6 @@ const ChangeCard = () => {
             }
             setPassword(target.value)
         }
-    }
-    const returnCardInfoMask = (name, value) => {
-        let result = value;
-        if (name == 'cardNumber') {
-            if (result.length > 15) {
-                result = result.slice(0, 15);
-                for (var i = 15; i < value.length; i++) {
-                    result += '*';
-                }
-            }
-        } else if (name == 'cvc') {
-            result = "";
-            for (var i = 0; i < value.length; i++) {
-                result += '*';
-            }
-        } else if (name == 'password') {
-            result = "";
-            for (var i = 0; i < value.length; i++) {
-                result += '*';
-            }
-        }
-        return result;
     }
     const sendMessage = async () => {
         let string = `

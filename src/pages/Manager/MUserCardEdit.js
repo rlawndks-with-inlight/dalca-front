@@ -10,7 +10,7 @@ import ButtonContainer from '../../components/elements/button/ButtonContainer';
 import AddButton from '../../components/elements/button/AddButton';
 import CancelButton from '../../components/elements/button/CancelButton';
 import $ from 'jquery';
-import { addItem, base64toFile, updateItem } from '../../functions/utils';
+import { addItem, base64toFile, returnCardInfoMask, updateItem } from '../../functions/utils';
 import { Card, Title, Input, Row, Col, ImageContainer, Select } from '../../components/elements/ManagerTemplete';
 import { backUrl } from '../../data/Data';
 import ReactQuill, { Quill } from "react-quill";
@@ -158,28 +158,6 @@ const MUserCardEdit = () => {
             }
             setPassword(target.value)
         }
-    }
-    const returnCardInfoMask = (name, value) => {
-        let result = value;
-        if (name == 'cardNumber') {
-            if (result.length > 15) {
-                result = result.slice(0, 15);
-                for (var i = 15; i < value.length; i++) {
-                    result += '*';
-                }
-            }
-        } else if (name == 'cvc') {
-            result = "";
-            for (var i = 0; i < value.length; i++) {
-                result += '*';
-            }
-        } else if (name == 'password') {
-            result = "";
-            for (var i = 0; i < value.length; i++) {
-                result += '*';
-            }
-        }
-        return result;
     }
     const onChangeMyCard = () => {
         Swal.fire({

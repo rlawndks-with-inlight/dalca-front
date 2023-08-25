@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import { commarNumber, formatPhoneNumber, getKoLevelByNum, getKoPayCategoryByNum } from "../functions/utils";
+import { useNavigate, useParams } from "react-router-dom";
+import { commarNumber, formatPhoneNumber, getKoLevelByNum, getKoPayCategoryByNum, returnCardInfoMask } from "../functions/utils";
 import { RiDeleteBinLine } from 'react-icons/ri'
 import axios from "axios";
 import { backUrl, socket } from "../data/Data";
@@ -35,6 +35,7 @@ white-space:pre;
 `
 const ContentTable = (props) => {
     const navigate = useNavigate();
+    const params = useParams();
     const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting, onClickList, onClickEditButton, checkOnlyOne, auth } = props;
     const [columns, setColumns] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -53,7 +54,7 @@ const ContentTable = (props) => {
         }
     }, [columns])
 
-    const deleteItem = async (pk, table, cha) => {
+    const deleteItem = async (pk, table, cha, page_pk) => {
         Swal.fire({
             title: `정말로 ${cha ?? '삭제'}하시겠습니까?`,
             showCancelButton: true,
@@ -63,9 +64,10 @@ const ContentTable = (props) => {
             if (result.isConfirmed) {
                 let obj = {
                     pk: pk,
-                    table: table
+                    table: table,
+                    page_pk: page_pk ?? 0
                 }
-                const { data: response } = await axios.post(`/api/deleteitem`, obj)
+                const { data: response } = await axios.post(`/api/deleteitem`, obj);
                 if (response.result > 0) {
                     toast.success('삭제되었습니다.');
                     pageSetting();
@@ -418,6 +420,10 @@ const ContentTable = (props) => {
                                                     getPayMonth(item) ?? "---"
                                                     :
                                                     null}
+                                                {column.type == 'card_number' ?
+                                                    returnCardInfoMask('cardNumber', item?.card_number ?? "")
+                                                    :
+                                                    null}
                                                 {column.type == 'pay_status' ?
                                                     getPayStatus(item) ?? "---"
                                                     :
@@ -507,7 +513,7 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'delete' ?
-                                                    <IconButton onClick={() => deleteItem(item.pk, table, column.name)}>
+                                                    <IconButton onClick={() => deleteItem(item.pk, table, column.name, params?.pk)}>
                                                         <Icon icon="material-symbols:delete-outline-sharp" />
                                                     </IconButton>
                                                     :

@@ -339,7 +339,7 @@ export const excelDownload = async (excelData, objManagerListContent, schema, na
         excel_list[i] = [];
         for (var j = 0; j < column_list.length; j++) {
             let data = await returnColumn(result[i], column_list[j]?.type, column_list[j]?.column, objManagerListContent[schema].schema, false, {
-                navigate:()=>{}
+                navigate: () => { }
             });;
             await excel_list[i].push(data);
         }
@@ -406,4 +406,26 @@ export const getMoneyByCardPercent = (price_, percent_) => {
     let percent = parseFloat(percent_);
 
     return price * (100 + percent) / 100;
+}
+export const returnCardInfoMask = (name, value) => {
+    let result = value;
+    if (name == 'cardNumber') {
+        if (result.length > 15) {
+            result = result.slice(0, 15);
+            for (var i = 15; i < value.length; i++) {
+                result += '*';
+            }
+        }
+    } else if (name == 'cvc') {
+        result = "";
+        for (var i = 0; i < value.length; i++) {
+            result += '*';
+        }
+    } else if (name == 'password') {
+        result = "";
+        for (var i = 0; i < value.length; i++) {
+            result += '*';
+        }
+    }
+    return result;
 }

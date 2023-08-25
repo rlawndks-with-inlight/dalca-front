@@ -218,7 +218,7 @@ export const objHistoryListContent = {
         title: "타인카드",
         columns: [
             columnObjFormat('체크', '', 'check', 'check'),
-            columnObjFormat('카드번호', '', 'text', 'card_number'),
+            columnObjFormat('카드번호', '', 'card_number', 'card_number'),
             columnObjFormat('카드사용자명', '', 'text', 'card_name'),
             columnObjFormat('생년월일', '', 'text', 'birth'),
             columnObjFormat('수정', '', 'edit', 'edit'),
