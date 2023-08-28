@@ -196,6 +196,12 @@ const History = () => {
         }
         changePage(1);
     }
+    const getOrderByTable = (table) =>{
+        if(table=='notice' || table=='faq' || table=='request'){
+            return 'sort'
+        }
+        return 'pk'
+    }
     const changePage = async (num) => {
         let state_query_str = "";
         if (location.state) {
@@ -205,7 +211,7 @@ const History = () => {
         }
         setLoading(true);
         setPage(num);
-        let api_str = `/api/items?table=${params?.category}&page=${num}&order=pk${state_query_str}&keyword=${searchKeyword}`
+        let api_str = `/api/items?table=${params?.category}&page=${num}&order=${getOrderByTable(params?.category)}${state_query_str}&keyword=${searchKeyword}`
         if (getLocalStorage('auth')?.user_level == 5 && params?.category == 'pay') {
             api_str += `&is_landlord=1`
         }
@@ -227,7 +233,6 @@ const History = () => {
         if (response?.result < 0) {
             toast.error(response?.message);
         } else {
-            console.log(response.data.option_obj)
             setOptionObj(response?.data?.option_obj)
             setData(response?.data?.data);
             setPageList(range(1, response?.data?.maxPage ?? 0));
@@ -377,7 +382,6 @@ const History = () => {
                             animate={{ opacity: 1 }}
                             style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                         >
-
                             <ContentTable
                                 columns={objHistoryListContent[schema] ?? []}
                                 data={data}
