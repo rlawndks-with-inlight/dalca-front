@@ -278,7 +278,7 @@ const MUserCardEdit = () => {
             }
         })
     }
-    const onCancelAutoCard = async () =>{
+    const onCancelAutoCard = async () => {
         Swal.fire({
             title: `정기결제 사용을 취소 하시겠습니까?`,
             showCancelButton: true,
@@ -286,7 +286,7 @@ const MUserCardEdit = () => {
             cancelButtonText: '취소'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const {data:response} = await axios.post('/api/cancelautocard',{
+                const { data: response } = await axios.post('/api/cancelautocard', {
                     user_pk: params?.pk
                 })
                 if (response?.result > 0) {
@@ -480,7 +480,7 @@ const MUserCardEdit = () => {
                             onClick={registerAutoCard}
                         >정기결제카드 저장</Button>
                     </div>
-                     <div style={{
+                    <div style={{
                         display: 'flex',
                         justifyContent: 'space-between',
                         width: '100%',

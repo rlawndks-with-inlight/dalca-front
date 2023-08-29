@@ -155,6 +155,10 @@ const Login = () => {
                             <Button variant="text" sx={twoOfThreeButtonStyle} onClick={onLogin}>로그인</Button>
                             <MarginBottom value={'1vh'} />
                             <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { setSignUpCount(1) }}>회원가입</Button>
+                            <MarginBottom value={'1vh'} />
+                            <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { 
+                                window.location.href = `https://center-pf.kakao.com/profiles`;
+                             }}>카카오 고객센터</Button>
                         </>
                         :
                         <>
