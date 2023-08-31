@@ -642,12 +642,11 @@ const SignUp = () => {
                                                     label={'집주소* '}
                                                     input_type={{
                                                         placeholder: '',
-                                                        disabled: "true"
                                                     }}
                                                     class_name='address'
                                                     is_divider={true}
                                                     onClick={() => {
-                                                        setIsSeePostCode(!isSeePostCode)
+                                                        setIsSeePostCode(true)
                                                     }}
                                                     value={values.address}
                                                 />
@@ -740,7 +739,6 @@ const SignUp = () => {
                                                     label={'사무실주소'}
                                                     input_type={{
                                                         placeholder: '',
-                                                        disabled: "true"
                                                     }}
                                                     class_name='office_address'
                                                     is_divider={true}

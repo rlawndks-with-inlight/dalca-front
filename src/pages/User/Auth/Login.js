@@ -83,7 +83,7 @@ const Login = () => {
     }
     return (
         <>
-            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff", height: '100vh' }}>
+            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '1rem auto', background: "#fff" }}>
                 <ContentWrappers style={{ margin: 'auto', maxWidth: '750px' }}>
                     <img src={logoSrc} style={{ maxWidth: '250px', width: '50%', margin: 'auto auto 10vh auto' }} onClick={() => { setSignUpCount(0) }} />
                     {signUpCount == 0 ?
@@ -157,7 +157,7 @@ const Login = () => {
                             <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { setSignUpCount(1) }}>회원가입</Button>
                             <MarginBottom value={'1vh'} />
                             <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { 
-                                window.location.href = `https://center-pf.kakao.com/profiles`;
+                                window.location.href = `https://pf.kakao.com/_pqZxkxj`;
                              }}>카카오 고객센터</Button>
                         </>
                         :
