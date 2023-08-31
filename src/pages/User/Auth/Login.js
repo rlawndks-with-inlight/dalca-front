@@ -158,7 +158,7 @@ const Login = () => {
                             <MarginBottom value={'1vh'} />
                             <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { 
                                 window.location.href = `https://pf.kakao.com/_pqZxkxj`;
-                             }}>카카오 고객센터</Button>
+                             }}>카카오톡 고객센터</Button>
                         </>
                         :
                         <>

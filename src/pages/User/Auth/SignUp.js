@@ -596,7 +596,7 @@ const SignUp = () => {
                                     <InputComponent
                                         label={'ID*'}
                                         input_type={{
-                                            placeholder: '특수문자 제외한 6자리 이상 20자리 이하',
+                                            placeholder: '특수문자 제외한 6자리 이상 20자리 이하 영문소문자',
                                             disabled: isCheckId
                                         }}
                                         class_name='id'
