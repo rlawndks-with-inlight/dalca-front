@@ -61,7 +61,7 @@ const PayItemCard = (props) => {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     let obj = {
-                        amount: 100,
+                        amount: price,
                         ord_num: `${user?.pk}${item?.pk}${new Date().getTime()}`,
                         item_name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} ` : ''} ${getKoPayCategoryByNum(item?.pay_category)}`,
                         buyer_name: user?.name,
