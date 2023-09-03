@@ -61,17 +61,16 @@ const PayItemCard = (props) => {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     let obj = {
-                        mid: 'welcometst',
+                        amount: 100,
+                        ord_num: `${user?.pk}${item?.pk}${new Date().getTime()}`,
+                        item_name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} ` : ''} ${getKoPayCategoryByNum(item?.pay_category)}`,
+                        buyer_name: user?.name,
+                        buyer_phone: user?.phone,
+                        return_url:`https://dalcapay.com:8443/api/payresult`,
                         temp: item?.pk,
-                        ord_nm: `${user?.pk}${item?.pk}${new Date().getTime()}`,
-                        name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} ` : ''} ${getKoPayCategoryByNum(item?.pay_category)}`,
-                        price: price,
-                        buyer: user?.name,
-                        tel: user?.phone,
-                        is_mobile: window.innerWidth >= 700 ? 0 : 1
                     }
                     let query = Object.entries(obj).map(e => e.join('=')).join('&');
-                    window.location.href = `https://worker1.payvery.kr/payment/kcp/${window.innerWidth >= 700 ? 'pc' : 'mobile'}/order?${query}`;
+                    window.location.href = `https://noti.payvery.kr/dalca/v2/pay/auth/koneps?${query}`;
                     // const { data: response } = await axios.post('/api/paydirect', {
                     //     item_pk: item?.pk
                     // });

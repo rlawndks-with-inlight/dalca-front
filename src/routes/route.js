@@ -43,6 +43,7 @@ import MRealEstateEdit from '../pages/Manager/MRealEstateEdit';
 import AroundRealEstate from '../pages/User/RealEstate/AroundRealEstate';
 import MPointEdit from '../pages/Manager/MPointEdit';
 import ChangePayStatus from '../pages/User/Pay/ChangePayStatus';
+import PayResult from '../pages/User/Pay/PayResult';
 
 const zManagerRoute = [
     { link: '/manager', element: <MLogin />, title: "관리자로그인" },
@@ -78,6 +79,7 @@ const zUserRoute = [
     { link: '/request/:pk', element: <Request />, title: "" },
     { link: '/payready/:pay_pk', element: <PayReady />, title: "" },
     { link: '/payready', element: <PayReady />, title: "" },
+    { link: '/payresult/:status', element: <PayResult />, title: "" },
     { link: '/card/:category', element: <ChangeCard />, title: "" },
     { link: '/around-realestate', element: <AroundRealEstate />, title: "" },
     { link: '/change_pay_status', element: <ChangePayStatus />, title: "" },
