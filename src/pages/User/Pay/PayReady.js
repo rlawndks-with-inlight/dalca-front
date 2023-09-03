@@ -92,7 +92,7 @@ const PayReady = () => {
                 }, 1000);
             }
         }
-    }, [])
+    }, [location])
     const getSetting = async () => {
         const { data: res_setting } = await axios.get(`/api/item?table=setting&pk=1`);
         setSetting(res_setting?.data);
@@ -100,7 +100,6 @@ const PayReady = () => {
     const getPayInfo = async (user_data, is_render) => {
         try {
             getSetting();
-
             const { data: response } = await axios.get(`/api/item?table=pay&pk=${params?.pay_pk}`);
             let obj = response?.data;
             if (user_data?.pk != obj?.lessee_pk && user_data?.pk != obj?.landlord_pk) {
