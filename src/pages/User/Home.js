@@ -157,7 +157,7 @@ const Home = () => {
                                     data={post?.pay ?? []}
                                     schema={`pay_${userData?.user_level}`}
                                     table={'pay'} />
-                                {userData?.user_level != 5 ?
+                                {userData?.user_level == 0 ?
                                     <>
                                         <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
                                         <ContentTable
