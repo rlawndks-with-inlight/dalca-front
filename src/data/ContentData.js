@@ -182,6 +182,15 @@ export const objHistoryListContent = {
             columnObjFormat('삭제', '', 'delete', 'delete'),
         ]
     },
+    commission_10: {
+        title: "정산",
+        columns: [
+            columnObjFormat('금액', '', 'number', 'price'),
+            columnObjFormat('퍼센트', '', 'percent', 'percent'),
+            columnObjFormat('비고', '', 'text', 'note'),
+            columnObjFormat('날짜', '', 'text', 'date'),
+        ]
+    },
     request: {
         title: "문의",
         columns: [

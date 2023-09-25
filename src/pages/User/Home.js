@@ -171,7 +171,20 @@ const Home = () => {
                                     <>
                                     </>
                                 }
-
+                                {userData?.user_level == 10 ?
+                                    <>
+                                        <HalfTitle style={{ maxWidth: '1050px' }}>정산내역</HalfTitle>
+                                        <ContentTable
+                                            columns={objHistoryListContent[`commission_${userData?.user_level}`] ?? []}
+                                            data={post?.commission ?? []}
+                                            schema={`commission_${userData?.user_level}`}
+                                            table={'commission'}
+                                        />
+                                    </>
+                                    :
+                                    <>
+                                    </>
+                                }
 
                             </>
                             :
