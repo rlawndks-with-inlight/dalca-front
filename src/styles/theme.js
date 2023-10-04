@@ -66,10 +66,10 @@ const theme = {
     desktop: `(max-width: ${size.desktop})`,
   },
   font: {
-    normal: "NanumBarunGothic",
-    bold: "NanumBarunGothicBold",
-    ultra_light: "NanumBarunGothicUltraLight",
-    light: "NanumBarunGothicLight",
+    normal: "SpoqaHanSansRegular",
+    bold: "SpoqaHanSansBold",
+    ultra_light: "SpoqaHanSansThin",
+    light: "SpoqaHanSansLight",
   },
   boxShadow: "0px 12px 12px #00000029",
   borderRadius: "10px"

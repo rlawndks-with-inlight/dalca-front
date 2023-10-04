@@ -1,19 +1,39 @@
+@font-face {
+  font-family: 'NanumBarunGothic';
+  src: url("../assets//fonts/NanumBarunGothic.ttf") format('truetype');
+}
 
-  @font-face {
-    font-family: 'NanumBarunGothic';
-    src: url("../assets//fonts/NanumBarunGothic.ttf") format('truetype');
-  }
- 
-  @font-face {
-    font-family: 'NanumBarunGothicBold';
-    src: url("../assets//fonts/NanumBarunGothicBold.ttf") format('truetype');
-  }
-  @font-face {
-    font-family: 'NanumBarunGothicLight';
-    src: url("../assets//fonts/NanumBarunGothicLight.ttf") format('truetype');
-  }
-  @font-face {
-    font-family: 'NanumBarunGothicUltraLight';
-    src: url("../assets//fonts/NanumBarunGothicUltraLight.ttf") format('truetype');
-  }
- 
+@font-face {
+  font-family: 'NanumBarunGothicBold';
+  src: url("../assets//fonts/NanumBarunGothicBold.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'NanumBarunGothicLight';
+  src: url("../assets//fonts/NanumBarunGothicLight.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'NanumBarunGothicUltraLight';
+  src: url("../assets//fonts/NanumBarunGothicUltraLight.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'SpoqaHanSansThin';
+  src: url("../assets//fonts/SpoqaHanSansThin.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'SpoqaHanSansLight';
+  src: url("../assets//fonts/SpoqaHanSansLight.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'SpoqaHanSansRegular';
+  src: url("../assets//fonts/SpoqaHanSansRegular.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'SpoqaHanSansBold';
+  src: url("../assets//fonts/SpoqaHanSansBold.ttf") format('truetype');
+}
