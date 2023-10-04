@@ -30,6 +30,9 @@ font-size:${props => props.theme.size.font6};
 //     font-size:${props => props.theme.size.font5};
 //     padding:2px;
 // }
+@media screen and (max-width:750px) {
+    border-right: none;
+}
 `
 const Img = styled.img`
 width: 80px;
@@ -45,6 +48,34 @@ margin-top:8px;
 flex-direction:column;
 }
 `
+const InfoContainer = styled.div`
+display:flex;
+align-items: center;
+@media screen and (max-width:750px) {
+    flex-direction:column;
+    align-items: flex-start;
+}
+`
+const PolicyContainer = styled.div`
+display:flex;
+align-items: center;
+@media screen and (max-width:750px) {
+    align-items: flex-start;
+    margin: 0;
+}
+`
+const Policy0 = styled.div`
+border-right:1px solid ${props => props.theme.color.font1};
+padding:0 8px;
+transition: 0.3s;
+font-size:${props => props.theme.size.font6};
+cursor: pointer;
+margin-left: 96px;
+@media screen and (max-width:750px) {
+    border-right: none;
+    margin-left: 0;
+}
+`
 const Footer = () => {
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -58,11 +89,11 @@ const Footer = () => {
                 <>
 
                     <Wrappers className="footer">
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Post onClick={() => navigate('/policy/0')} style={{ cursor: 'pointer', marginLeft: '96px' }}>이용약관</Post>
+                        <PolicyContainer>
+                            <Policy0 onClick={() => navigate('/policy/0')} >이용약관</Policy0>
                             <Post onClick={() => navigate('/policy/1')} style={{ cursor: 'pointer', borderRight: 'none' }}>개인정보처리방침</Post>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                        </PolicyContainer>
+                        <InfoContainer>
                             <Img src={logoSrc} alt="footer" />
                             <Post>주식회사 오앤유페이먼츠</Post>
                             <Post>대표자 조웅형</Post>
@@ -70,7 +101,7 @@ const Footer = () => {
                             <Post style={{ borderRight: 'none' }}>
                                 상담시간 오전 11시~오후 5시 / 점심시간 오후 12시~1시 / 휴무일: 주말 및 공휴일
                             </Post>
-                        </div>
+                        </InfoContainer>
                         <div style={{ marginTop: '8px' }}>경기도 김포시 태장로789, 611호(장기동, 금광하이테크)</div>
                         <Flex>
                             <div style={{ marginRight: '16px' }}>대표번호&nbsp;&nbsp;1533-8643</div>
