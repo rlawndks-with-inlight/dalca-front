@@ -26,6 +26,7 @@ min-height:58vh;
 @media screen and (max-width:1050px) { 
     margin-top:5rem;
 }
+font-family: ${({ theme }) => theme.font.normal};
 `
 export const postCodeStyle = {
     display: 'block',
