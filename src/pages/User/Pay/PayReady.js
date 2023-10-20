@@ -93,6 +93,11 @@ const PayReady = () => {
             }
         }
     }, [location])
+    useEffect(() => {
+        if (values?.realtor_pk > 0) {
+            setLoading(false);
+        }
+    }, [values])
     const getSetting = async () => {
         const { data: res_setting } = await axios.get(`/api/item?table=setting&pk=1`);
         setSetting(res_setting?.data);
@@ -128,7 +133,6 @@ const PayReady = () => {
             //     obj['realtor'] = {};
             // }
             setValues({ ...values, ...obj });
-            setLoading(false);
         } catch (err) {
             console.log(err);
         }
