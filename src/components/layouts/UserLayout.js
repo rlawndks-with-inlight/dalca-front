@@ -15,7 +15,6 @@ const UserLayout = () => {
     return (
         <>
             <AnimatePresence>
-
                 {nonLayoutList.includes(location.pathname) || location.pathname.includes('/signup') ?
                     <>
 

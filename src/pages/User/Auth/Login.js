@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MarginBottom, Wrappers, ContentWrappers, twoOfThreeButtonStyle, InputComponent } from "../../../components/elements/UserContentTemplete";
+import { MarginBottom, Wrappers, ContentWrappers, twoOfThreeButtonStyle, InputComponent, RowContent, RowContainer, TopTitleWithBackButton } from "../../../components/elements/UserContentTemplete";
 import LoginCard from "../../../components/LoginCard";
 import { fullBackgroundColorWrappersStyle } from "../../../data/ContentData";
 import { logoSrc } from "../../../data/Data";
@@ -18,6 +18,38 @@ import $ from 'jquery';
 import { setLocalStorage } from "../../../functions/LocalStorage";
 import { motion } from "framer-motion";
 import Footer from '../../../common/Footer'
+import OverBannerSrc from '../../../assets/images/test/login-banner.svg'
+import PersonIcon from '../../../assets/images/icon/person.svg'
+import LockIcon from '../../../assets/images/icon/lock.svg'
+import KakaoTalkIcon from '../../../assets/images/icon/kako-talk.svg'
+import LandlordBannerSrc from '../../../assets/images/test/landlord-banner.svg'
+import RealEstateBannerSrc from '../../../assets/images/test/real-estate-banner.svg'
+import LesseeBannerSrc from '../../../assets/images/test/lessee-banner.svg'
+import { Col } from "../../../components/elements/ManagerTemplete";
+const OverBannerImg = styled.img`
+position: absolute;
+width: 800px;
+top: -10vh;
+left: 50%;
+transform: translate(-50%, 0);
+@media screen and (max-width: 1000px) {
+    
+    width: 100vw;
+    top: -10vw;
+}
+`
+const OverBannerPaddingTop = styled.div`
+margin-bottom: 50vh;
+@media screen and (max-width: 1000px) {
+    margin-bottom: 80vw;
+}
+`
+const RowIconContainer = styled.div`
+display: flex;
+margin: 1rem auto;
+column-gap: 0.5rem;
+align-items: center;
+`
 const SignUpCategoryButton = (props) => {
     const { icon, title, sub_title, onClick } = props;
     return (
@@ -38,6 +70,7 @@ const Login = () => {
     const [signUpCount, setSignUpCount] = useState(0);
     const [state, setState] = useState({});
     useEffect(() => {
+        window.scrollTo(0, 0);
         setState(location.state)
     }, []);
     const defaultObj = {
@@ -83,17 +116,27 @@ const Login = () => {
     }
     return (
         <>
-            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '1rem auto', background: "#fff" }}>
-                <ContentWrappers style={{ margin: 'auto', maxWidth: '750px' }}>
-                    <img src={logoSrc} style={{ maxWidth: '250px', width: '50%', margin: 'auto auto 10vh auto' }} onClick={() => { setSignUpCount(0) }} />
-                    {signUpCount == 0 ?
+            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '0 auto', background: "#fff", width: '100%' }}>
+                {signUpCount == 0 &&
+                    <>
+                        <OverBannerImg src={OverBannerSrc} />
+                    </>}
+                <ContentWrappers style={{ margin: '0 auto', maxWidth: '750px', width: '90%' }}>
+                    {signUpCount == 1 &&
                         <>
+                            <TopTitleWithBackButton title={'로그인 하러가기'} onClickBackIcon={() => {
+                                setSignUpCount(0);
+                            }} />
+                        </>}
+                    {/* <img src={logoSrc} style={{ maxWidth: '250px', margin: 'auto auto 10vh auto', zIndex: '1' }} onClick={() => { setSignUpCount(0) }} /> */}
+                    {signUpCount == 0 &&
+                        <>
+                            <OverBannerPaddingTop />
                             <InputComponent
                                 label={'아이디를 입력해주세요.'}
                                 input_type={{
                                     placeholder: '',
                                 }}
-                                icon_label={<img src={userIcon} style={{ marginBottom: '6px' }} />}
                                 class_name='id'
                                 onKeyPress={() => $('.pw').focus()}
                                 onChange={(e) => handleChange(e, 'id')}
@@ -111,58 +154,44 @@ const Login = () => {
                                 value={values?.pw}
                                 isSeeButton={true}
                             />
-                            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
-                                <div style={{ marginLeft: 'auto', cursor: 'pointer', color: theme.color.background1 }}
-                                    onClick={() => {
-                                        navigate('/findmyinfo')
-                                    }}
-                                >아이디/비밀번호 찾기</div>
-                            </div>
-                        </>
-                        :
+                        </>}
+                    {signUpCount == 1 &&
                         <>
                             <div style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
-                                <div style={{ color: '#fff' }}>
-                                    원하는 회원가입 유형을 선택하세요.
+                                <div style={{ color: '', fontWeight: 'bold', margin: '1rem auto' }}>
+                                    해당하는 버튼을 터치해주세요
                                 </div>
                                 <MarginBottom value={'1vh'} />
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <SignUpCategoryButton
-                                        icon={signUpIcon1}
-                                        title={'임차인'}
-                                        sub_title={'세입자'}
-                                        onClick={() => { navigate('/signup/0') }}
-                                    />
-                                    <SignUpCategoryButton
-                                        icon={signUpIcon2}
-                                        title={'임대인'}
-                                        sub_title={'집주인'}
-                                        onClick={() => { navigate('/signup/5') }}
-                                    />
-                                    <SignUpCategoryButton
-                                        icon={signUpIcon3}
-                                        title={'공인중개사'}
-                                        sub_title={'부동산'}
-                                        onClick={() => { navigate('/signup/10') }}
-                                    />
-                                </div>
+                                <Col style={{ rowGap: '1rem' }}>
+                                    <img src={LesseeBannerSrc} onClick={() => { navigate('/signup/0') }} style={{ cursor: 'pointer', width: '100%' }} />
+                                    <img src={LandlordBannerSrc} onClick={() => { navigate('/signup/5') }} style={{ cursor: 'pointer', width: '100%' }} />
+                                    <img src={RealEstateBannerSrc} onClick={() => { navigate('/signup/10') }} style={{ cursor: 'pointer', width: '100%' }} />
+                                </Col>
                             </div>
                         </>}
-
-                    <MarginBottom value={'10vh'} />
-                    {signUpCount == 0 ?
+                    <MarginBottom value={'5vh'} />
+                    {signUpCount == 0 &&
                         <>
                             <Button variant="text" sx={twoOfThreeButtonStyle} onClick={onLogin}>로그인</Button>
-                            <MarginBottom value={'1vh'} />
-                            <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { setSignUpCount(1) }}>회원가입</Button>
-                            <MarginBottom value={'1vh'} />
-                            <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { 
-                                window.location.href = `https://pf.kakao.com/_pqZxkxj`;
-                             }}>카카오톡 고객센터</Button>
-                        </>
-                        :
-                        <>
-                            <Button variant="text" sx={twoOfThreeButtonStyle} onClick={() => { setSignUpCount(0) }}>로그인 페이지로</Button>
+                            <MarginBottom value={'2vh'} />
+                            <RowIconContainer>
+                                <RowContainer style={{ columnGap: '0.25rem', cursor: 'pointer' }} onClick={() => { setSignUpCount(1) }}>
+                                    <img src={PersonIcon} />
+                                    <div>회원가입</div>
+                                </RowContainer>
+                                <RowContainer style={{ columnGap: '0.25rem', cursor: 'pointer' }} onClick={() => {
+                                    navigate('/findmyinfo')
+                                }}>
+                                    <img src={LockIcon} />
+                                    <div>ID/PW 찾기</div>
+                                </RowContainer>
+                                <RowContainer style={{ columnGap: '0.25rem', cursor: 'pointer' }} onClick={() => {
+                                    window.location.href = `https://pf.kakao.com/_pqZxkxj`;
+                                }}>
+                                    <img src={KakaoTalkIcon} />
+                                    <div>고객센터</div>
+                                </RowContainer>
+                            </RowIconContainer>
                         </>}
                     <div style={{ margin: '0 auto auto auto' }} />
                 </ContentWrappers>

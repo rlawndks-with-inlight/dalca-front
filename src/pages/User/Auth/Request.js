@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Input, Textarea } from "../../../components/elements/ManagerTemplete";
-import { borderButtonStyle, colorButtonStyle, Content, TextButton, TextFillButton, Title, Wrappers } from "../../../components/elements/UserContentTemplete"
+import { borderButtonStyle, colorButtonStyle, Content, InputComponent, RowContent, TextButton, TextFillButton, Title, Wrappers, twoOfThreeButtonStyle } from "../../../components/elements/UserContentTemplete"
 import theme from "../../../styles/theme";
 import $ from 'jquery';
 import { useEffect, useState } from "react";
@@ -51,12 +51,19 @@ const Request = () => {
             confirmButtonText: '확인',
             cancelButtonText: '취소'
         }).then(async (result) => {
-            const { data: response } = await axios.post('/api/additembyuser', {
+            if (!result.isConfirmed) {
+                return;
+            }
+            let obj = {
                 table: 'request',
                 title: $('.title_').val(),
                 note: $('.note').val(),
-            })
-            if (response?.result > 0) {
+            };
+            if (post?.pk) {
+                obj.pk = post?.pk;
+            }
+            const { data: response } = await axios.post(`/api/${post?.pk ? 'updateitem' : 'additembyuser'}`, obj)
+            if (response?.result > 0 && !post?.pk) {
                 socket.emit('message', {
                     method: 'add_request',
                     data: {
@@ -65,50 +72,95 @@ const Request = () => {
                 });
                 toast.success("성공적으로 저장되었습니다.");
                 navigate('/history/request', { state: { type_num: 1 } })
+            } else if (response?.result > 0 && post?.pk) {
+                toast.success("성공적으로 저장되었습니다.");
+                navigate('/history/request', { state: { type_num: 1 } })
             } else {
                 toast.error(response?.message);
             }
         })
     }
+    const onCancel = () => {
+        Swal.fire({
+            title: `작성중인 글은 모두 지워집니다.\n문의하기를 취소하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '네, 취소할게요.',
+            cancelButtonText: '아니오, 계속 작성할게요.'
+        }).then(async (result) => {
+            if (!result.isConfirmed) {
+                return;
+            }
+            navigate(-1);
+        })
+    }
+    const onDelete = async () => {
+        Swal.fire({
+            title: `글을 삭제하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '네, 삭제할게요.',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (!result.isConfirmed) {
+                return;
+            }
+            const { data: response } = await axios.post(`/api/deleteitembyuser`, {
+                table: 'request',
+                pk: post?.pk
+            })
+            if (response?.result > 0) {
+                toast.success("성공적으로 삭제되었습니다.");
+                navigate('/history/request', { state: { type_num: 1 } })
+            }
+        })
+    }
     return (
-        <Wrappers>
+        <Wrappers style={{ marginBottom: '1rem' }}>
             <Content>
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
+                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '500px' }}
                 >
-                    <Title>문의하기</Title>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>제목</div>
-                        <Input style={{ margin: '0 0 0 8px', width: '80%', maxWidth: '700px', padding: '14px 8px' }} className='title_' disabled={params?.pk > 0 ? true : false} />
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
-                        <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>내용</div>
-                        <Textarea style={{ margin: '0 0 0 8px', width: '80%', height: '360px', maxWidth: '700px' }} className='note' disabled={params?.pk > 0 ? true : false} />
-                    </div>
-                    {post?.status == 1 ?
+                    <InputComponent
+                        label={'제목을 입력해주세요.'}
+                        top_label={'제목'}
+                        input_type={{
+                            placeholder: ''
+                        }}
+                        class_name='title_'
+                    />
+                    <InputComponent
+                        label={'내용을 입력해주세요.'}
+                        top_label={'내용'}
+                        input_type={{
+                            placeholder: ''
+                        }}
+                        class_name='note'
+                        rows={6}
+                    />
+                    {post?.pk > 0 ?
                         <>
-                            <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '16px', justifyContent: 'space-between' }}>
-                                <div style={{ maxWidth: '48px', fontSize: theme.size.font4, fontWeight: 'bold', width: '10%' }}>답변</div>
-                                <Textarea style={{ margin: '0 0 0 8px', width: '85%', height: '360px', maxWidth: '700px' }} className='reply' disabled={params?.pk > 0 ? true : false} />
-                            </div>
-                            <div style={{ display: "flex", marginTop: '16px', marginLeft: 'auto' }}>
-                                <Button sx={borderButtonStyle} onClick={() => navigate(-1)}>뒤로가기</Button>
-                            </div>
+                            <InputComponent
+                                label={''}
+                                top_label={'답변'}
+                                input_type={{
+                                    placeholder: ''
+                                }}
+                                class_name='reply'
+                                rows={6}
+                                disabled={params?.pk > 0 ? true : false}
+                            />
+                            <RowContent style={{ columnGap: '0.5rem', marginTop: 'auto' }}>
+                                <Button sx={{ ...borderButtonStyle, width: '50%' }} onClick={onDelete}>삭제</Button>
+                                <Button sx={{ ...colorButtonStyle, width: '50%' }} onClick={onRequest}>수정</Button>
+                            </RowContent>
                         </>
                         :
                         <>
-                            <div style={{ display: "flex", marginTop: '16px', marginLeft: 'auto' }}>
-                                <Button sx={borderButtonStyle} onClick={() => navigate(-1)}>취소</Button>
-                                {params?.pk > 0 ?
-                                    <>
-                                    </>
-                                    :
-                                    <>
-                                        <Button sx={{ ...colorButtonStyle, margin: '0 0 0 8px' }} onClick={onRequest}>완료</Button>
-                                    </>}
-                            </div>
+                            <RowContent style={{ columnGap: '0.5rem', marginTop: 'auto' }}>
+                                <Button sx={{ ...borderButtonStyle, width: '50%' }} onClick={onCancel}>취소</Button>
+                                <Button sx={{ ...colorButtonStyle, width: '50%' }} onClick={onRequest}>완료</Button>
+                            </RowContent>
                         </>}
                 </motion.div>
 

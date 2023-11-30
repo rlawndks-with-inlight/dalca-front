@@ -2,8 +2,7 @@ import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { GrFormPrevious } from "react-icons/gr";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
-import { ContentWrappers, FakeHeaders, HalfTitle, InputComponent, RowContent, Title, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { ContentWrappers, FakeHeaders, HalfTitle, InputComponent, RowContainer, RowContent, Title, TopTitleWithBackButton, TwoOfThreeButton, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import theme from "../../../styles/theme";
 import Button from '@mui/material/Button';
 import { Dialog, DialogContent, Divider } from "@mui/material";
@@ -14,16 +13,17 @@ import $ from 'jquery';
 import axios from "axios";
 import { formatPhoneNumber, regExp } from "../../../functions/utils";
 import Swal from "sweetalert2";
-import { ImageContainer } from "../../../components/elements/ManagerTemplete";
+import { Col, ImageContainer } from "../../../components/elements/ManagerTemplete";
 import { AiFillFileImage } from "react-icons/ai";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
 import Policy from "../Policy/Policy";
-import { PAY_INFO } from "../../../data/ContentData";
 import { backUrl, frontUrl, socket } from "../../../data/Data";
 import Loading from "../../../components/Loading";
 import { getUserLevelByNumber } from "../../../functions/format";
 import { onPostWebview } from "../../../functions/webview-connect";
-
+import AuthPhoneSrc from '../../../assets/images/test/auth-phone.svg'
+import PassSrc from '../../../assets/images/test/pass.svg'
+import { Icon } from "@iconify/react";
 
 const SignUp = () => {
     const params = useParams();
@@ -471,7 +471,7 @@ const SignUp = () => {
                 content: string
             })
             if (response?.result > 0) {
-                alert('인증번호가 발송되었습니다.');
+                toast.success('인증번호가 발송되었습니다.');
 
                 setIsSendSms(true)
                 setRandNum(content);
@@ -509,6 +509,13 @@ const SignUp = () => {
                     setCheckPhoneNum("");
                 }, 500);
             }}>
+                <Icon icon='mingcute:close-line' style={{ margin: '20px 20px 0 auto', fontSize: '2rem', cursor: 'pointer' }} onClick={() => {
+                    setOpenPhoneCheckType(false);
+                    setTimeout(() => {
+                        setPhoneCheckType(1);
+                        setCheckPhoneNum("");
+                    }, 500);
+                }} />
                 <DialogContent style={{ columnGap: '1rem', display: 'flex', width: `${window.innerWidth > 1000 ? '500px' : '70vw'}` }}>
                     {phoneCheckType == 0 ?
                         <>
@@ -536,7 +543,7 @@ const SignUp = () => {
                                     onChange={(e) => handleChange(e, 'id_number')}
                                 />
                                 <InputComponent
-                                    label={'휴대폰번호*'}
+                                    label={'휴대폰번호'}
                                     input_type={{
                                         placeholder: '하이픈제외(-)',
                                         disabled: values?.phone
@@ -551,7 +558,7 @@ const SignUp = () => {
                                     value={checkPhoneNum}
                                 />
                                 <InputComponent
-                                    label={'휴대폰인증번호*'}
+                                    label={'휴대폰인증번호'}
                                     input_type={{
                                         placeholder: '',
                                     }}
@@ -568,20 +575,39 @@ const SignUp = () => {
                         </>
                         :
                         <>
-                            <Button variant="outlined" style={{ width: `${window.innerWidth > 1000 ? '200px' : '30vw'}`, height: '72px', margin: `0 ${!window.ReactNativeWebView ? '0' : 'auto'} 0 auto`, fontWeight: 'bold' }} onClick={() => {
-                                setPhoneCheckType(0);
-                            }}>인증번호</Button>
-                            {!window.ReactNativeWebView &&
-                                <>
-                                    <Button variant="contained" style={{ width: `${window.innerWidth > 1000 ? '200px' : '30vw'}`, height: '72px', margin: `0 auto 0 auto`, fontWeight: 'bold' }} onClick={getIdentificationInfo}>PASS</Button>
-                                </>}
+                            <ContentWrappers>
+                                <div style={{ margin: '1rem auto', fontWeight: 'bold' }}>인증방법을 선택해주세요</div>
+                                <RowContainer>
+                                    <Col style={{ alignItems: 'center', rowGap: '1rem', cursor: 'pointer', margin: '0 auto' }} onClick={() => {
+                                        setPhoneCheckType(0);
+                                    }}>
+                                        <img src={AuthPhoneSrc} />
+                                        <div>인증번호</div>
+                                    </Col>
+                                    {!window.ReactNativeWebView &&
+                                        <>
+                                            <Col style={{ alignItems: 'center', rowGap: '1rem', cursor: 'pointer', margin: '0 auto' }} onClick={getIdentificationInfo}>
+                                                <img src={PassSrc} style={{ borderRadius: '0.5rem' }} />
+                                                <div>PASS</div>
+                                            </Col>
+                                        </>}
+
+                                    {/* <Button variant="outlined" style={{ width: `${window.innerWidth > 1000 ? '200px' : '30vw'}`, height: '72px', margin: `0 ${!window.ReactNativeWebView ? '0' : 'auto'} 0 auto`, fontWeight: 'bold' }} onClick={() => {
+                                        setPhoneCheckType(0);
+                                    }}>인증번호</Button>
+                                    {!window.ReactNativeWebView &&
+                                        <>
+                                            <Button variant="contained" style={{ width: `${window.innerWidth > 1000 ? '200px' : '30vw'}`, height: '72px', margin: `0 auto 0 auto`, fontWeight: 'bold' }} onClick={getIdentificationInfo}>PASS</Button>
+                                        </>} */}
+                                </RowContainer>
+                            </ContentWrappers>
+
                         </>}
 
                 </DialogContent>
             </Dialog>
-            <FakeHeaders label='회원가입' />
-            <Wrappers className="wrapper">
-
+            <Wrappers className="wrapper" style={{ marginTop: '0' }}>
+                <TopTitleWithBackButton title='회원가입' />
                 <ContentWrappers>
                     {loading ?
                         <>
@@ -594,7 +620,7 @@ const SignUp = () => {
                                 <>
                                     <HalfTitle>{title}</HalfTitle>
                                     <InputComponent
-                                        label={'ID*'}
+                                        label={'아이디'}
                                         input_type={{
                                             placeholder: '특수문자 제외한 6자리 이상 20자리 이하 영문소문자',
                                             disabled: isCheckId
@@ -609,7 +635,7 @@ const SignUp = () => {
                                         value={values.id}
                                     />
                                     <InputComponent
-                                        label={'PW*'}
+                                        label={'비밀번호'}
                                         input_type={{
                                             placeholder: '영문, 숫자, 특수문자조합 8~20자',
                                             type: 'password'
@@ -622,7 +648,7 @@ const SignUp = () => {
                                         isSeeButton={true}
                                     />
                                     <InputComponent
-                                        label={'PW 확인*'}
+                                        label={'비밀번호확인'}
                                         input_type={{
                                             placeholder: '비밀번호 확인을 위해 한번 더 입력해주세요',
                                             type: 'password'
@@ -639,7 +665,7 @@ const SignUp = () => {
                                             <div onClick={() => {
                                             }}>
                                                 <InputComponent
-                                                    label={'집주소* '}
+                                                    label={'집주소'}
                                                     input_type={{
                                                         placeholder: '',
                                                     }}
@@ -710,11 +736,11 @@ const SignUp = () => {
                             {step == 1 ?
                                 <>
                                     <HalfTitle>{title}</HalfTitle>
-
                                     {params?.user_level == 10 ?
                                         <>
                                             <InputComponent
                                                 label={'중개업소명칭'}
+                                                top_label={'중개업소명칭'}
                                                 input_type={{
                                                     placeholder: ''
                                                 }}
@@ -724,6 +750,7 @@ const SignUp = () => {
                                                 value={values.office_name}
                                             />
                                             <InputComponent
+                                                top_label={'사업자등록번호'}
                                                 label={'사업자등록번호'}
                                                 input_type={{
                                                     placeholder: '필수입력'
@@ -736,6 +763,7 @@ const SignUp = () => {
                                             <div onClick={() => {
                                             }}>
                                                 <InputComponent
+                                                    top_label={'사무실주소'}
                                                     label={'사무실주소'}
                                                     input_type={{
                                                         placeholder: '',
@@ -749,6 +777,7 @@ const SignUp = () => {
                                                 />
                                             </div>
                                             <InputComponent
+                                                top_label={'사무실상세주소'}
                                                 label={'사무실상세주소'}
                                                 input_type={{
                                                     placeholder: ''
@@ -759,6 +788,7 @@ const SignUp = () => {
                                                 value={values.office_address_detail}
                                             />
                                             <InputComponent
+                                                top_label={'사무실연락처'}
                                                 label={'사무실연락처'}
                                                 input_type={{
                                                     placeholder: ''

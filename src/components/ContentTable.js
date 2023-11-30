@@ -1,37 +1,46 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { commarNumber, formatPhoneNumber, getKoLevelByNum, getKoPayCategoryByNum, returnCardInfoMask } from "../functions/utils";
-import { RiDeleteBinLine } from 'react-icons/ri'
+import { commarNumber, formatPhoneNumber, getKoLevelByNum, getKoPayCategoryByNum, getMoneyByCardPercent, returnCardInfoMask } from "../functions/utils";
 import axios from "axios";
 import { backUrl, socket } from "../data/Data";
 import AddButton from "./elements/button/AddButton";
 import theme from "../styles/theme";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { TextButton } from "./elements/UserContentTemplete";
+import { ContentWrappers, InputComponent, MiniButton, RowContainer, RowContent, TextButton, twoOfThreeButtonStyle, borderButtonStyle } from "./elements/UserContentTemplete";
 import { objHistoryListContent } from "../data/ContentData";
-import { Button, IconButton } from "@mui/material";
+import { Button, Dialog, DialogContent, IconButton } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { getLocalStorage } from "../functions/LocalStorage";
 import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { getPayCategory, getPayStatus, getPointHistoryByNum, getUserLevelByNumber } from "../functions/format";
-const Table = styled.table`
+import NoneDataSrc from '../assets/images/test/none-data.svg'
+import EyeIconSrc from '../assets/images/icon/eye.svg'
+import DeleteIconSrc from '../assets/images/icon/delete.svg'
+import HistoryIconSrc from '../assets/images/icon/history.svg'
+import $ from 'jquery';
+
+const Table = styled.div`
 font-size:${props => props.theme.size.font4};
 width:100%;
 text-align:center;
-border-collapse: collapse;
 min-width:350px;
+row-gap: 1rem;
+display: flex;
+flex-direction: column;
 `
-const Tr = styled.tr`
-width:100%;
-height:26px;
-border-bottom:1px solid ${props => props.theme.color.font4};
+const Tr = styled.div`
+display: flex;
+flex-wrap: wrap;
+row-gap: 0.75rem;
+align-items: center;
 `
-const Td = styled.td`
-border-bottom:1px solid ${props => props.theme.color.font4};
+const Td = styled.div`
+width: 25%;
 font-size:${props => props.theme.size.font5};
-white-space:pre;
+text-align: left;
+word-break: break-all;
 `
 const ContentTable = (props) => {
     const navigate = useNavigate();
@@ -39,6 +48,8 @@ const ContentTable = (props) => {
     const { data, click, schema, table, isPointer, addSubscribeMaster, columnsBold, marginBottom, fontSize, pageSetting, onClickList, onClickEditButton, checkOnlyOne, auth } = props;
     const [columns, setColumns] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [setting, setSetting] = useState({});
+    const [userData, setUserData] = useState({});
     const onClickEvent = (str) => {
         if (str) {
             navigate(str)
@@ -47,7 +58,18 @@ const ContentTable = (props) => {
     useEffect(() => {
         setLoading(true);
         setColumns(objHistoryListContent[schema]?.columns);
+        let user_data = getLocalStorage('auth');
+        setUserData(user_data);
+        if (table == 'pay') {
+            getSetting();
+        }
     }, [])
+
+    const getSetting = async () => {
+        const { data: res_setting } = await axios.get(`/api/item?table=setting&pk=1`);
+        setSetting(res_setting?.data);
+
+    }
     useEffect(() => {
         if (columns && columns.length > 0) {
             setLoading(false);
@@ -67,7 +89,7 @@ const ContentTable = (props) => {
                     table: table,
                     page_pk: page_pk ?? 0
                 }
-                const { data: response } = await axios.post(`/api/deleteitem`, obj);
+                const { data: response } = await axios.post(`/api/deleteitembyuser`, obj);
                 if (response.result > 0) {
                     toast.success('삭제되었습니다.');
                     pageSetting();
@@ -204,7 +226,7 @@ const ContentTable = (props) => {
         Swal.fire({
             title: `결제취소 요청을 하시겠습니까?`,
             showCancelButton: true,
-            confirmButtonText: '확인',
+            confirmButtonText: '요청하기',
             cancelButtonText: '취소'
         }).then(async (result) => {
             if (result.isConfirmed) {
@@ -224,10 +246,117 @@ const ContentTable = (props) => {
                 }
             }
         })
+    }
 
+    const [openPayReady, setOpenPayReady] = useState(false);
+    const [dialogPayItem, setDialogPayItem] = useState({});
+    const onPayByDirect = () => {
+        if (dialogPayItem?.status == 0) {
+            Swal.fire({
+                title: '결제 하시겠습니까?',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                cancelButtonText: '취소'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    let obj = {
+                        amount: (dialogPayItem?.pay_category == 1 || dialogPayItem?.pay_category == 2)
+                            ?
+                            dialogPayItem?.price
+                            :
+                            getMoneyByCardPercent(dialogPayItem?.price, setting?.card_percent),
+                        ord_num: `${userData?.pk}${dialogPayItem?.pk}${new Date().getTime()}`,
+                        item_name: `${dialogPayItem?.contract_pk}번 계약 ${dialogPayItem?.pay_category == 0 ? `${dialogPayItem?.day.substring(0, 7)} ` : ''} ${getKoPayCategoryByNum(dialogPayItem?.pay_category)}`,
+                        buyer_name: userData?.name,
+                        buyer_phone: userData?.phone,
+                        return_url: `https://dalcapay.com:8443/api/payresult`,
+                        temp: dialogPayItem?.pk,
+                    }
+                    let query = Object.entries(obj).map(e => e.join('=')).join('&');
+                    window.location.href = `https://noti.payvery.kr/dalca/v2/pay/auth/koneps?${query}`;
+                    // const { data: response } = await axios.post('/api/paydirect', {
+                    //     item_pk: item?.pk
+                    // });
+                    // console.log(response);
+                    // if (response?.result > 0) {
+                    //     toast.success("성공적으로 결제 되었습니다.");
+                    //     navigate(`/history/pay`, {
+                    //         state: {
+                    //             contract_pk: item?.contract_pk
+                    //         }
+                    //     })
+                    // } else {
+                    //     toast.error(response?.message);
+                    // }
+                }
+            })
+        } else {
+            navigate('/history/pay')
+        }
+    }
+    const returnPayStatus = () => {
+        if (dialogPayItem?.pay_category == 1 || dialogPayItem?.pay_category == 2) {
+            return '결제불가'
+        }
+        if (dialogPayItem?.status == 1) {
+            return '결제완료'
+        } else if (dialogPayItem?.status == 0) {
+            return '결제하기'
+
+        } else if (dialogPayItem?.status == -1) {
+            return '취소완료'
+        }
     }
     return (
         <>
+            <Dialog open={openPayReady}
+                sx={{
+                    zIndex: '99'
+                }}
+                PaperProps={{
+                    style: {
+                        borderRadius: '1rem'
+                    }
+                }}
+                onClose={() => {
+                    setOpenPayReady(false);
+                    setDialogPayItem({});
+                }}>
+                <DialogContent style={{ columnGap: '1rem', display: 'flex', width: `${window.innerWidth > 1000 ? '500px' : '70vw'}` }}>
+                    <ContentWrappers style={{ fontSize: theme.size.font5, rowGap: '0.5rem', marginBottom: '0' }}>
+                        <div style={{ margin: '0.5rem auto 1rem auto', fontSize: theme.size.font4, fontWeight: 'bold' }}>납부하기</div>
+                        <RowContent style={{ justifyContent: 'space-between' }}>
+                            <div style={{ color: theme.color.font5 }}>계약고유번호</div>
+                            <div>{dialogPayItem?.contract_pk}</div>
+                        </RowContent>
+                        <RowContent style={{ justifyContent: 'space-between' }}>
+                            <div style={{ color: theme.color.font5 }}>종류</div>
+                            <div>{getKoPayCategoryByNum(dialogPayItem?.pay_category)}</div>
+                        </RowContent>
+                        <RowContent style={{ justifyContent: 'space-between', paddingBottom: '1rem' }}>
+                            <div style={{ color: theme.color.font5 }}>결제예정일</div>
+                            <div>{dialogPayItem?.day?.replaceAll('-', '.')}</div>
+                        </RowContent>
+                        <RowContent style={{ justifyContent: 'space-between', alignItems: 'center', borderTop: `1px solid ${theme.color.font5}`, paddingTop: '1rem' }}>
+                            <div style={{ color: theme.color.font5 }}>금액</div>
+                            <div style={{ fontSize: theme.size.font4, fontWeight: 'bold' }}>{commarNumber(
+                                (dialogPayItem?.pay_category == 1 || dialogPayItem?.pay_category == 2)
+                                    ?
+                                    dialogPayItem?.price
+                                    :
+                                    getMoneyByCardPercent(dialogPayItem?.price, setting?.card_percent)
+                            )}원</div>
+                        </RowContent>
+                        <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '2rem' }} disabled={dialogPayItem?.pay_category == 1 || dialogPayItem?.pay_category == 2} onClick={() => {
+                            onPayByDirect();
+                        }}>{returnPayStatus()}</Button>
+                        <Button variant="text" sx={{ ...twoOfThreeButtonStyle, ...borderButtonStyle }} onClick={() => {
+                            setOpenPayReady(false);
+                            setDialogPayItem({});
+                        }}>취소</Button>
+                    </ContentWrappers>
+                </DialogContent>
+            </Dialog>
             {loading ?
                 <>
                 </>
@@ -235,13 +364,13 @@ const ContentTable = (props) => {
                 <>
                     <div className='subtype-container' style={{ overflowX: 'auto', display: 'flex', width: '100%', margin: '8px auto', marginBottom: marginBottom }} >
                         <Table style={{ fontSize: `${fontSize ? fontSize : ''}` }}>
-                            <Tr style={{ fontWeight: `${columnsBold ? 'bold' : ''}` }}>
+                            {/* <Tr style={{ fontWeight: `${columnsBold ? 'bold' : ''}` }}>
                                 {columns && columns.map((item, idx) => (
                                     <>
                                         <Td style={{ width: item.width }}>{item.name}</Td>
                                     </>
                                 ))}
-                            </Tr>
+                            </Tr> */}
                             {data && data.map((item, index) => (
                                 <Tr onClick={() => {
                                     if (onClickList) {
@@ -250,7 +379,11 @@ const ContentTable = (props) => {
                                 }} style={{ cursor: `${onClickList ? 'pointer' : ''}` }}>
                                     {columns && columns.map((column, idx) => (
                                         <>
-                                            <Td style={{ width: column.width, color: `${column.color ? column.color : ''}`, cursor: `${isPointer ? 'pointer' : ''}`, fontWeight: `${column.bold ? 'bold' : ''}` }}>
+                                            {column.name &&
+                                                <>
+                                                    <Td style={{ width: item.width, color: theme.color.font5 }}>{column.name}</Td>
+                                                </>}
+                                            <Td style={{ width: column.width, color: `${column.color ? column.color : ''}`, cursor: `${isPointer ? 'pointer' : ''}`, fontWeight: `500`, textAlign: column?.text_align }}>
                                                 {column.type == 'img' ?
                                                     <img src={backUrl + item[column.column]} alt="#" style={{ height: '36px' }} /> ?? "---"
                                                     :
@@ -285,32 +418,31 @@ const ContentTable = (props) => {
                                                             </>
                                                         }
                                                     </>
-
                                                     :
                                                     null}
                                                 {column.type == 'change_pay_status' ?
                                                     <>
-                                                        {(item?.status == 0 || item?.status == 1) ?
-                                                            <>
-                                                                <IconButton onClick={() => {
-                                                                    navigate(`/change_pay_status`, {
-                                                                        state: item?.pk
-                                                                    })
-                                                                }}>
-                                                                    <Icon icon="ic:twotone-published-with-changes" />
-                                                                </IconButton>
-                                                            </>
-                                                            :
-                                                            <>
-                                                            </>
-                                                        }
+                                                        <RowContainer style={{ alignItems: 'center', columnGap: '0.5rem' }}>
+                                                            {getPayStatus(item)}
+                                                            {(item?.status == 0 || item?.status == 1) ?
+                                                                <>
+                                                                    <MiniButton style={{ background: theme.color.background0, color: '#B87A1D' }} onClick={() => {
+                                                                        navigate(`/change_pay_status`, {
+                                                                            state: item?.pk
+                                                                        })
+                                                                    }}>{`상태변경`}</MiniButton>
+                                                                </>
+                                                                :
+                                                                <>
+                                                                </>
+                                                            }
+                                                        </RowContainer>
                                                     </>
-
                                                     :
                                                     null}
                                                 {column.type == 'title_link' ?
                                                     <>
-                                                        <div style={{ textAlign: 'left', padding: '0.5rem', cursor: 'pointer', }} onClick={() => {
+                                                        <div style={{ textAlign: 'left', cursor: 'pointer', }} onClick={() => {
                                                             goToLink(item)
                                                         }}>{item.title}</div>
                                                     </>
@@ -318,11 +450,9 @@ const ContentTable = (props) => {
                                                     <>
                                                     </>}
                                                 {column.type == 'link' ?
-                                                    <IconButton onClick={() => {
+                                                    <img src={EyeIconSrc} style={{ cursor: 'pointer' }} onClick={() => {
                                                         goToLink(item)
-                                                    }}>
-                                                        <Icon icon="ph:eye" />
-                                                    </IconButton>
+                                                    }} />
                                                     :
                                                     null}
                                                 {column.type == 'check' ?
@@ -337,11 +467,10 @@ const ContentTable = (props) => {
                                                     <>
                                                         {item?.lessee_pk == getLocalStorage('auth')?.pk ?
                                                             <>
-                                                                <IconButton onClick={() => {
-                                                                    navigate(`/payready/${item?.pk}`)
-                                                                }}>
-                                                                    <Icon icon={item?.status == 0 ? `ri:money-dollar-circle-line` : `ph:eye`} style={{ color: `${item?.status == 0 ? theme.color.background1 : ''}` }} />
-                                                                </IconButton>
+                                                                <MiniButton style={{ background: theme.color.background2, color: '#fff' }} onClick={() => {
+                                                                    setDialogPayItem(item);
+                                                                    setOpenPayReady(true);
+                                                                }}>{item?.status == 0 ? `납부하기` : `납부완료`}</MiniButton>
                                                             </>
                                                             :
                                                             <>
@@ -359,13 +488,12 @@ const ContentTable = (props) => {
                                                     null}
                                                 {column.type == 'want_cancel' ?
                                                     <>
+
                                                         {item?.status == 1 && item?.is_want_cancel == 0 ?
                                                             <>
-                                                                <IconButton onClick={() => {
+                                                                <MiniButton style={{ background: theme.color.background0, color: '#B87A1D' }} onClick={() => {
                                                                     onWantPayCancel(item?.pk)
-                                                                }}>
-                                                                    <Icon icon="material-symbols:cancel-outline" style={{ color: theme.color.background1 }} />
-                                                                </IconButton>
+                                                                }}>{`취소요청`}</MiniButton>
                                                             </>
                                                             :
                                                             <>
@@ -382,26 +510,23 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'go_pay_list' ?
-                                                    <IconButton onClick={() => {
+                                                    <img src={HistoryIconSrc} style={{ cursor: 'pointer' }} onClick={() => {
                                                         navigate(`/history/pay`, {
                                                             state: {
                                                                 contract_pk: item?.pk
                                                             }
                                                         })
-                                                    }}>
-                                                        <Icon icon="ic:baseline-format-list-bulleted" style={{ color: theme.color.background1 }} />
-                                                    </IconButton>
+                                                    }} />
                                                     :
                                                     null}
                                                 {column.type == 'send_miss_pay' ?
                                                     <>
                                                         {item?.status == 0 ?
                                                             <>
-                                                                <IconButton onClick={() => {
+                                                                <MiniButton style={{ background: theme.color.background0, color: '#B87A1D' }} onClick={() => {
                                                                     sendSmsOnMissPay(item)
-                                                                }}>
-                                                                    <Icon icon="ic:outline-sms" style={{ color: theme.color.background1 }} />
-                                                                </IconButton>
+
+                                                                }}>{`발송하기`}</MiniButton>
                                                             </>
                                                             :
                                                             <>
@@ -441,15 +566,15 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'date' ?
-                                                    item[column.column].substring(0, 10)
+                                                    <div style={{ textAlign: 'left', padding: '0', color: theme.color.font5 }}>
+                                                        {item[column.column].substring(0, 10).replaceAll('-', '.')}
+                                                    </div>
                                                     :
                                                     null}
                                                 {column.type == 'contract_detail' ?
-                                                    <IconButton onClick={() => {
+                                                    <img src={EyeIconSrc} style={{ cursor: 'pointer' }} onClick={() => {
                                                         goToContractDetail(item)
-                                                    }}>
-                                                        <Icon icon="ph:eye" />
-                                                    </IconButton>
+                                                    }} />
                                                     :
                                                     null}
                                                 {column.type == 'class_status' ?
@@ -513,9 +638,7 @@ const ContentTable = (props) => {
                                                     :
                                                     null}
                                                 {column.type == 'delete' ?
-                                                    <IconButton onClick={() => deleteItem(item.pk, table, column.name, params?.pk)}>
-                                                        <Icon icon="material-symbols:delete-outline-sharp" />
-                                                    </IconButton>
+                                                    <img src={DeleteIconSrc} style={{ cursor: 'pointer' }} onClick={() => deleteItem(item.pk, table, column.name, params?.pk)} />
                                                     :
                                                     null}
                                             </Td>
@@ -533,11 +656,9 @@ const ContentTable = (props) => {
                                 animate={{ opacity: 1 }}
                                 style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', alignItems: 'center' }}
                             >
-                                <div style={{ margin: 'auto auto 8px auto' }}>
-                                    <Icon icon="material-symbols:cancel-outline" style={{ fontSize: '52px', color: theme.color.background1 }} />
-                                </div>
+                                <img src={NoneDataSrc} style={{ margin: 'auto auto 8px auto' }} />
                                 <div style={{ margin: '8px auto auto auto' }}>
-                                    데이터가 없습니다.
+                                    데이터가 없습니다
                                 </div>
                             </motion.div>
                         </>

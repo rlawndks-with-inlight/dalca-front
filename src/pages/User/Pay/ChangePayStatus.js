@@ -1,6 +1,6 @@
 //카드변경
 
-import { CustomSelect, HalfTitle, Wrappers, colorButtonStyle } from "../../../components/elements/UserContentTemplete";
+import { CustomSelect, HalfTitle, InputComponent, RowContent, Wrappers, colorButtonStyle, twoOfThreeButtonStyle } from "../../../components/elements/UserContentTemplete";
 // ** React Imports
 import { useState } from 'react'
 
@@ -53,6 +53,23 @@ height:120px;
     margin-left:auto;
 }
 `
+const GetContent = (props) => {
+    const { title, content } = props;
+
+    return (
+        <>
+            <InputComponent
+                top_label={title}
+                input_type={{
+                    placeholder: '',
+                    disabled: true,
+                }}
+                value={content}
+            />
+
+        </>
+    )
+}
 const ChangePayStatus = () => {
 
     const location = useLocation();
@@ -118,7 +135,6 @@ const ChangePayStatus = () => {
                 }
             }
         })
-
     }
     return (
         <>
@@ -126,7 +142,7 @@ const ChangePayStatus = () => {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', margin: '2rem auto', paddingTop: '4rem' }}
+                    style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', margin: '0 auto 2rem auto', paddingTop: '4rem' }}
                 >
                     {loading ?
                         <>
@@ -134,40 +150,33 @@ const ChangePayStatus = () => {
                         </>
                         :
                         <>
-                            <HalfTitle>결제 상태변경</HalfTitle>
                             <Container style={{ paddingBottom: '16px' }}>
                                 <ContentContainer style={{ flexDirection: 'column' }}>
-                                    <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px', width: 'auto' }}>
-                                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>계약고유번호: {commarNumber(pay?.contract_pk)}</div>
-                                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>종류: {getKoPayCategoryByNum(pay?.pay_category)}</div>
-                                        {pay?.pay_category == 0 ?
-                                            <>
-                                                <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>결제예정일: {pay?.day}</div>
-                                            </>
-                                            :
-                                            <>
-                                            </>}
-                                        <div style={{ fontSize: theme.size.font4, margin: '0 auto 12px 12px' }}>금액: {commarNumber(price)}원</div>
-                                        <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
-                                            <InputLabel id="demo-select-small">납부상태</InputLabel>
-                                            <CustomSelect
-                                                labelId="demo-select-small"
-                                                id="demo-select-small"
-                                                value={payStatus}
-                                                label="납부상태"
-                                                onChange={(e) => setPayStatus(e.target.value)}
-                                            >
-                                                <MenuItem value={1}>납부함 {(pay?.pay_category == 1 || pay?.pay_category == 2) && '(현금)'}</MenuItem>
-                                                <MenuItem value={0}>납부안함</MenuItem>
-                                            </CustomSelect>
-                                        </FormControl>
-
+                                    <div style={{ display: 'flex', flexDirection: 'column', width: 'auto', rowGap: '0.5rem', fontSize: theme.size.font5 }}>
+                                        <RowContent>
+                                            <div style={{ width: '25%' }}>{commarNumber(pay?.contract_pk)}</div>
+                                        </RowContent>
+                                        <RowContent style={{ borderBottom: `1px solid #ccc`, paddingBottom: '1rem' }}>
+                                            <div style={{ width: '25%', color: theme.color.font5 }}>종류</div>
+                                            <div style={{ width: '25%' }}>{getKoPayCategoryByNum(pay?.pay_category)}</div>
+                                            <div style={{ width: '25%', color: theme.color.font5 }}>결제금액</div>
+                                            <div style={{ width: '25%' }}>{`${commarNumber(price)}원`}</div>
+                                        </RowContent>
+                                        <div style={{ fontSize: theme.size.font5, fontWeight: '400', color: theme.color.font5 }}>납부상태</div>
+                                        <CustomSelect
+                                            labelId="demo-select-small"
+                                            id="demo-select-small"
+                                            value={payStatus}
+                                            label="납부상태"
+                                            onChange={(e) => setPayStatus(e.target.value)}
+                                        >
+                                            <MenuItem value={1}>납부함 {(pay?.pay_category == 1 || pay?.pay_category == 2) && '(현금)'}</MenuItem>
+                                            <MenuItem value={0}>납부안함</MenuItem>
+                                        </CustomSelect>
                                     </div>
                                 </ContentContainer>
                             </Container>
-                            <div style={{ display: "flex", margin: 'auto 0 0 auto' }}>
-                                <Button sx={{ ...colorButtonStyle, width: '81px' }} onClick={onChangePayStatus}>{'저장'}</Button>
-                            </div>
+                            <Button sx={twoOfThreeButtonStyle} onClick={onChangePayStatus}>{'변경완료'}</Button>
                         </>}
 
                 </motion.div>

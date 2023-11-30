@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Title, ViewerContainer, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { ViewerContainer, Wrappers } from "../../../components/elements/UserContentTemplete";
 import { axiosInstance, backUrl } from "../../../data/Data";
 import theme from "../../../styles/theme";
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
@@ -19,27 +19,12 @@ import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import './post.css';
 import { motion } from "framer-motion";
-const Progress = styled.progress`
-
-appearance: none;
-position: fixed;
-bottom: 0;
-width: 100%;
-left: 0;
-right: 0;
-height:16px;
-
-::-webkit-progress-bar {
-background: #f0f0f0;
-border-radius: 0;
-}
-
-::-webkit-progress-value {
-background:transparent;
-border-bottom: 16px solid #4CDAD8;
-border-right: 10px solid transparent;
-}
+import { Button } from "@mui/material";
+const Title = styled.div`
+font-weight: bold;
+font-size: ${theme.size.font3_5};
 `
+
 const Post = (props) => {
     let { post_pk, post_table } = props;
     const params = useParams();
@@ -268,14 +253,20 @@ const Post = (props) => {
                             style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                         >
                             <Title not_arrow={true}>{post.title}</Title>
-                            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'end', fontSize: `${theme.size.font4}` }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    {/* <div style={{ margin: '0 4px' }}>{post.nickname}</div> / */}
-                                    <div style={{ margin: '0 4px' }}>{post?.date?.substring(0, 10)}</div> /
-                                    <div style={{ margin: '0 8px 0 4px' }}>조회수 {commarNumber(post?.views ?? 0)}</div>
-                                </div>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                fontSize: theme.size.font6,
+                                borderBottom: `1px solid #ccc`,
+                                paddingBottom: '1rem',
+                                marginTop: '0.5rem',
+                                color: theme.color.font5
+                            }}>
+                                {/* <div style={{ margin: '0 4px' }}>{post.nickname}</div> / */}
+                                <div style={{ margin: '0 4px' }}>{post?.date?.substring(0, 10)}</div>
+                                <div style={{ margin: '0 8px 0 4px' }}>조회수 {commarNumber(post?.views ?? 0)}</div>
                             </div>
-                            <div style={{ fontSize: `${theme.size.font4}`, color: `${theme.color.font2}` }}>{post.hash}</div>
                             <ViewerContainer className="viewer" style={{ margin: `${getViewerMarginByNumber(post?.note_align)}` }}>
                                 {/* <Viewer initialValue={post?.note ?? `<body></body>`} /> */}
                                 <ReactQuill
@@ -288,12 +279,16 @@ const Post = (props) => {
                             </ViewerContainer>
                             {/* <ZoomButton/> */}
                             {/* <CommentComponent addComment={addComment} data={comments} fetchComments={fetchComments} updateComment={updateComment} auth={auth} /> */}
-
+                            {(params?.table == 'notice' || params?.table == 'faq') &&
+                                <>
+                                    <Button style={{ width: 'fit-content', background: theme.color.font4, color: '#000' }} size="small" onClick={() => {
+                                        navigate(`/list/${params?.table}`);
+                                    }}>목록으로 가기</Button>
+                                </>}
                         </motion.div>
 
                     </>}
 
-                <Progress value={`${percent}`} max="100"></Progress>
                 {/* <Logo src={logo} style={{left:`${percent-1}.7%`}}/> */}
             </Wrappers>
         </>

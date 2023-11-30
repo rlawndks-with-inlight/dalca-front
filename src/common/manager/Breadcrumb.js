@@ -120,9 +120,9 @@ const Breadcrumb = (props) => {
             }
         });
     }, [])
-    useEffect(()=>{
+    useEffect(() => {
         getBellContent();
-    },[location.pathname])
+    }, [location.pathname])
     const getBellContent = async () => {
         const { data: response } = await axios.get(`/api/getbellcontent`)
         let bell_list = response?.data?.data;
@@ -146,6 +146,9 @@ const Breadcrumb = (props) => {
             confirmButtonText: '확인',
             cancelButtonText: '취소'
         }).then(async (result) => {
+            if (!result.isConfirmed) {
+                return;
+            }
             if (result.isConfirmed) {
                 const { data: response } = await axios.post('/api/logout');
                 if (response.result > 0) {

@@ -12,21 +12,25 @@ import { useRef } from "react";
 import { Icon } from '@iconify/react';
 import { logoSrc } from "../../data/Data";
 import { motion } from "framer-motion";
+import { Row } from "./ManagerTemplete";
 export const WrappersStyle = styled.div`
 position:relative;
 display:flex;
 flex-direction:column;
-width:90%;
+width: 90%;
 max-width:1000px;
-margin-top:10rem;
+margin-top:6rem;
 margin-left:auto;
 margin-right:auto;
 margin-bottom:6rem;
 min-height:58vh;
 @media screen and (max-width:1050px) { 
-    margin-top:5rem;
+    margin-top:4rem;
 }
 font-family: ${({ theme }) => theme.font.normal};
+`
+export const RowContainer = styled.div`
+display: flex;
 `
 export const postCodeStyle = {
     display: 'block',
@@ -123,10 +127,12 @@ export const Title = (props) => {
         </>
     )
 }
+export const BorderButton = styled.div`
 
+`
 export const ContentWrappers = styled.div`
 display:flex;
-flex-direction:column;
+flex-direction:column; 
 max-width:1050px;
 width:100%;
 margin:0 auto 4rem auto;
@@ -142,10 +148,8 @@ justify-content:space-between;
 align-items:center;
 z-index:10;
 background:#fff;
-border
 @media screen and (max-width:1050px) { 
     display:flex;
-    
 }
 `
 export const FakeHeaders = (props) => {
@@ -165,20 +169,12 @@ export const FakeHeaders = (props) => {
     )
 }
 export const smallButtonStyle = {
-    position: 'absolute',
-    right: '2px',
-    minWidth: '12px',
-    height: '48px',
-    width: '72px',
-    top: '8px',
-    borderTopRightRadius: '4px',
-    borderBottomRightRadius: '4px',
-    borderBottomLeftRadius: '0',
-    borderTopLeftRadius: '0',
+    minWidth: '94px',
+    height: '52px',
+    borderRadius: '10px',
     fontSize: `${theme.size.font6}`,
     fontWeight: 'bold',
-    ml: 'auto',
-    color:'#fff',
+    color: theme.color.font2,
     background: `${theme.color.background1}`,
     '&:hover': {
         background: `${theme.color.background1}`,
@@ -192,7 +188,8 @@ export const colorButtonStyle = {
     minWidth: '55px',
     fontSize: `${theme.size.font6}`,
     fontWeight: 'bold',
-    color: '#fff',
+    color: `#000`,
+    borderRadius: '10px',
     background: `${theme.color.background1}`,
     '&:hover': {
         background: `${theme.color.background1}`,
@@ -211,8 +208,9 @@ export const borderButtonStyle = {
     minWidth: '53px',
     fontSize: `${theme.size.font6}`,
     fontWeight: 'bold',
-    border: `2px solid ${theme.color.background1}`,
-    color: `${theme.color.background1}`,
+    border: `1px solid ${theme.color.font4}`,
+    color: `#000`,
+    borderRadius: '10px',
     background: `#fff`,
     '&:hover': {
         background: `#fff`,
@@ -222,51 +220,53 @@ export const borderButtonStyle = {
     },
 }
 export const Input = styled.input`
-padding:14px 2%;
+padding:18px 14px;
 width:96%;
-border:1px solid ${props => props.theme.color.font5};
-background:#fff;
-border-radius:4px;
+border: none;
+background: #F6F7FF;
+border-radius:10px;
 font-size:${props => props.theme.size.font5};
 outline:none;
 margin:1px;
 &::placeholder {
-    color: ${props => props.theme.color.font4};
+    color: ${props => props.theme.color.font5};
 }
 &:hover{  
-    border:1px solid ${props => props.theme.color.font4_5};
 }
 &:focus{  
-    border:2px solid ${props => props.theme.color.background1};
-    margin:0;
 }
 `
-const InputLabel = styled.div`
-position:absolute;
+export const Textarea = styled.textarea`
+padding:18px 14px;
+width:96%;
+border: none;
+background: #F6F7FF;
+border-radius:10px;
 font-size:${props => props.theme.size.font5};
-left:2.5%;
-top:25px;
-padding:2px 4px;
-background:#fff;
-transition-duration: 200ms;
-`
-const PlaceholderLabel = styled.div`
-position:absolute;
-font-size:${props => props.theme.size.font6};
-left:3%;
-top:27px;
-transition-duration: 200ms;
-color: ${props => props.theme.color.font4};
-opacity:${props => props.opacity};
+outline:none;
+margin:1px;
+resize: none;
+font-family: SpoqaHanSansRegular !important;
+&::placeholder {
+    color: ${props => props.theme.color.font5};
+    font-size:${props => props.theme.size.font5};
+}
+&:hover{  
+}
+&:focus{  
+}
 `
 const HalfTitleStyle = styled.div`
-width:50%;
+width:100%;
 text-align:center;
 padding:8px 0;
 margin-right:auto;
-max-width:250px;
-font-size:${props => props.theme.size.font5};
-border-bottom: 2px solid ${props => props.theme.color.background1};
+font-size:${props => props.theme.size.font4};
+font-weight: bold;
+border-bottom: 2px solid ${props => props.theme.color.font2};
+display: flex;
+align-items: center;
+column-gap: 0.5rem;
 `
 export const LogoHeader = (props) => {
     const { link } = props;
@@ -289,39 +289,78 @@ export const HalfTitle = (props) => {
     )
 }
 
+export const MiniButton = styled.div`
+cursor: pointer;
+padding: 0.1rem 0.4rem;
+font-size: ${theme.size.font6};
+width: fit-content;
+border-radius: 0.2rem;
+`
+const TopTitleContainer = styled.div`
+align-items: center ;
+justify-content: space-between ;
+height: 4rem;
+display: flex;
+position: fixed;
+width: 800px;
+z-index: 10;
+background: #fff;
+@media screen and (max-width:800px) { 
+    width: 90vw;
+}
+`
+export const TopTitleWithBackButton = (props) => {
+    const { title, onClickBackIcon } = props;
+    const navigate = useNavigate();
+    return (
+        <>
+            <TopTitleContainer>
+                <Icon icon={'ion:arrow-back'} style={{ fontSize: '2rem', cursor: 'pointer' }} onClick={() => {
+                    if (onClickBackIcon) {
+                        onClickBackIcon();
+                    } else {
+                        navigate(-1);
+                    }
+                }} />
+                {title}
+                <div style={{ width: '32px' }} />
+            </TopTitleContainer>
+            <div style={{ paddingTop: '4rem' }} />
+        </>
+    )
+}
 export const CustomSelect = styled(Select)(() => ({
     '& label.Mui-focused': {
         color: theme.color.background1,
     },
     "&.MuiOutlinedInput-root": {
-      "& fieldset": {
-        borderColor: theme.color.font5
-      },
-      "&:hover fieldset": {
-        borderColor: theme.color.font4_5
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: theme.color.background1
-      }
+        "& fieldset": {
+            border: 'none',
+        },
+        "&:hover fieldset": {
+            borderColor: theme.color.font4_5
+        },
+        "&.Mui-focused fieldset": {
+            borderColor: theme.color.background1
+        },
+        background: `#F6F7FF`,
+        border: 'none !important',
+        borderRadius: '10px',
+        fontSize: '14px'
     }
-  }));
+}));
 export const InputComponent = (props) => {
-    const { label, button_label, class_name, input_type, is_divider, on_focus, on_blur, onKeyPress, onClickButton, isButtonAble, icon_label, onClickIcon, onClick, onChange, value, divStyle, isSeeButton, autoCompleteList, onAutoCompleteClick } = props;
+    const {
+        top_label,
+        label, button_label,
+        rows,
+        class_name, input_type, is_divider, on_focus, on_blur, onKeyPress, onClickButton, isButtonAble, icon_label, onClickIcon, onClick, onChange, value, divStyle, isSeeButton, autoCompleteList, onAutoCompleteClick } = props;
     const focusRef = useRef();
     const [focused, setFocused] = useState(false);
     const [isPlaceholder, setIsPlaceholder] = useState(false);
     const [isValue, setIsValue] = useState(false);
     const [isSeePassword, setIsSeePassword] = useState(false);
-    const onFocus = () => {
-        setFocused(true);
-        // setTimeout(()=>{
-        //     setIsPlaceholder(true);
-        // },100);
-    }
-    const onBlur = () => {
-        setIsPlaceholder(false);
-        setFocused(false);
-    }
+
     const onChangeValue = (e) => {
         onChange(e.target.value)
         if (e.target.value) {
@@ -335,23 +374,27 @@ export const InputComponent = (props) => {
             setIsValue(true);
         }
     }, [$(`.${class_name}`).val()])
-    useEffect(()=>{
+    useEffect(() => {
         if (value) {
             setIsValue(true);
         }
-    },[value])
+    }, [value])
 
-    const getInputType = () =>{
-        if((input_type?.type == 'password' && isSeePassword)){
+    const getInputType = () => {
+        if ((input_type?.type == 'password' && isSeePassword)) {
             return 'text'
         }
-        if(input_type?.type){
+        if (input_type?.type) {
             return input_type?.type
         }
         return '';
     }
     return (
         <>
+            {top_label &&
+                <>
+                    <div style={{ fontSize: theme.size.font5, fontWeight: '400' }}>{top_label}</div>
+                </>}
             <div style={{
                 display: 'flex',
                 position: 'relative',
@@ -364,51 +407,69 @@ export const InputComponent = (props) => {
                 onClick={onClick}
             >
                 {/* <div style={{ width: '22%', fontSize: theme.size.font5,whiteSpace:'pre',wordBreak:'break-all' }}>{label}</div> */}
-                <div style={{ width: '100%', display: 'flex' }}
+                <div style={{ width: '100%', display: 'flex', columnGap: '0.5rem', alignItems: 'center' }}
                     onClick={onClick}
                 >
-                    <InputLabel
+                    {/* <InputLabel
                         style={{
                             top: `${(focused || isValue) ? '0px' : '22px'}`,
                             fontSize: `${(focused || isValue) ? theme.size.font7 : theme.size.font6}`,
                             color: `${focused ? theme.color.background1 : theme.color.font4}`,
                         }}
-                        onClick={() => $(`.${class_name}`).focus()}>{label}</InputLabel>
-                    <PlaceholderLabel opacity={(focused && !isValue) ? 1 : 0} >
-                        {(focused && !isValue) ?
-                            <>
-                                {input_type?.placeholder}
-                            </>
-                            :
-                            <>
-                            </>}
-                    </PlaceholderLabel>
-                    <Input
-                        {...props}
-                        className={class_name}
-                        {...input_type}
-                        placeholder={''}
-                        ref={focusRef}
-                        value={value}
-                        onFocus={onFocus}
-                        onBlur={onBlur}
-                        onChange={onChangeValue}
-                        onClick={onClick}
-                        type={getInputType()}
-                        style={{
-                            padding: `${(button_label
-                                || isSeeButton
-                                || icon_label
-                            )
-                                ?
-                                '14px 82px 14px 2%' : ''}`,
-                        }}
-                        onKeyPress={(e) => {
-                            if (e.key == 'Enter' && onKeyPress) {
-                                onKeyPress();
-                            }
-                        }}
-                    />
+                        onClick={() => $(`.${class_name}`).focus()}>{label}</InputLabel> */}
+                    {rows ?
+                        <>
+                            <Textarea
+                                {...props}
+                                className={class_name}
+                                {...input_type}
+                                placeholder={label}
+                                ref={focusRef}
+                                rows={rows}
+                                value={value}
+                                onChange={onChangeValue}
+                                onClick={onClick}
+                                type={getInputType()}
+
+                                style={{
+                                    paddingRight: `${(icon_label
+                                    )
+                                        ?
+                                        '64px' : ''}`,
+                                }}
+                                onKeyPress={(e) => {
+                                    if (e.key == 'Enter' && onKeyPress) {
+                                        onKeyPress();
+                                    }
+                                }}
+                            />
+                        </>
+                        :
+                        <>
+                            <Input
+                                {...props}
+                                className={class_name}
+                                {...input_type}
+                                placeholder={label}
+                                ref={focusRef}
+                                value={value}
+                                onChange={onChangeValue}
+                                onClick={onClick}
+                                type={getInputType()}
+                                style={{
+                                    paddingRight: `${(icon_label
+                                    )
+                                        ?
+                                        '64px' : ''}`,
+                                }}
+                                onKeyPress={(e) => {
+                                    if (e.key == 'Enter' && onKeyPress) {
+                                        onKeyPress();
+                                    }
+                                }}
+                            />
+                        </>}
+
                     {icon_label ?
                         <>
                             <div style={isImgIconStyle} onClick={onClickIcon}>
@@ -426,7 +487,7 @@ export const InputComponent = (props) => {
                         :
                         <>
                         </>}
-                    {isSeeButton ?
+                    {/* {isSeeButton ?
                         <>
                             {isSeeButton ?
                                 <>
@@ -449,7 +510,7 @@ export const InputComponent = (props) => {
                         </>
                         :
                         <>
-                        </>}
+                        </>} */}
                     {autoCompleteList && autoCompleteList.length > 0 ?
                         <>
                             <motion.div
@@ -466,7 +527,7 @@ export const InputComponent = (props) => {
                                     boxShadow: theme.boxShadow,
                                     height: '130px',
                                     overflowY: 'auto',
-                                    zIndex:'2'
+                                    zIndex: '2'
                                 }}>
                                 {autoCompleteList.map((item, idx) => (
                                     <>
@@ -518,14 +579,14 @@ const isSeeIconStyle = {
     fontSize: theme.size.font3,
     right: '12px',
     top: '15px',
-    color:'rgba(0, 0, 0, 0.54)'
+    color: 'rgba(0, 0, 0, 0.54)'
 }
 const isImgIconStyle = {
     position: 'absolute',
     fontSize: theme.size.font3,
     right: '21px',
     top: '23px',
-    color:'rgba(0, 0, 0, 0.54)'
+    color: 'rgba(0, 0, 0, 0.54)'
 }
 export const TitleInputComponent = (props) => {
     const { label, icon, class_name, input_type, is_blue, onKeyPress } = props;
@@ -561,7 +622,7 @@ export const TwoOfThreeButton = styled.button`
 cursor:pointer;
 width:70%;
 max-width:400px;
-border:3px solid ${props => props.theme.color.background2};
+border:3px solid red;
 background: ${props => props.theme.color.background1};
 border-radius:10px;
 margin:0 auto;
@@ -572,21 +633,20 @@ font-weight:bold;
 `
 export const twoOfThreeButtonStyle = {
     height: '48px',
-    border: `3px solid ${theme.color.background2}`,
     margin: '0 auto',
-    background: `${theme.color.background1}`,
-    color: `#fff`,
-    width: '70%',
+    background: theme.color.background1,
+    color: `#343841`,
+    width: '100%',
     maxWidth: '400px',
     borderRadius: '10px',
     minWidth: '250px',
     fontSize: `${theme.size.font5}`,
     fontWeight: 'bold',
     '&:hover': {
-        background: `${theme.color.background1}`,
+        background: theme.color.background1,
     },
     '&:active': {
-        background: `${theme.color.background1}`,
+        background: theme.color.background1,
     },
 }
 export const MarginBottom = (props) => {
@@ -646,18 +706,12 @@ display:none;
 }
 `
 export const Type = styled.div`
-width:50%;
 text-align:center;
-padding: 0.75rem 0;
-font-weight:bold;
+padding: 0.5rem 0.75rem;
 cursor:pointer;
 font-size:1rem;
-@media screen and (max-width:700px) {
-    font-size:0.8rem;
-}
-@media screen and (max-width:350px) {
-    font-size:0.65rem;
-}
+border-radius: 1.5rem;
+font-size: ${theme.size.font5};
 `
 export const ViewerContainer = styled.div`
 margin:0 auto;
@@ -665,10 +719,9 @@ width:100%;
 `
 export const SelectType = styled.div`
 display:flex;
-width:100%;
 z-index:5;
-background:#fff;
-margin:16px 0;
+margin:16px auto;
+column-gap: 0.5rem;
 `
 export const ShadowContainer = styled.div`
 background:#FAFAFA;

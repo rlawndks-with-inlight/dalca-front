@@ -1,5 +1,5 @@
 :root{
-    --background1:#3250D2;
+    --background1:#FFD80A;
     --background2:#FFDC00;
 }
 
@@ -14,10 +14,40 @@
 }
 .swal2-title {
     font-size: 17px !important;
+    font-weight: bold;
+}
+#swal2-title{
+    font-weight: bold;
+    color:#343841;
+}
+.swal2-container.swal2-center>.swal2-popup{
+    padding: 2rem 0;
+    border-radius: 16px;
+}
+button.swal2-cancel.swal2-styled{
+    border: 1px solid #E7E7E7;
+    background-color: #fff;
+    color: #343841;
+    min-width: 130px;
+    height: 48px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+button.swal2-confirm.swal2-styled {
+    color: #343841;
+    min-width: 130px;
+    height: 48px;
+    border-radius: 10px;
+    font-size: 14px;
 }
 .swal2-styled.swal2-confirm{
     background: var(--background1) !important;
 }
+.swal2-actions{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 .swal2-styled.swal2-cancel{
     outline: none;
 }

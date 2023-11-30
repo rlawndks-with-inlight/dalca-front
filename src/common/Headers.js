@@ -4,24 +4,26 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/style.css'
 import { zSidebarMenu } from '../data/ContentData';
-import { backUrl, logoSrc } from '../data/Data';
+import { backUrl, logoTextSrc } from '../data/Data';
 import theme from '../styles/theme';
 import $ from 'jquery';
-import share from '../assets/images/icon/home/share.svg';
-import hamburger from '../assets/images/icon/home/hamburger.svg';
 import axios from 'axios';
-import { formatPhoneNumber, returnMoment } from '../functions/utils';
+import { returnMoment } from '../functions/utils';
 import logoutIcon from '../assets/images/icon/logout.svg'
-import { Viewer } from '@toast-ui/react-editor';
 import { IoMdClose } from 'react-icons/io'
 import { IoCloseCircleOutline } from 'react-icons/io5'
 import { getLocalStorage } from '../functions/LocalStorage';
-import { AiOutlineBell, AiOutlineSearch, AiOutlineSetting } from 'react-icons/ai';
-import { Icon } from '@iconify/react';
-import { IconButton } from '@mui/material';
+import { Avatar, IconButton } from '@mui/material';
 import Swal from 'sweetalert2';
 import { toast } from 'react-hot-toast';
 import { getUserLevelByNumber } from '../functions/format';
+import bellIcon from '../assets/images/icon/bell.svg'
+import menuIcon from '../assets/images/icon/menu.svg'
+import EditIconSrc from '../assets/images/icon/edit.svg'
+import { RowContent } from '../components/elements/UserContentTemplete';
+import DefaultAvatarSrc from '../assets/images/test/default-avatar.svg';
+import { Icon } from '@iconify/react';
+
 const Header = styled.header`
 position:fixed;
 height:6rem;
@@ -77,7 +79,7 @@ const SideBarContainer = styled.div`
   display: flex;
   margin: 2rem 2rem 2rem 0;
   height: 2rem;
-  width:250px;
+  width:280px;
   opacity:0;
   right:-100rem;
   flex-direction:column;
@@ -107,21 +109,24 @@ const SideBarList = styled.div`
 `
 const SideBarMenu = styled.div`
 text-align:left;
-font-size:${props => props.theme.size.font4};
+font-size:${props => props.theme.size.font5};
 padding:0.5rem;
 margin-left:1rem;
 font-weight:bold;
 cursor:pointer;
+display: flex;
+align-items: center;
+column-gap: 0.5rem;
 transition-duration: 0.3s;
 &:hover{  
-  color : ${props => props.theme.color.background1};
+  color : ${props => props.theme.color.background2};
 }
 `
 
 const HeaderLogo = styled.img`
-height: 5rem;
+height: 4rem;
 @media screen and (max-width:1050px) { 
-  height: 2.5rem;
+  height: 2rem;
   margin-top: 0.25rem;
 }
 
@@ -165,8 +170,8 @@ const Headers = () => {
 
   useEffect(() => {
 
-    function isAuth() {
-      let user_auth = getLocalStorage('auth');
+    async function isAuth() {
+      let user_auth = await getLocalStorage('auth');
       setAuth(user_auth);
     }
     if (!location.pathname.includes('/manager')) {
@@ -214,7 +219,7 @@ const Headers = () => {
     setMenuDisplay(menuDisplay == 'flex' ? 'none' : 'flex');
 
   }
- 
+
   const onClickLink = (link) => {
     // if(link=='/card/family'){
     //   toast.success("문자 및 알림을 확인해 주세요.")
@@ -238,6 +243,9 @@ const Headers = () => {
       confirmButtonText: '확인',
       cancelButtonText: '취소'
     }).then(async (result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
       if (result.isConfirmed) {
         const { data: response } = await axios.post('/api/logout');
         if (response.result > 0) {
@@ -266,7 +274,6 @@ const Headers = () => {
     <>
       <Header style={{ display: `${display}` }} className='header'>
         <HeaderMenuContainer>{/* pc */}
-
           {popupList.length > 0 ?
             <>
               <PopupContainer>
@@ -296,38 +303,41 @@ const Headers = () => {
             <>
             </>}
           <LeftNoneIcon />
-          <HeaderLogo src={logoSrc} alt="홈으로" onClick={() => { navigate('/home') }} />
+          <HeaderLogo src={logoTextSrc} alt="홈으로" onClick={() => { navigate('/home') }} />
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <IconButton sx={{ padding: '0', mr: 1 }}>
-              <Icon icon="mdi:bell-outline" style={{ color: theme.color.background1, marginRight: '6px' }} />
+              <img src={bellIcon} style={{ marginRight: '6px' }} />
             </IconButton>
             <IconButton sx={{ padding: '0' }}>
-              <Icon icon="icon-park-outline:hamburger-button" onClick={onChangeMenuDisplay} style={{ color: theme.color.background1 }} />
+              <img src={menuIcon} onClick={onChangeMenuDisplay} />
             </IconButton>
           </div>
           <OpenSideBarBackground className='sidebar-open-background' onClick={onChangeMenuDisplay} />
 
           <SideBarContainer className="sidebar-menu-list">
-            <img src={logoutIcon} className='hamburgur' style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', width: '32px' }} onClick={onLogout} />
-            <div style={{ width: '100%', background: theme.color.background1, margin: '0', height: '18vh', color: '#fff', display: 'flex' }}>
-              <Row style={{ justifyContent: 'flex-start', margin: 'auto' }}>
+            <Icon icon='mingcute:close-line' style={{ margin: '20px 20px 0 auto', fontSize: '2rem', cursor: 'pointer' }} onClick={onChangeMenuDisplay} />
+            <div style={{ width: '80%', background: '#fff', margin: '0 auto', height: '18vh', color: theme.color.font2, display: 'flex', borderBottom: `1px solid ${theme.color.font4}` }}>
+              <Row style={{ justifyContent: 'flex-start', margin: '1rem 0', alignItems: 'center', columnGap: '1rem' }}>
+                <Avatar src={DefaultAvatarSrc} style={{ height: '58px', width: '58px' }} />
                 {/* <img src={auth?.profile_img ? backUrl + auth?.profile_img : defaultProfile} style={{ width: '34px', height: '34px', borderRadius: '50%' }} /> */}
-                <Col style={{ marginLeft: '8px', textAlign: 'left', height: '72px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <img src={logoSrc} style={{ height: '24px', width: 'auto', margin: '0 auto 6px 0' }} />
-                    <div style={{ fontSize: theme.size.font3, fontWeight: 'bold', margin: '0 auto 6px 0' }}>{auth?.name} 님 환영합니다</div>
-                    <div style={{ fontSize: theme.size.font5, fontWeight: 'bold', margin: '0 auto 6px 0' }}>{getUserLevelByNumber(auth?.user_level, true)}</div>
-                  </div>
+                <Col>
+                  <RowContent style={{ fontSize: theme.size.font4, fontWeight: 'bold', margin: '0 auto 6px 0', alignItems: 'center', columnGap: '0.5rem' }}>
+                    <div>{auth?.name}</div>
+                    <img src={EditIconSrc} />
+                  </RowContent>
+                  <div style={{ fontSize: theme.size.font5, margin: '0 auto 6px 0', color: theme.color.font5 }}>{getUserLevelByNumber(auth?.user_level, true)}</div>
                 </Col>
               </Row>
             </div>
-            <div style={{ width: '100%', background: theme.color.background3, height: '5vh' }} />
             <SideBarList className='scroll-table'>
               {zSidebarMenu.map((item, idx) => (
                 <>
                   {item.level_list.includes(auth?.user_level) ?
                     <>
-                      <SideBarMenu key={idx} onClick={() => { onClickLink(item.link) }} style={{ color: `${item.link == location.pathname ? theme.color.background1 : ''}` }}>{item.name}</SideBarMenu>
+                      <SideBarMenu key={idx} onClick={() => { onClickLink(item.link) }} style={{ color: `${item.link == location.pathname ? theme.color.background2 : ''}` }}>
+                        <img src={item.icon} />
+                        <div style={{ marginBottom: '1px' }}>{item.name}</div>
+                      </SideBarMenu>
                     </>
                     :
                     <>
@@ -336,10 +346,14 @@ const Headers = () => {
                 </>
               ))}
             </SideBarList>
+            <RowContent style={{ width: '80%', margin: '1rem auto', columnGap: '0.5rem', cursor: 'pointer', color: theme.color.font5, fontWeight: 'bold' }} onClick={onLogout}>
+              <img src={logoutIcon} className='hamburgur' />
+              <div style={{ marginBottom: '1px' }}>로그아웃</div>
+            </RowContent>
           </SideBarContainer>
 
         </HeaderMenuContainer>
-      </Header>
+      </Header >
     </>
   )
 }

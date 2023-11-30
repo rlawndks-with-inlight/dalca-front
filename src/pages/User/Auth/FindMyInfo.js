@@ -10,13 +10,11 @@ const FindMyInfo = () => {
     const navigate = useNavigate();
     return (
         <>
-            <Wrappers className="wrapper" style={{ minHeight: '100vh', margin: '3rem auto', background: "#fff" }}>
-                <ContentWrappers style={{ margin: 'auto' }}>
-                    <img src={logoSrc} style={{ maxWidth: '250px', width: '50%', margin: 'auto auto 10vh auto' }} onClick={() => { navigate('/') }} />
+            <Wrappers className="wrapper" style={{ minHeight: '100vh', background: "#fff", marginTop: '0' }}>
+                <ContentWrappers>
                     <FindMyInfoCard />
                 </ContentWrappers>
             </Wrappers>
-
         </>
     )
 }

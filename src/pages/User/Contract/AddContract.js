@@ -1,6 +1,6 @@
 //계약생성
 
-import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, postCodeStyle, smallButtonStyle, Title, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { ContentWrappers, CustomSelect, InputComponent, postCodeStyle, RowContent, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -10,36 +10,63 @@ import { toast } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import theme from "../../../styles/theme";
 import { Button } from "@mui/material";
-import Autocomplete from '@mui/material/Autocomplete';
-import styled from "styled-components";
-import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Icon } from "@iconify/react";
 import Swal from "sweetalert2";
 import $ from 'jquery';
-import { Explain, ImageContainer } from "../../../components/elements/ManagerTemplete";
-import { AiFillFileImage } from "react-icons/ai";
 import { backUrl } from "../../../data/Data";
 import Modal from '../../../components/Modal';
 import DaumPostcode from 'react-daum-postcode';
 import Loading from "../../../components/Loading";
 import { range, returnMoment } from "../../../functions/utils";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
-import AddButton from "../../../components/elements/button/AddButton";
-//./component/socket.js
 import React from 'react';
-import io from "socket.io-client";
-import { useRef } from "react";
 import useInterval from "../../../components/useInterval";
+import AddContractIconSrc from '../../../assets/images/icon/add-contract.svg';
+import LandlordAgreeIconSrc from '../../../assets/images/icon/landlord-agree.svg';
+import RealtorAgreeIconSrc from '../../../assets/images/icon/realtor-agree.svg';
+import CheckIconSrc from '../../../assets/images/icon/check.svg';
+import CameraIconSrc from '../../../assets/images/icon/camera.svg';
+import { styled as muiStyled } from '@mui/material/styles';
+import { Col } from "../../../components/elements/ManagerTemplete";
+import ContractConfirmSrc from '../../../assets/images/test/contract-confirm.svg'
+
+
 const steps = ['계약서등록', '임대인\n동의구하기', '임차인\n동의구하기', '완료'];
+
 const stepLabelStyle = {
     whiteSpace: 'pre'
 };
-
+const ColorlibStepIconRoot = muiStyled('div')(({ theme, ownerState }) => ({
+    zIndex: 1,
+    width: 50,
+    height: 50,
+    display: 'flex',
+    borderRadius: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.text.disabled,
+    backgroundColor:
+        theme.palette.mode === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
+    ...(ownerState.active && {
+        boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+        color: theme.palette.common.white,
+        ...{
+            startColor: theme.palette.primary.light,
+            endColor: theme.palette.primary.main,
+        },
+    }),
+    ...(ownerState.completed && {
+        color: theme.palette.common.white,
+        ...{
+            startColor: theme.palette.primary.light,
+            endColor: theme.palette.primary.main,
+        },
+    }),
+}));
 const AddContract = () => {
     const navigate = useNavigate();
     const params = useParams();
@@ -93,7 +120,9 @@ const AddContract = () => {
         }
     }, [params?.pk]);
     useEffect(() => {
+        window.scrollTo(0, 0);
         settingActiveStep(activeStep)
+
     }, [activeStep])
     const settingActiveStep = async (num) => {
         let obj = {};
@@ -319,7 +348,7 @@ const AddContract = () => {
                 Swal.fire({
                     title: '계약서를 등록 하시겠습니까?',
                     showCancelButton: true,
-                    confirmButtonText: '확인',
+                    confirmButtonText: '등록',
                     cancelButtonText: '취소'
                 }).then(async (result) => {
                     if (result.isConfirmed) {
@@ -351,8 +380,9 @@ const AddContract = () => {
             }
         }
         if (activeStep == 3) {
-            setActiveStep(0);
-            getCheckContractAppr();
+            navigate('/home')
+            // setActiveStep(0);
+            // getCheckContractAppr();
         }
     }
     const onPrevButton = () => {
@@ -395,7 +425,7 @@ const AddContract = () => {
 
     const addFile = (e) => {
         let { id, files } = e.target;
-        if(!(e.target.files[0].type.includes('png') || e.target.files[0].type.includes('jpg') || e.target.files[0].type.includes('jpeg'))){
+        if (!(e.target.files[0].type.includes('image'))) {
             toast.error('이미지 파일만 업로드 가능합니다.')
             $(`#${id}`).val("");
             return;
@@ -417,7 +447,7 @@ const AddContract = () => {
     };
     const addPdf = (e) => {
         let { id, files } = e.target;
-        if(!e.target.files[0].type.includes('pdf')){
+        if (!e.target.files[0].type.includes('pdf')) {
             toast.error('pdf 만 업로드 가능합니다.')
             $(`#${id}`).val("");
             return;
@@ -433,7 +463,34 @@ const AddContract = () => {
         $(`#${id}`).val("");
     };
 
-
+    const StepIconComponent = (props) => {
+        const { active, completed, className, icon } = props;
+        console.log(props)
+        const icon_list = {
+            1: <img src={AddContractIconSrc} />,
+            2: <img src={LandlordAgreeIconSrc} />,
+            3: <img src={RealtorAgreeIconSrc} />,
+            4: <img src={CheckIconSrc} />,
+        }
+        return (
+            <>
+                <div style={{ background: `${active || completed ? theme.color.background2 : theme.color.font4}`, width: '48px', height: '48px', borderRadius: '50%', display: 'flex', zIndex: '1' }}>
+                    <div style={{ margin: 'auto' }}>
+                        {icon_list[icon]}
+                    </div>
+                </div>
+            </>
+        )
+    }
+    const returnAgreeIcon = (type, data) => {
+        if (data[`${type}_appr`] == 1) {
+            return 'akar-icons:check'
+        } else if (data[`${type}_pk`] > 0) {
+            return 'ri:hourglass-2-line'
+        } else {
+            return ''
+        }
+    }
     return (
         <>
             <Wrappers>
@@ -443,13 +500,20 @@ const AddContract = () => {
                     </>
                     :
                     <>
-                        <Stepper activeStep={activeStep} alternativeLabel>
+                        <Stepper activeStep={activeStep} alternativeLabel
+                            sx={{
+                                "& .MuiStepConnector-root": {
+                                    top: '23px'
+                                },
+                            }}
+                        >
                             {steps.map((label, index) => (
-                                <Step key={label} classes={{
-                                    completed: theme.color.background1,
-                                    active: theme.color.background1,
-                                }}>
-                                    <StepLabel sx={stepLabelStyle}>{label}</StepLabel>
+                                <Step key={label}
+                                    classes={{
+                                        completed: theme.color.background2,
+                                        active: theme.color.background2,
+                                    }}>
+                                    <StepLabel sx={stepLabelStyle} StepIconComponent={StepIconComponent}>{label}</StepLabel>
                                 </Step>
                             ))}
                         </Stepper>
@@ -464,10 +528,10 @@ const AddContract = () => {
                                         <div onClick={() => {
                                         }}>
                                             <InputComponent
+                                                top_label={'계약주소'}
                                                 label={'계약주소* '}
                                                 input_type={{
                                                     placeholder: '',
-                                                    disabled: "true"
                                                 }}
                                                 class_name='address'
                                                 is_divider={true}
@@ -478,6 +542,7 @@ const AddContract = () => {
                                             />
                                         </div>
                                         <InputComponent
+                                            top_label={'상세주소'}
                                             label={'상세주소'}
                                             input_type={{
                                                 placeholder: ''
@@ -502,10 +567,8 @@ const AddContract = () => {
                                             </CustomSelect>
                                         </FormControl> */}
                                         <InputComponent
-                                            label={'보증금'}
-                                            input_type={{
-                                                placeholder: '숫자를 입력해 주세요.'
-                                            }}
+                                            label={'숫자를 입력해 주세요.'}
+                                            top_label={'보증금'}
                                             class_name='deposit'
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'deposit')}
@@ -513,10 +576,8 @@ const AddContract = () => {
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
                                         <InputComponent
-                                            label={'계약금'}
-                                            input_type={{
-                                                placeholder: '숫자를 입력해 주세요.'
-                                            }}
+                                            label={'숫자를 입력해 주세요.'}
+                                            top_label={'계약금'}
                                             class_name='down_payment'
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'down_payment')}
@@ -525,45 +586,49 @@ const AddContract = () => {
                                         />
                                         {/* <Explain style={{margin:'0'}}>보증금 - 계약금 = 잔금 입니다.</Explain> */}
                                         <InputComponent
-                                            label={'월세'}
-                                            input_type={{
-                                                placeholder: '숫자를 입력해 주세요.'
-                                            }}
+                                            label={'숫자를 입력해 주세요.'}
+                                            top_label={'월세'}
                                             class_name='monthly'
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'monthly')}
                                             value={values.monthly}
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
-                                        <InputComponent
-                                            label={'계약 시작일'}
-                                            input_type={{
-                                                placeholder: '',
-                                                type: 'date'
-                                            }}
-                                            class_name='start_date'
-                                            is_divider={true}
-                                            onChange={(e) => handleChange(e, 'start_date')}
-                                            value={values.start_date}
-                                        />
-                                        <InputComponent
-                                            label={'계약 종료일'}
-                                            input_type={{
-                                                placeholder: '',
-                                                type: 'date'
-                                            }}
-                                            class_name='end_date'
-                                            is_divider={true}
-                                            onChange={(e) => handleChange(e, 'end_date')}
-                                            value={values.end_date}
-                                        />
-                                        <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
-                                            <InputLabel id="demo-select-small">월세 납부일</InputLabel>
+                                        <RowContent style={{ columnGap: '0.5rem', alignItems: 'center' }}>
+                                            <Col style={{ width: '50%' }}>
+                                                <InputComponent
+                                                    top_label={'계약 시작일'}
+                                                    input_type={{
+                                                        placeholder: '',
+                                                        type: 'date'
+                                                    }}
+                                                    class_name='start_date'
+                                                    is_divider={true}
+                                                    onChange={(e) => handleChange(e, 'start_date')}
+                                                    value={values.start_date}
+                                                />
+                                            </Col>
+                                            <div style={{ marginTop: '20px' }}>~</div>
+                                            <Col style={{ width: '50%' }}>
+                                                <InputComponent
+                                                    top_label={'계약 종료일'}
+                                                    input_type={{
+                                                        placeholder: '',
+                                                        type: 'date'
+                                                    }}
+                                                    class_name='end_date'
+                                                    is_divider={true}
+                                                    onChange={(e) => handleChange(e, 'end_date')}
+                                                    value={values.end_date}
+                                                />
+                                            </Col>
+                                        </RowContent>
+                                        <div style={{ fontSize: theme.size.font5, fontWeight: '400' }}>월세 납부일</div>
+                                        <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} >
                                             <CustomSelect
                                                 labelId="demo-select-small"
                                                 id="demo-select-small"
                                                 value={values.pay_day}
-                                                label="월세 납부일"
                                                 onChange={(e) => handleChange(e.target.value, 'pay_day')}
                                             >
                                                 {range(1, 28).map((item, idx) => {
@@ -572,17 +637,15 @@ const AddContract = () => {
                                             </CustomSelect>
                                         </FormControl>
                                         <InputComponent
-                                            label={'부동산 중개수수료'}
-                                            input_type={{
-                                                placeholder: '숫자를 입력해 주세요.'
-                                            }}
+                                            top_label={'부동산 중개수수료'}
+                                            label={'숫자를 입력해 주세요.'}
                                             class_name='brokerage_fee'
                                             is_divider={true}
                                             onChange={(e) => handleChange(e, 'brokerage_fee')}
                                             value={values.brokerage_fee}
                                             icon_label={<div style={{ fontSize: theme.size.font4 }}>만원</div>}
                                         />
-                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서 업로드(png, jpg, jpeg 파일)</CategoryName>
+                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서 업로드</CategoryName>
                                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                             {imgList.map((item, idx) => (
                                                 <>
@@ -633,15 +696,16 @@ const AddContract = () => {
                                                 </>
                                             ))}
                                         </div>
-                                        <div style={{ margin: '8px auto 0px 0px' }} for={`document_src`}>
-                                            <label style={{ ...colorButtonStyle, cursor: 'pointer', padding: '8px 16px', borderRadius: '4px' }} for={`document_src`}>
-                                                업로드
+                                        (png, jpg, jpeg 파일)
+                                        <div style={{ margin: '8px auto 2rem 0px' }} for={`document_src`}>
+                                            <label style={{ cursor: 'pointer', display: 'flex', fontSize: theme.size.font5, alignItems: 'center', columnGap: '0.5rem', color: theme.color.background2, fontWeight: 'bold' }} for={`document_src`}>
+                                                <img src={CameraIconSrc} />
+                                                <div>업로드</div>
                                             </label>
                                         </div>
                                         <div>
                                             <input type="file" id={`document_src`} onChange={addFile} style={{ display: 'none' }} multiple />
                                         </div>
-                                        <CategoryName style={{ width: '100%', maxWidth: '1000px', marginBottom: '0.5rem', fontWeight: 'bold' }}>계약서 업로드(pdf파일)</CategoryName>
                                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                                             {pdfList.map((item, idx) => (
                                                 <>
@@ -651,7 +715,7 @@ const AddContract = () => {
                                                         display: 'flex',
                                                         flexDirection: 'column',
                                                         cursor: 'pointer',
-                                                        color: theme.color.background1,
+                                                        color: theme.color.background2,
                                                     }}
                                                         onMouseOver={() => {
                                                             let pdf_list = [...pdfList];
@@ -664,7 +728,7 @@ const AddContract = () => {
                                                             setPdfList([...pdf_list]);
                                                         }}
                                                     >
-                                                        <a href={item?.url} download={item?.content?.name || item?.name} style={{ textDecoration: 'none', color: theme.color.background1 }}>
+                                                        <a href={item?.url} download={item?.content?.name || item?.name} style={{ textDecoration: 'none', color: theme.color.background2 }}>
                                                             {item?.content?.name || item?.name}
                                                         </a>
                                                         {item.hover ?
@@ -692,9 +756,11 @@ const AddContract = () => {
                                                 </>
                                             ))}
                                         </div>
+                                        (pdf파일)
                                         <div style={{ margin: '8px auto 0px 0px' }} for={`pdf_src`}>
-                                            <label style={{ ...colorButtonStyle, cursor: 'pointer', padding: '8px 16px', borderRadius: '4px' }} for={`pdf_src`} multiple>
-                                                업로드
+                                            <label style={{ cursor: 'pointer', display: 'flex', fontSize: theme.size.font5, alignItems: 'center', columnGap: '0.5rem', color: theme.color.background2, fontWeight: 'bold' }} for={`pdf_src`} multiple>
+                                                <img src={CameraIconSrc} />
+                                                <div>업로드</div>
                                             </label>
                                         </div>
                                         <div>
@@ -714,9 +780,9 @@ const AddContract = () => {
                                         style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                                     >
                                         <InputComponent
-                                            label={'임대인'}
+                                            top_label={'임대인'}
+                                            label={'임대인 이름, 주민등록번호, 전화번호 검색가능.'}
                                             input_type={{
-                                                placeholder: '임대인 이름, 주민등록번호, 전화번호 검색가능.',
                                                 disabled: values.landlord?.name
                                             }}
                                             class_name='landlord_search'
@@ -765,14 +831,21 @@ const AddContract = () => {
                                                     <div>전화번호: {values.landlord?.phone}</div>
                                                     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
                                                         <div />
-                                                        <Button sx={colorButtonStyle} onClick={() => {
+                                                        <Button sx={{
+                                                            ...twoOfThreeButtonStyle, background: theme.color.background2, color: '#fff', '&:hover': {
+                                                                background: theme.color.background2,
+                                                            },
+                                                            '&:active': {
+                                                                background: theme.color.background2,
+                                                            },
+                                                        }} onClick={() => {
                                                             if (values?.landlord_pk > 0) {
                                                             } else {
                                                                 requestContractAppr(5, values.landlord?.pk)
                                                             }
                                                         }}
-                                                            startIcon={<Icon icon="material-symbols:approval-delegation" />}
-                                                        >{values?.landlord_appr == 1 ? '동의완료' : (values?.landlord_pk > 0 ? '동의 기다리는 중...' : '동의구하기')}</Button>
+                                                            startIcon={<Icon icon={returnAgreeIcon('landlord', values)} />}
+                                                        >{values?.landlord_appr == 1 ? '동의완료' : (values?.landlord_pk > 0 ? '동의기다리는중...' : '동의구하기')}</Button>
                                                     </div>
                                                 </div>
                                             </>
@@ -793,9 +866,9 @@ const AddContract = () => {
                                         style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px' }}
                                     >
                                         <InputComponent
-                                            label={'임차인'}
+                                            top_label={'임차인'}
+                                            label={'임차인 이름, 주민등록번호, 전화번호 검색가능.'}
                                             input_type={{
-                                                placeholder: '임차인 이름, 주민등록번호, 전화번호 검색가능.',
                                                 disabled: values.lessee?.name
                                             }}
                                             class_name='lessee_search'
@@ -844,14 +917,22 @@ const AddContract = () => {
                                                     <div>전화번호: {values.lessee?.phone}</div>
                                                     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
                                                         <div />
-                                                        <Button sx={colorButtonStyle} onClick={() => {
+                                                        <Button sx={{
+                                                            ...twoOfThreeButtonStyle, background: theme.color.background2, color: '#fff', '&:hover': {
+                                                                background: theme.color.background2,
+                                                            },
+                                                            '&:active': {
+                                                                background: theme.color.background2,
+                                                            },
+                                                        }} onClick={() => {
                                                             if (values?.lessee_pk > 0) {
+
                                                             } else {
                                                                 requestContractAppr(0, values.lessee?.pk)
                                                             }
                                                         }}
-                                                            startIcon={<Icon icon="material-symbols:approval-delegation" />}
-                                                        >{values?.lessee_appr == 1 ? '동의완료' : (values?.lessee_pk > 0 ? '동의 기다리는 중...' : '동의구하기')}</Button>
+                                                            startIcon={<Icon icon={returnAgreeIcon('lessee', values)} />}
+                                                        >{values?.lessee_appr == 1 ? '동의완료' : (values?.lessee_pk > 0 ? '동의기다리는중...' : '동의구하기')}</Button>
                                                     </div>
                                                 </div>
 
@@ -871,14 +952,7 @@ const AddContract = () => {
                                         animate={{ opacity: 1 }}
                                         style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '250px', alignItems: 'center' }}
                                     >
-                                        <div style={{ margin: 'auto auto 8px auto' }}>
-                                            <Icon icon="line-md:confirm-circle" style={{ fontSize: '52px', color: theme.color.background1 }} />
-                                        </div>
-                                        <div style={{ margin: '8px auto auto auto' }}>
-                                            계약이 성사되었습니다.<br />
-                                        </div>
-
-
+                                        <img src={ContractConfirmSrc} style={{ margin: 'auto' }} />
                                     </motion.div>
                                 </>
                                 :
@@ -886,9 +960,10 @@ const AddContract = () => {
                                 </>}
                             <div style={{
                                 display: 'flex',
-                                justifyContent: 'space-between',
+                                flexDirection: 'column',
                                 width: '100%',
                                 marginTop: '1rem',
+                                rowGap: '1rem'
                             }}>
                                 {activeStep == 0 ?
                                     <>
@@ -896,9 +971,9 @@ const AddContract = () => {
                                     </>
                                     :
                                     <>
-                                        <Button sx={colorButtonStyle} onClick={onPrevButton}>이전</Button>
+                                        <Button sx={twoOfThreeButtonStyle} onClick={onPrevButton}>이전</Button>
                                     </>}
-                                <Button sx={colorButtonStyle} onClick={onNextButton} disabled={!canNextButton(activeStep)}>{activeStep == 3 ? '완료' : '다음'}</Button>
+                                <Button sx={twoOfThreeButtonStyle} onClick={onNextButton} disabled={!canNextButton(activeStep)}>{activeStep == 3 ? '완료' : '다음'}</Button>
                             </div>
                             {isSeePostCode ?
                                 <>

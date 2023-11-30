@@ -7,15 +7,14 @@ import axios from 'axios';
 import { Wrappers, ContentWrappers, twoOfThreeButtonStyle, MarginBottom, HalfTitle } from '../../components/elements/UserContentTemplete';
 import Loading from '../../components/Loading';
 import styled from 'styled-components';
-import editIcon from '../../assets/images/icon/edit.svg'
-import { Button } from '@mui/material';
 import theme from '../../styles/theme';
 import { Icon } from '@iconify/react';
 import { getLocalStorage } from '../../functions/LocalStorage';
 import { backUrl } from '../../data/Data';
 import ContentTable from '../../components/ContentTable';
-import { objHistoryListContent } from '../../data/ContentData';
+import { CommissionIconSrc, ContractIconSrc, PayIconSrc, PointIconSrc, objHistoryListContent } from '../../data/ContentData';
 import { getIsUser } from '../../functions/utils';
+import addContractBannerSrc from '../../assets/images/test/add-contract-banner.svg'
 const BorderContainer = styled.div`
 height:220px;
 width:100%;
@@ -28,7 +27,7 @@ border-radius:10px;
 const MarginTop = styled.div`
 margin-top:1.5rem;
 @media screen and (max-width:1050px) { 
-    margin-top:4rem;
+    margin-top:3rem;
 }
 
 `
@@ -37,7 +36,7 @@ position:fixed;
 z-index:9;
 top:6rem;
 width:100vw;
-background:${theme.color.background3};
+background:#fff;
 font-size:${theme.size.font4};
 color:${theme.color.font2};
 left:0;
@@ -48,7 +47,7 @@ flex-direction:column;
 }
 `
 const NoticeContent = styled.div`
-width:90%;
+width:100%;
 max-width: 1002px;
 margin:0 auto;
 padding:8px 0;
@@ -63,7 +62,7 @@ const NoticeComponent = (props) => {
             <NoticeContainer>
                 {posts && posts.map((item, idx) => (
                     <>
-                        <div style={{ borderTop: `1px solid #fff`, cursor: 'pointer', width: '100%' }}
+                        <div style={{ borderTop: `1px solid ${idx != 0 ? theme.color.font4 : '#fff'}`, cursor: 'pointer', width: '90%', margin: '0 auto', maxWidth: '1002px' }}
                             onClick={() => { navigate(`/post/notice/${item.pk}`) }}>
                             <NoticeContent>
                                 <div>[공지] {item?.title}</div>
@@ -92,6 +91,9 @@ const Home = () => {
         let user_data = getLocalStorage('auth');
         setUserData(user_data);
         const { data: response } = await axios.get('/api/gethomecontent');
+        if (response?.result == -150) {
+            window.location.href = '/login'
+        }
         setPost(response?.data);
         if (is_loading) {
             setLoading(false);
@@ -111,10 +113,7 @@ const Home = () => {
                         <MarginTop />
                         {userData?.user_level >= 10 ?
                             <>
-                                <BorderContainer>
-                                    <img src={editIcon} style={{ width: '48px', margin: 'auto auto 16px auto' }} />
-                                    <Button variant="text" sx={{ ...twoOfThreeButtonStyle, margin: '16px auto auto auto' }} onClick={() => { navigate('/addcontract') }}>계약생성하러 가기</Button>
-                                </BorderContainer>
+                                <img src={addContractBannerSrc} style={{ width: '100%', cursor: 'pointer', marginTop: '1rem' }} onClick={() => { navigate('/addcontract') }} />
                             </>
                             :
                             <>
@@ -129,7 +128,7 @@ const Home = () => {
                     <div style={{ width: '100%', display: 'flex' }}>
                         <img
                             src={backUrl + post?.setting?.home_banner_img_1}
-                            style={{ width: '100%', margin: '16px auto', maxWidth: '1000px', cursor: `${post?.setting?.home_banner_link_1 ? 'pointer' : ''}` }}
+                            style={{ width: '90%', margin: '16px auto', maxWidth: '1000px', cursor: `${post?.setting?.home_banner_link_1 ? 'pointer' : ''}` }}
                             onClick={() => { if (post?.setting?.home_banner_link_1) window.location.href = post?.setting?.home_banner_link_1; }}
                         />
                     </div>
@@ -143,7 +142,10 @@ const Home = () => {
                     <>
                         {getIsUser(userData?.user_level) ?
                             <>
-                                <HalfTitle style={{ maxWidth: '1050px' }}>계약내역</HalfTitle>
+                                <HalfTitle style={{ maxWidth: '1050px' }}>
+                                    <img src={ContractIconSrc} />
+                                    <div>계약내역</div>
+                                </HalfTitle>
                                 <ContentTable
                                     columns={objHistoryListContent[`contract_${userData?.user_level}`] ?? []}
                                     data={post?.contract ?? []}
@@ -151,7 +153,10 @@ const Home = () => {
                                     pageSetting={getHomeContent}
                                     table={'contract'}
                                 />
-                                <HalfTitle style={{ maxWidth: '1050px' }}>결제내역</HalfTitle>
+                                <HalfTitle style={{ maxWidth: '1050px' }}>
+                                    <img src={PayIconSrc} />
+                                    <div>결제내역</div>
+                                </HalfTitle>
                                 <ContentTable
                                     columns={objHistoryListContent[`pay_${userData?.user_level}`] ?? []}
                                     data={post?.pay ?? []}
@@ -159,7 +164,10 @@ const Home = () => {
                                     table={'pay'} />
                                 {userData?.user_level == 0 ?
                                     <>
-                                        <HalfTitle style={{ maxWidth: '1050px' }}>포인트내역</HalfTitle>
+                                        <HalfTitle style={{ maxWidth: '1050px' }}>
+                                            <img src={PointIconSrc} />
+                                            <div>포인트내역</div>
+                                        </HalfTitle>
                                         <ContentTable
                                             columns={objHistoryListContent[`point`] ?? []}
                                             data={post?.point ?? []}
@@ -173,7 +181,10 @@ const Home = () => {
                                 }
                                 {userData?.user_level == 10 ?
                                     <>
-                                        <HalfTitle style={{ maxWidth: '1050px' }}>정산내역</HalfTitle>
+                                        <HalfTitle style={{ maxWidth: '1050px' }}>
+                                            <img src={CommissionIconSrc} />
+                                            <div>정산내역</div>
+                                        </HalfTitle>
                                         <ContentTable
                                             columns={objHistoryListContent[`commission_${userData?.user_level}`] ?? []}
                                             data={post?.commission ?? []}

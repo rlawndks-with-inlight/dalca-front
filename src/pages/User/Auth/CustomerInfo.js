@@ -1,7 +1,7 @@
 //내역
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { HalfTitle, SelectType, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { HalfTitle, SelectType, Type, Wrappers } from "../../../components/elements/UserContentTemplete";
 import { getLocalStorage } from "../../../functions/LocalStorage";
 import styled from "styled-components";
 import theme from "../../../styles/theme";
@@ -13,20 +13,7 @@ import { toast } from "react-hot-toast";
 import UserCard from "../../../components/UserCard";
 import { motion } from "framer-motion";
 import Loading from "../../../components/Loading";
-const Type = styled.div`
-width:50%;
-text-align:center;
-padding: 0.75rem 0;
-font-weight:bold;
-cursor:pointer;
-font-size:1rem;
-@media screen and (max-width:700px) {
-    font-size:0.8rem;
-}
-@media screen and (max-width:350px) {
-    font-size:0.65rem;
-}
-`
+
 
 const CustomerInfo = () => {
 
@@ -73,11 +60,10 @@ const CustomerInfo = () => {
             <Wrappers>
 
                 <HalfTitle>고객정보조회</HalfTitle>
-
                 <SelectType className="select-type">
                     {levelList && levelList.map((item, idx) => (
                         <>
-                            <Type style={{ borderBottom: `4px solid ${currentLevel == item?.level ? theme.color.background1 : '#fff'}`, color: `${currentLevel == item?.level ? theme.color.background1 : (localStorage.getItem('dark_mode') ? '#fff' : '#ccc')}` }} onClick={() => {
+                            <Type style={{ border: `1px solid ${currentLevel == item?.level ? theme.color.background2 : '#fff'}`, color: `${currentLevel == item?.level ? theme.color.background2 : (localStorage.getItem('dark_mode') ? '#fff' : '#ccc')}` }} onClick={() => {
                                 getCustomerInfo(item?.level, 1)
                             }}>{item.name}</Type>
                         </>
@@ -106,17 +92,17 @@ const CustomerInfo = () => {
                 <MBottomContent>
                     <div />
                     <PageContainer>
-                        <PageButton onClick={() => getCustomerInfo(currentLevel, 1)}>
+                        <PageButton onClick={() => getCustomerInfo(currentLevel, 1)} style={{ color: '#000', background: '#fff', border: '1px solid #ccc' }}>
                             처음
                         </PageButton>
                         {pageList.map((item, index) => (
                             <>
-                                <PageButton onClick={() => getCustomerInfo(currentLevel, item)} style={{ color: `${page == item ? '#fff' : ''}`, background: `${page == item ? theme.color.background1 : ''}`, display: `${Math.abs(index + 1 - page) > 4 ? 'none' : ''}` }}>
+                                <PageButton onClick={() => getCustomerInfo(currentLevel, item)} style={{ color: `${page == item ? '#000' : ''}`, background: `${page == item ? theme.color.background1 : ''}`, display: `${Math.abs(index + 1 - page) > 4 ? 'none' : ''}` }}>
                                     {item}
                                 </PageButton>
                             </>
                         ))}
-                        <PageButton onClick={() => getCustomerInfo(currentLevel, pageList.length ?? 1)}>
+                        <PageButton onClick={() => getCustomerInfo(currentLevel, pageList.length ?? 1)} style={{ color: '#000', background: '#fff', border: '1px solid #ccc' }}>
                             마지막
                         </PageButton>
                     </PageContainer>

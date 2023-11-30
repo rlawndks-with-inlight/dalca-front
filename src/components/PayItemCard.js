@@ -66,7 +66,7 @@ const PayItemCard = (props) => {
                         item_name: `${item?.contract_pk}번 계약 ${item?.pay_category == 0 ? `${item?.day.substring(0, 7)} ` : ''} ${getKoPayCategoryByNum(item?.pay_category)}`,
                         buyer_name: user?.name,
                         buyer_phone: user?.phone,
-                        return_url:`https://dalcapay.com:8443/api/payresult`,
+                        return_url: `https://dalcapay.com:8443/api/payresult`,
                         temp: item?.pk,
                     }
                     let query = Object.entries(obj).map(e => e.join('=')).join('&');
@@ -134,7 +134,6 @@ const PayItemCard = (props) => {
     }
     return (
         <>
-            <HalfTitle>결제 상세내용</HalfTitle>
             <Container>
                 <ContentContainer>
                     {payList && payList.length > 0 ?

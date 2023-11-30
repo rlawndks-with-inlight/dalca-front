@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { WrapperForm, CategoryName, Input, Button, FlexBox, SnsLogo, RegularNotice } from './elements/AuthContentTemplete';
-import { Title, SelectType, RowContent, ShadowContainer } from "./elements/UserContentTemplete";
+import { Title, SelectType, RowContent, ShadowContainer, Type } from "./elements/UserContentTemplete";
 import theme from "../styles/theme";
 import $ from 'jquery';
 import axios from "axios";
@@ -31,20 +31,7 @@ border-bottom:1px solid ${props => props.theme.color.font4};
 const Td = styled.td`
 border-bottom:1px solid ${props => props.theme.color.font4};
 `
-const Type = styled.div`
-width:50%;
-text-align:center;
-padding: 0.75rem 0;
-font-weight:bold;
-cursor:pointer;
-font-size:1rem;
-@media screen and (max-width:700px) {
-    font-size:0.8rem;
-}
-@media screen and (max-width:350px) {
-    font-size:0.65rem;
-}
-`
+
 const EditMyInfoCard = () => {
     const navigate = useNavigate();
     const [typeNum, setTypeNum] = useState(0);
@@ -121,9 +108,7 @@ const EditMyInfoCard = () => {
         } catch (e) {
         }
     }
-    const refresh = () => {
 
-    }
     const onChangeTypeNum = async (num) => {
         if (num != typeNum) {
             $('.id').val('');
@@ -277,7 +262,7 @@ const EditMyInfoCard = () => {
                         <SelectType className="select-type">
                             {zType.map((item, idx) => (
                                 <>
-                                    <Type style={{ borderBottom: `4px solid ${typeNum == item?.type ? theme.color.background1 : '#fff'}`, color: `${typeNum == item?.type ? theme.color.background1 : (localStorage.getItem('dark_mode') ? '#fff' : '#ccc')}` }} onClick={() => { onChangeTypeNum(item?.type) }}>{item.title}</Type>
+                                    <Type style={{ border: `1px solid ${typeNum == item?.type ? theme.color.background2 : '#fff'}`, color: `${typeNum == item?.type ? theme.color.background2 : (localStorage.getItem('dark_mode') ? '#fff' : '#ccc')}` }} onClick={() => { onChangeTypeNum(item?.type) }}>{item.title}</Type>
                                 </>
                             ))}
 
@@ -313,7 +298,7 @@ const EditMyInfoCard = () => {
                                         </div> */}
                                         <CategoryName style={{ display: 'flex', alignItems: 'center' }}>
                                             <div>우편번호</div>
-                                           
+
                                         </CategoryName>
                                         <RowContent style={{ maxWidth: '398px', width: '100%', alignItems: 'center', margin: '0 auto' }} onClick={() => { setIsSeePostCode(!isSeePostCode) }}>
                                             <Input onClick={() => { setIsSeePostCode(!isSeePostCode) }} disabled={true} className="zip_code" placeholder="예) 12345" onKeyPress={(e) => e.key == 'Enter' ? $('.address').focus() : null} />
@@ -321,8 +306,8 @@ const EditMyInfoCard = () => {
                                         <CategoryName style={{ display: 'flex', alignItems: 'center' }}>
                                             <div>주소</div>
                                         </CategoryName>
-                                        <div style={{margin:'0 auto',width:'100%',display:'flex'}}>
-                                        <Input onClick={() => { setIsSeePostCode(!isSeePostCode) }} disabled={true} className="address" placeholder="예) XX시 YY구 ZZ동 111-11" onKeyPress={(e) => e.key == 'Enter' ? $('.address-detail').focus() : null} />
+                                        <div style={{ margin: '0 auto', width: '100%', display: 'flex' }}>
+                                            <Input onClick={() => { setIsSeePostCode(!isSeePostCode) }} disabled={true} className="address" placeholder="예) XX시 YY구 ZZ동 111-11" onKeyPress={(e) => e.key == 'Enter' ? $('.address-detail').focus() : null} />
                                         </div>
                                         <CategoryName>상세주소</CategoryName>
                                         <Input className="address_detail" placeholder="예) XX동 YY호" onKeyPress={(e) => e.key == 'Enter' ? $('.account_holder').focus() : null} />

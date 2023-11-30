@@ -58,7 +58,7 @@ const MItemList = () => {
     const use_user_pk_list = [];
     const use_contract_pk_list = ['contract_pay'];
     const use_pay_user_pk_list = ['pay'];
-    
+
     useEffect(() => {
         setZColumn(objManagerListContent[`${params.table}`].zColumn ?? {})
         async function fetchPost() {
@@ -300,17 +300,17 @@ const MItemList = () => {
             <MBottomContent>
                 <div />
                 <PageContainer>
-                    <PageButton onClick={() => changePage(1)}>
+                    <PageButton onClick={() => changePage(1)} style={{ color: '#000', background: '#fff', border: '1px solid #ccc' }}>
                         처음
                     </PageButton>
                     {pageList.map((item, index) => (
                         <>
-                            <PageButton onClick={() => changePage(item)} style={{ color: `${page == item ? '#fff' : ''}`, background: `${page == item ? theme.color.background1 : ''}`, display: `${Math.abs(index + 1 - page) > 4 ? 'none' : ''}` }}>
+                            <PageButton onClick={() => changePage(item)} style={{ color: `${page == item ? '#000' : ''}`, background: `${page == item ? theme.color.background1 : ''}`, display: `${Math.abs(index + 1 - page) > 4 ? 'none' : ''}` }}>
                                 {item}
                             </PageButton>
                         </>
                     ))}
-                    <PageButton onClick={() => changePage(pageList.length ?? 1)}>
+                    <PageButton onClick={() => changePage(pageList.length ?? 1)} style={{ color: '#000', background: '#fff', border: '1px solid #ccc' }}>
                         마지막
                     </PageButton>
                 </PageContainer>

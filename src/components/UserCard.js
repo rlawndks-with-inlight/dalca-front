@@ -1,8 +1,9 @@
-import { ShadowContainer } from "./elements/UserContentTemplete";
+import { RowContent, ShadowContainer } from "./elements/UserContentTemplete";
 import defaultImg from '../assets/images/icon/default-profile.png'
 import { backUrl } from "../data/Data";
 import styled from "styled-components";
 import theme from "../styles/theme";
+import { Avatar } from "@mui/material";
 
 const ProfileImg = styled.img`
 height: 125px;
@@ -18,38 +19,33 @@ margin: 0 auto;
 }
 `
 const InfoContainer = styled.div`
-width: 70%;
-margin: 1rem auto 0 1rem;
-height: 100%;
+display: flex;
+flex-direction: column;
+row-gap: 0.25rem;
 font-size:${theme.size.font4};
 @media screen and (max-width:700px) {
     font-size:${theme.size.font5};
 }
 `
-const getUserInfoByLevel = (level, data) =>{
-    if(level==10){
-        return <>
-        <div style={{ marginBottom: '8px' }}>부동산명: {data?.office_name}</div>
-        </>
-    }
-
-    return "";
-}
 const UserCard = (props) => {
     const { data } = props;
     return (
         <>
-            <ShadowContainer style={{
-                display: 'flex', height: '150px', alignItems: 'center', margin: '0 auto 1rem auto', width: '96%', cursor: 'pointer'
-            }}>
-                <ProfileImg src={data?.profile_img ? data?.profile_img.substring(0, 4) == "http" ? data?.profile_img : backUrl + data?.profile_img : defaultImg} alt="#" onError={defaultImg} />
+            <RowContent style={{ alignItems: 'center', columnGap: '1rem' }}>
+                <Avatar src={backUrl + data?.profile_img} style={{ width: '56px', height: '56px' }} />
                 <InfoContainer>
-                    <div style={{ marginBottom: '8px' }}>이름: {data?.name}</div>
-                    <div style={{ marginBottom: '8px' }}>전화번호: {data?.phone}</div>
-                    <div style={{ marginBottom: '8px' }}>주민등록번호: {data?.id_number.substring(0, 7)}*******</div>
-                    {getUserInfoByLevel(data?.user_level, data)}
+                    <RowContent style={{ columnGap: '0.5rem' }}>
+                        <div style={{ fontWeight: 'bold' }}>{data?.name}</div>
+                        <div style={{ color: theme.color.font5, borderLeft: `${data?.user_level == 10 ? `1px solid ${theme.color.font5}` : ''}` }}>{data?.user_level == 10 ? data?.office_name : ''}</div>
+                    </RowContent>
+                    <RowContent>
+                        {data?.phone}
+                    </RowContent>
+                    <RowContent>
+                        {data?.id_number.substring(0, 7)}*******
+                    </RowContent>
                 </InfoContainer>
-            </ShadowContainer>
+            </RowContent>
         </>
     )
 }

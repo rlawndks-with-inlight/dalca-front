@@ -401,7 +401,7 @@ export const dateFormat = (date, is_minus) => {//두날짜의 시간차
     }
 }
 
-export const getMoneyByCardPercent = (price_, percent_) => {
+export const getMoneyByCardPercent = (price_ = 0, percent_ = 0) => {
     let price = parseFloat(price_);
     let percent = parseFloat(percent_);
 

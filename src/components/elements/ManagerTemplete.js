@@ -18,7 +18,7 @@ display:flex;
 flex-direction:column;
 width:95%;
 margin:12px auto;
-box-shadow:${props=>props.theme.boxShadow};
+box-shadow:${props => props.theme.boxShadow};
 border-radius:3px;
 padding: 24px 0;
 min-height:640px;
@@ -26,7 +26,7 @@ min-height:640px;
 export const Title = styled.div`
 margin:12px auto 6px 24px;
 width:90%;
-color:${props=>props.theme.color.manager.font2};
+color:${props => props.theme.color.manager.font2};
 font-weight:bold;
 margin-top:32px;
 `
@@ -66,7 +66,7 @@ border:1px solid #dadde6;
 border-radius:4px;
 `
 export const ImageContainer = styled.label`
-border: 1px dashed ${props=>props.theme.color.font4};
+border: 1px dashed ${props => props.theme.color.font4};
 margin:12px auto 6px 24px;
 width:100%;
 min-height:12rem;
@@ -78,9 +78,9 @@ display:flex;
 }
 `
 export const Explain = styled.div`
-font-size: ${props=>props.theme.size.font5};
+font-size: ${props => props.theme.size.font5};
 margin:0px auto 0px 24px;
-color: ${props=>props.theme.color.font2};
+color: ${props => props.theme.color.font2};
 `
 export const Table = styled.table`
 width:770px;

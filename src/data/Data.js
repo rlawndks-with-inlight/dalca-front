@@ -18,6 +18,7 @@ import menu5Icon from '../assets/images/icon/speaker.svg';
 import menu5IconWhite from '../assets/images/icon/speaker-white.svg';
 import menu5IconActive from '../assets/images/icon/speaker-active.svg';
 import logo from '../assets/images/test/logo2.png'
+import logoText from '../assets/images/test/logo-text.svg'
 import logo_white from '../assets/images/test/logo-white.svg'
 import defaultImage from '../assets/images/test/default-image.png'
 import { EditorState } from "draft-js"
@@ -37,6 +38,7 @@ export const socket = io(SOCKET_URL);
 
 
 export const logoSrc = logo;
+export const logoTextSrc = logoText;
 export const logoWhiteSrc = logo_white;
 export const defaultImageSrc = defaultImage;
 //http://weare-first.com:8001
@@ -51,7 +53,7 @@ export const localization = {
     locale: 'ko',
 }
 export const zBottomMenu = [
-    { name: `퍼스트강사${window.innerWidth>=1000?' ▼':''}`, link: '/masterlist', icon: <img src={localStorage.getItem('dark_mode') ? bulbWhiteImg : bulbImg} className='menu-icon' alt="#" />, activeIcon: <img src={bulbActiveImg} className='menu-icon' alt="#" />, className: 'master-dropdown-btn', allowList: ['/masterlist'] },
+    { name: `퍼스트강사${window.innerWidth >= 1000 ? ' ▼' : ''}`, link: '/masterlist', icon: <img src={localStorage.getItem('dark_mode') ? bulbWhiteImg : bulbImg} className='menu-icon' alt="#" />, activeIcon: <img src={bulbActiveImg} className='menu-icon' alt="#" />, className: 'master-dropdown-btn', allowList: ['/masterlist'] },
     { name: '강의실', link: '/academylist', icon: <img src={localStorage.getItem('dark_mode') ? featureWhiteImg : featureImg} className='menu-icon' alt="#" />, activeIcon: <img src={featureActiveImg} className='menu-icon' alt="#" />, className: '', allowList: ['/academylist'] },
     { name: '수강신청', link: '/enrolmentlist', icon: <img src={localStorage.getItem('dark_mode') ? albumWhiteImg : albumImg} className='menu-icon' alt="#" />, activeIcon: <img src={albumActiveImg} className='menu-icon' alt="#" />, className: '', allowList: ['/enrolmentlist'] },
     { name: '수강후기', link: '/reviewlist', icon: <img src={localStorage.getItem('dark_mode') ? thumbWhiteImg : thumbImg} className='menu-icon' alt="#" />, activeIcon: <img src={thumbActiveImg} className='menu-icon' alt="#" />, className: '', allowList: ['/reviewlist'] },

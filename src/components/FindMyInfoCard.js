@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { WrapperForm, CategoryName, Input, FlexBox, SnsLogo, RegularNotice } from './elements/AuthContentTemplete';
-import { Title, SelectType, InputComponent, twoOfThreeButtonStyle } from "./elements/UserContentTemplete";
+import { Title, SelectType, InputComponent, twoOfThreeButtonStyle, TopTitleWithBackButton } from "./elements/UserContentTemplete";
 import theme from "../styles/theme";
 import $ from 'jquery';
 import axios from "axios";
@@ -10,13 +10,14 @@ import { formatPhoneNumber } from "../functions/utils";
 import { Button } from "@mui/material";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
+import ScrollToTop from "./ScrollToTop";
 const Type = styled.div`
-width:50%;
+width:120px;
 text-align:center;
-padding: 0.75rem 0;
-font-weight:bold;
+padding: 0.5rem 0;
 cursor:pointer;
 font-size:1rem;
+border-radius: 1.5rem;
 `
 const FindMyInfoCard = () => {
     const navigate = useNavigate();
@@ -94,7 +95,7 @@ const FindMyInfoCard = () => {
                 content: string
             })
             if (response?.result > 0) {
-                toast.success('인증번호가 발송되었습니다.');
+                toast.success('인증번호가 전송되었습니다.');
                 setIsSendSms(true)
             } else {
                 toast.error(response?.message);
@@ -195,11 +196,12 @@ const FindMyInfoCard = () => {
 
     return (
         <>
+            <ScrollToTop />
             <WrapperForm>
-                <Title>아이디/비밀번호 찾기</Title>
+                <TopTitleWithBackButton title={'아이디/비밀번호 찾기'} />
                 <SelectType className="select-type">
-                    <Type style={{ borderBottom: `4px solid ${typeNum == 1 ? theme.color.background1 : '#fff'}`, color: `${typeNum == 1 ? theme.color.background1 : '#ccc'}` }} onClick={() => { onChangeTypeNum(1) }}>아이디찾기</Type>
-                    <Type style={{ borderBottom: `4px solid ${typeNum == 2 ? theme.color.background1 : '#fff'}`, color: `${typeNum == 2 ? theme.color.background1 : '#ccc'}` }} onClick={() => { onChangeTypeNum(2) }}>비밀번호 찾기</Type>
+                    <Type style={{ border: `1px solid ${typeNum == 1 ? theme.color.background2 : '#fff'}`, color: `${typeNum == 1 ? theme.color.background2 : '#ccc'}` }} onClick={() => { onChangeTypeNum(1) }}>아이디찾기</Type>
+                    <Type style={{ border: `1px solid ${typeNum == 2 ? theme.color.background2 : '#fff'}`, color: `${typeNum == 2 ? theme.color.background2 : '#ccc'}` }} onClick={() => { onChangeTypeNum(2) }}>비밀번호 찾기</Type>
                 </SelectType>
 
                 {typeNum == 1 ?
@@ -218,8 +220,10 @@ const FindMyInfoCard = () => {
                                     class_name='phone'
                                     onChange={(e) => handleChange(e, 'phone')}
                                     value={values?.phone}
+                                    button_label={'인증번호 전송'}
+                                    isButtonAble={!isCheckPhoneNumber}
+                                    onClickButton={() => sendSms()}
                                 />
-                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={sendSms} disabled={isCheckPhoneNumber}>인증번호 발송</Button>
                                 <InputComponent
                                     label={'인증번호를 입력해주세요.'}
                                     input_type={{
@@ -228,8 +232,10 @@ const FindMyInfoCard = () => {
                                     class_name='phoneCheck'
                                     onChange={(e) => handleChange(e, 'phoneCheck')}
                                     value={values?.phoneCheck}
+                                    button_label={isCheckPhoneNumber ? '확인완료' : '확인'}
+                                    isButtonAble={!isCheckPhoneNumber}
+                                    onClickButton={() => confirmCoincide()}
                                 />
-                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={confirmCoincide} disabled={isCheckPhoneNumber}>{isCheckPhoneNumber ? '확인완료' : '인증번호 확인'}</Button>
                             </>
                         }
 
@@ -281,8 +287,10 @@ const FindMyInfoCard = () => {
                                     class_name='phone'
                                     onChange={(e) => handleChange2(e, 'phone')}
                                     value={values2?.phone}
+                                    button_label={'인증번호 전송'}
+                                    isButtonAble={!isCheckIdAndPhone}
+                                    onClickButton={() => sendSms()}
                                 />
-                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={sendSms} disabled={isCheckIdAndPhone}>인증번호 발송</Button>
                                 <InputComponent
                                     label={'인증번호를 입력해주세요.'}
                                     input_type={{
@@ -291,8 +299,10 @@ const FindMyInfoCard = () => {
                                     class_name='phoneCheck'
                                     onChange={(e) => handleChange2(e, 'phoneCheck')}
                                     value={values2?.phoneCheck}
+                                    button_label={isCheckPhoneNumber ? '확인완료' : '확인'}
+                                    isButtonAble={!isCheckIdAndPhone}
+                                    onClickButton={() => confirmCoincideIdAndPhone()}
                                 />
-                                <Button variant="text" sx={twoOfThreeButtonStyle} onClick={confirmCoincideIdAndPhone} disabled={isCheckIdAndPhone}>{isCheckPhoneNumber ? '확인완료' : '인증번호 확인'}</Button>
                             </>
                         }
 

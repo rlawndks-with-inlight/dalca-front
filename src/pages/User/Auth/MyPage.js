@@ -138,8 +138,8 @@ const MyPage = () => {
                 {auth?.user_level == 0 ?
                     <>
                         <SelectType>
-                            <Type style={{ borderBottom: `4px solid ${location.pathname == '/mypage' ? theme.color.background1 : '#fff'}`, color: `${location.pathname == '/mypage' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/mypage`) }}>내정보</Type>
-                            <Type style={{ borderBottom: `4px solid ${location.pathname == '/history/point' ? theme.color.background1 : '#fff'}`, color: `${location.pathname == '/history/point' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/history/point`) }}>포인트 적립내역 및 사용하기</Type>
+                            <Type style={{ border: `1px solid ${location.pathname == '/mypage' ? theme.color.background2 : '#fff'}`, color: `${location.pathname == '/mypage' ? theme.color.background2 : theme.color.font3}` }} onClick={() => { navigate(`/mypage`) }}>내정보</Type>
+                            <Type style={{ border: `1px solid ${location.pathname == '/history/point' ? theme.color.background2 : '#fff'}`, color: `${location.pathname == '/history/point' ? theme.color.background2 : theme.color.font3}` }} onClick={() => { navigate(`/history/point`) }}>포인트 적립내역 및 사용하기</Type>
                         </SelectType>
                     </>
                     :

@@ -13,7 +13,6 @@ import { WrapperForm, CategoryName, Input, Button, FlexBox, SnsLogo } from './el
 import { KAKAO_AUTH_URL } from '../data/Data';
 import NaverLogin from '../pages/User/Auth/NaverLogin';
 import Loading from './Loading';
-
 const LoginCard = () => {
     const navigate = useNavigate();
     const [isWebView, setIsWebView] = useState(false);

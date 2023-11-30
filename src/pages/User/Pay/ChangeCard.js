@@ -1,12 +1,12 @@
 //카드변경
 
-import { colorButtonStyle, ContentWrappers, CustomSelect, InputComponent, SelectType, twoOfThreeButtonStyle, Type, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, borderButtonStyle, CustomSelect, InputComponent, RowContent, SelectType, twoOfThreeButtonStyle, Type, Wrappers } from "../../../components/elements/UserContentTemplete";
 // ** React Imports
 import { useState } from 'react'
 // ** MUI Imports
 import Button from '@mui/material/Button'
 
-import { styled } from '@mui/material/styles'
+import { styled as muiStyled } from '@mui/material/styles'
 
 import Box from '@mui/material/Box'
 
@@ -35,43 +35,94 @@ import PageContainer from "../../../components/elements/pagination/PageContainer
 import { objHistoryListContent } from "../../../data/ContentData";
 import Loading from "../../../components/Loading";
 import { FormControl, InputLabel, MenuItem } from "@mui/material";
-import { ImageContainer } from "../../../components/elements/ManagerTemplete";
+import { Col, ImageContainer } from "../../../components/elements/ManagerTemplete";
 import { backUrl, frontUrl } from "../../../data/Data";
 import { AiFillFileImage } from "react-icons/ai";
 import { CategoryName } from "../../../components/elements/AuthContentTemplete";
 import { useRef } from "react";
+import styled from "styled-components";
+import CardBannerSrc from '../../../assets/images/test/card-banner.svg';
+import CardIconSrc from '../../../assets/images/icon/card.svg';
+import OnIconSrc from '../../../assets/images/icon/on.svg';
+import OffIconSrc from '../../../assets/images/icon/off.svg';
+import EditIconSrc from '../../../assets/images/icon/edit.svg'
+import CheckOnIconSrc from '../../../assets/images/icon/check-on.svg'
+import CheckOffIconSrc from '../../../assets/images/icon/check-off.svg'
+import NoneCardSrc from '../../../assets/images/test/none-card.svg'
+import CameraIconSrc from '../../../assets/images/icon/camera.svg';
 
-const CreditCardWrapper = styled(Box)(({ }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-}))
-const TextField = styled(MuiTextField)(({ }) => ({
-    width: '100%',
-    fontSize: theme.size.font4,
-    margin: '8px 0',
-    '& label.Mui-focused': {
-        color: theme.color.background1,
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: theme.color.font5,
-        },
-        '&:hover fieldset': {
-            borderColor: theme.color.font4_5,
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: theme.color.background1,
-        },
-    },
-}))
-const CardWrapper = styled('div')({
+
+const CardWrapper = muiStyled('div')({
     display: 'flex',
     margin: '0 auto',
     '& .rccs, & .rccs__card': {
         margin: 0
     }
 })
+const OverBannerImg = styled.img`
+position: absolute;
+left: 50%;
+transform: translate(-50%, 0);
+width:1000px;
+top: -30rem;
+@media screen and (max-width: 1000px) {
+top: 0;
+width: 100%;
+}
+`
+const Table = styled.table`
+border-collapse: collapse;
+font-size: ${theme.size.font5};
+`
+const Tr = styled.tr`
+align-items: center;
+`
+const Td = styled.td`
+padding: 0.3rem 0;
+align-items: center;
+`
+const CardData = (props) => {
 
+    const { data = [], checkCardPk, setCheckCardPk, onClickEditButton, deleteItem } = props;
+    return (
+        <>
+            <Table>
+                <thead>
+                    <Tr style={{ fontWeight: 'bold' }}>
+                        <Td style={{ borderBottom: '1px solid #000' }}>체크</Td>
+                        <Td style={{ borderBottom: '1px solid #000' }}>카드번호</Td>
+                        <Td style={{ borderBottom: '1px solid #000' }}>사용자</Td>
+                        <Td style={{ borderBottom: '1px solid #000' }}>생년월일</Td>
+                        <Td style={{ borderBottom: '1px solid #000' }}>수정</Td>
+                        <Td style={{ borderBottom: '1px solid #000' }}>삭제</Td>
+                    </Tr>
+                </thead>
+                <tbody>
+                    {data.map((item, idx) => (
+                        <>
+                            <Tr>
+                                <Td><img src={checkCardPk == item?.pk ? CheckOnIconSrc : CheckOffIconSrc} style={{ marginTop: '4px', cursor: 'pointer' }} onClick={() => {
+                                    setCheckCardPk(item?.pk)
+                                }} /></Td>
+                                <Td>{returnCardInfoMask('cardNumber', item?.card_number ?? "")}</Td>
+                                <Td>{item?.card_name}</Td>
+                                <Td>{item?.birth}</Td>
+                                <Td style={{ cursor: 'pointer', marginTop: '4px' }}><img src={EditIconSrc} onClick={() => {
+                                    onClickEditButton(item, -1, false)
+                                }} /></Td>
+                                <Td style={{ cursor: 'pointer' }} onClick={() => {
+                                    deleteItem(item?.pk)
+                                }}>삭제</Td>
+                            </Tr>
+                        </>
+                    ))}
+                </tbody>
+
+            </Table>
+
+        </>
+    )
+}
 const ChangeCard = () => {
 
     const location = useLocation();
@@ -101,7 +152,8 @@ const ChangeCard = () => {
     const [phoneCheck, setPhoneCheck] = useState("")
     const [isSendSms, setIsSendSms] = useState(false);
     const [randNum, setRandNum] = useState("");
-
+    const [checkCardPk, setCheckCardPk] = useState(-1);
+    const [myCheckCardPk, setMyCheckCardPk] = useState(-1);
     const [saveCardInfo, setSaveCardInfo] = useState({});
     const [openConfirmCardId, setOpenConfirmCardId] = useState(false);
     useEffect(() => {
@@ -192,13 +244,13 @@ const ChangeCard = () => {
         setPassword(data?.card_password ?? "");
         setFamilyType(1);
         setCardSrc("");
+        setPageList(range(1, response?.data?.maxPage));
+        setPosts(response?.data?.data);
+        const { data: auto_card } = await axios.get('/api/myautocard');
+        console.log(auto_card)
+        setCheckCardPk(auto_card?.data?.pk ?? -1)
+        setMyCheckCardPk(auto_card?.data?.pk ?? -1)
         setLoading(false);
-        if (params?.category == 'family') {
-            setPageList(range(1, response?.data?.maxPage));
-            setPosts(response?.data?.data);
-            const { data: auto_card } = await axios.get('/api/myautocard');
-            $(`#user_card-${auto_card?.data?.pk}`).prop('checked', true);
-        }
     }
 
 
@@ -410,15 +462,10 @@ const ChangeCard = () => {
         let pk = 0;
         if (params?.category == 'family') {
             table = 'user_card';
-            for (var i = 0; i < posts.length; i++) {
-                if ($(`#user_card-${posts[i]?.pk}`).is(':checked')) {
-                    pk = posts[i]?.pk
-                    break;
-                }
-            }
             if (posts.length == 0) {
                 toast.error(`카드를 등록해 주세요.`);
             }
+            pk = checkCardPk;
             if (pk == 0) {
                 toast.error(`선택할 카드를 체크해 주세요.`);
                 return;
@@ -441,6 +488,7 @@ const ChangeCard = () => {
                 })
                 if (response?.result > 0) {
                     toast.success("성공적으로 자동결제 카드가 등록 되었습니다.");
+                    getCard(1);
                 } else {
                     toast.error(response?.message);
                 }
@@ -458,6 +506,7 @@ const ChangeCard = () => {
                 const { data: response } = await axios.post('/api/cancelautocard')
                 if (response?.result > 0) {
                     toast.success("성공적으로 정기결제 사용 취소 되었습니다.");
+                    getCard(1);
                 } else {
                     toast.error(response?.message);
                 }
@@ -472,7 +521,40 @@ const ChangeCard = () => {
             }
         }
     }
-
+    const isCheckCardRegist = () => {
+        if (params?.category == 'change') {
+            if (myCheckCardPk == 0) {
+                return true;
+            }
+        } else if (params?.category == 'family') {
+            if (myCheckCardPk > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    const deleteItem = async (pk) => {
+        Swal.fire({
+            title: `정말로 삭제하시겠습니까?`,
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                let obj = {
+                    pk: pk,
+                    table: 'user_card',
+                }
+                const { data: response } = await axios.post(`/api/deleteitembyuser`, obj);
+                if (response.result > 0) {
+                    toast.success('삭제되었습니다.');
+                    getCard(1);
+                } else {
+                    toast.error(response?.message);
+                }
+            }
+        })
+    }
     return (
         <>
             <form name="reqfrm" id="reqfrm" method="post" style={{ display: 'none' }}>
@@ -482,10 +564,11 @@ const ChangeCard = () => {
                 <input type="hidden" id="Closeurl" name="Closeurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[3] = el} />
                 <input type="hidden" id="Okurl" name="Okurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[4] = el} />
             </form>
+            <OverBannerImg src={CardBannerSrc} />
             <Wrappers>
                 <SelectType className="select-type">
-                    <Type style={{ borderBottom: `4px solid ${params?.category == 'change' ? theme.color.background1 : '#fff'}`, color: `${params?.category == 'change' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/card/change`) }}>본인카드 등록 및 변경</Type>
-                    <Type style={{ borderBottom: `4px solid ${params?.category == 'family' ? theme.color.background1 : '#fff'}`, color: `${params?.category == 'family' ? theme.color.background1 : theme.color.font3}` }} onClick={() => { navigate(`/card/family`) }}>타인카드 등록 및 변경</Type>
+                    <Type style={{ border: `1px solid transparent`, color: `${params?.category == 'change' ? theme.color.background2 : theme.color.font3}`, background: `${params?.category == 'change' ? '#fff' : 'transparent'}`, }} onClick={() => { navigate(`/card/change`) }}>본인카드 등록 및 변경</Type>
+                    <Type style={{ border: `1px solid transparent`, color: `${params?.category == 'family' ? theme.color.background2 : theme.color.font3}`, background: `${params?.category == 'family' ? '#fff' : 'transparent'}`, }} onClick={() => { navigate(`/card/family`) }}>타인카드 등록 및 변경</Type>
                 </SelectType>
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -498,11 +581,34 @@ const ChangeCard = () => {
                         </>
                         :
                         <>
+
+                            {isSeeCard ?
+                                <>
+                                    <CardWrapper style={{ marginTop: '1rem' }}>
+                                        <Cards cvc={cvc} focused={focus} expiry={expiry} name={name} number={returnCardInfoMask('cardNumber', cardNumber)} />
+                                    </CardWrapper>
+                                </>
+                                :
+                                <>
+                                    <img src={NoneCardSrc} style={{ maxWidth: '330px', margin: '1rem auto', width: '100%', cursor: 'pointer' }} onClick={() => {
+                                        setCardNumber("");
+                                        setName("");
+                                        setExpiry("");
+                                        setCvc("");
+                                        setBirth("");
+                                        setPassword("");
+                                        setPhone("");
+                                        setPhoneCheck("");
+                                        setIsSeeCard(true);
+                                        setIsSendSms(false);
+                                        sendMessage();
+                                        toast.success("문자 및 알림을 확인해 주세요.");
+                                    }} />
+                                </>}
                             {params?.category == 'family' ?
                                 <>
                                     <ContentWrappers style={{ margin: '1rem auto' }}>
-
-                                        <div style={{ fontSize: theme.size.font4, color: theme.color.red }}>
+                                        <div style={{ fontSize: theme.size.font6, color: theme.color.red }}>
                                             ※ 가족 외에 타인카드는 등록불가합니다.<br /><br />
 
                                             1. 본인은 이 임대 계약한 월세 또는 보증금 카드결제 사실을 알고 있습니다.<br />
@@ -516,138 +622,173 @@ const ChangeCard = () => {
                                 <>
 
                                 </>}
-                            {isSeeCard ?
-                                <>
-                                    <CardWrapper style={{ marginTop: '1rem' }}>
-                                        <Cards cvc={cvc} focused={focus} expiry={expiry} name={name} number={returnCardInfoMask('cardNumber', cardNumber)} />
-                                    </CardWrapper>
-                                </>
-                                :
-                                <>
-                                </>}
-
                             <ContentWrappers style={{ marginTop: '1rem' }}>
                                 {isSeeCard ?
                                     <>
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            name='cardNumber'
-                                            className="cardNumber"
+
+                                        <InputComponent
+                                            label={'숫자를 입력해 주세요.'}
+                                            top_label={'카드번호'}
+                                            class_name='cardNumber'
+                                            is_divider={true}
+                                            onFocus={() => {
+                                                setFocus('cardNumber')
+                                            }}
+                                            onBlur={handleBlur}
+                                            onChange={(e) => {
+                                                handleInputChange({
+                                                    target: {
+                                                        value: e,
+                                                        name: 'cardNumber'
+                                                    }
+                                                })
+                                            }}
                                             value={returnCardInfoMask('cardNumber', cardNumber)}
-                                            autoComplete='off'
-                                            label='카드 번호'
-                                            onBlur={handleBlur}
-                                            onChange={handleInputChange}
-                                            placeholder='0000 0000 0000 ****'
-                                            onFocus={e => setFocus(e.target.name)}
                                         />
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            name='name'
-                                            className="name"
+                                        <InputComponent
+                                            label={''}
+                                            top_label={'카드 사용자명'}
+                                            class_name='name'
+                                            onFocus={() => {
+                                                setFocus('name')
+                                            }}
+                                            onBlur={handleBlur}
+                                            is_divider={true}
+                                            onChange={(e) => {
+                                                setName(e);
+                                            }}
                                             value={name}
-                                            autoComplete='off'
-                                            onBlur={handleBlur}
-                                            label='카드 사용자명'
-                                            placeholder='홍길동'
-                                            onChange={e => setName(e.target.value)}
-                                            onFocus={e => setFocus(e.target.name)}
                                         />
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            name='expiry'
-                                            className="expiry"
-                                            label='만료일'
-                                            value={expiry}
-                                            onBlur={handleBlur}
-                                            placeholder='MM/YY'
-                                            onChange={handleInputChange}
-                                            inputProps={{ maxLength: '5' }}
-                                            onFocus={e => setFocus(e.target.name)}
-                                        />
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            name='cvc'
-                                            className="cvc"
-                                            label='CVC 번호'
-                                            value={returnCardInfoMask('cvc', cvc)}
-                                            autoComplete='off'
-                                            onBlur={handleBlur}
-                                            onChange={handleInputChange}
-                                            onFocus={e => setFocus(e.target.name)}
-                                            placeholder={Payment.fns.cardType(cardNumber) === 'amex' ? '1234' : '123'}
-                                        />
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            name='birth'
-                                            className="birth"
-                                            label='생년월일 6자리'
-                                            value={birth}
-                                            autoComplete='off'
-                                            onBlur={handleBlur}
-                                            type='birth'
-                                            inputProps={{ maxLength: '6' }}
-                                            onChange={e => setBirth(e.target.value)}
-                                            onFocus={e => setFocus(e.target.name)}
-                                        />
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            name='password'
-                                            className="password"
-                                            label='카드 비밀번호 앞 두자리'
-                                            value={returnCardInfoMask('password', password)}
-                                            autoComplete='off'
-                                            onBlur={handleBlur}
-                                            inputProps={{ maxLength: '2' }}
-                                            onChange={handleInputChange}
-                                            onFocus={e => setFocus(e.target.name)}
-                                        />
+                                        <RowContent style={{ columnGap: '0.5rem', alignItems: 'center' }}>
+                                            <Col style={{ width: '50%' }}>
+                                                <InputComponent
+                                                    label={''}
+                                                    top_label={'만료일'}
+                                                    class_name='expiry'
+                                                    is_divider={true}
+                                                    onFocus={() => {
+                                                        setFocus('expiry')
+                                                    }}
+                                                    onBlur={handleBlur}
+                                                    onChange={(e) => {
+                                                        handleInputChange({
+                                                            target: {
+                                                                value: e,
+                                                                name: 'expiry'
+                                                            }
+                                                        })
+                                                    }}
+                                                    value={expiry}
+                                                />
+                                            </Col>
+                                            <Col style={{ width: '50%' }}>
+                                                <InputComponent
+                                                    label={''}
+                                                    top_label={'CVC 번호'}
+                                                    class_name='cvc'
+                                                    is_divider={true}
+                                                    onFocus={() => {
+                                                        setFocus('cvc')
+                                                    }}
+                                                    onBlur={handleBlur}
+                                                    onChange={(e) => {
+                                                        handleInputChange({
+                                                            target: {
+                                                                value: e,
+                                                                name: 'cvc'
+                                                            }
+                                                        })
+                                                    }}
+                                                    value={returnCardInfoMask('cvc', cvc)}
+                                                />
+                                            </Col>
+                                        </RowContent>
+                                        <RowContent style={{ columnGap: '0.5rem', alignItems: 'center' }}>
+                                            <Col style={{ width: '50%' }}>
+                                                <InputComponent
+                                                    label={''}
+                                                    top_label={'생년월일 6자리'}
+                                                    class_name='birth'
+                                                    is_divider={true}
+                                                    onFocus={() => {
+                                                        setFocus('birth')
+                                                    }}
+                                                    onBlur={handleBlur}
+                                                    onChange={(e) => {
+                                                        setBirth(e);
+                                                    }}
+                                                    value={birth}
+                                                />
+                                            </Col>
+                                            <Col style={{ width: '50%' }}>
+                                                <InputComponent
+                                                    label={''}
+                                                    top_label={'카드 비밀번호 앞 두자리'}
+                                                    class_name='password'
+                                                    is_divider={true}
+                                                    onFocus={() => {
+                                                        setFocus('password')
+                                                    }}
+                                                    onBlur={handleBlur}
+                                                    onChange={(e) => {
+                                                        handleInputChange({
+                                                            target: {
+                                                                value: e,
+                                                                name: 'password'
+                                                            }
+                                                        })
+                                                    }}
+                                                    value={returnCardInfoMask('password', password)}
+                                                />
+                                            </Col>
+                                        </RowContent>
                                         {params?.category == 'family' ?
                                             <>
-                                                <FormControl sx={{ minWidth: 120, margin: '8px 1px' }} size="small">
-                                                    <InputLabel id="demo-select-small">가족관계</InputLabel>
-                                                    <CustomSelect
-                                                        labelId="demo-select-small"
-                                                        id="demo-select-small"
-                                                        value={familyType}
-                                                        label="가족관계"
+                                                <div style={{ fontSize: theme.size.font5, fontWeight: '400', color: theme.color.font5 }}>가족관계</div>
+                                                <CustomSelect
+                                                    labelId="demo-select-small"
+                                                    id="demo-select-small"
+                                                    value={familyType}
+                                                    onChange={(e) => setFamilyType(e.target.value)}
+                                                >
+                                                    <MenuItem value={1}>부</MenuItem>
+                                                    <MenuItem value={2}>모</MenuItem>
+                                                    <MenuItem value={3}>형제</MenuItem>
+                                                    <MenuItem value={4}>자매</MenuItem>
+                                                    <MenuItem value={5}>배우자</MenuItem>
+                                                    <MenuItem value={6}>자녀</MenuItem>
+                                                </CustomSelect>
+                                                <CategoryName style={{ width: '98%', marginBottom: '0.5rem', fontWeight: 'bold', maxWidth: '1000px' }}>신용카드 실물</CategoryName>
 
-                                                        onChange={(e) => setFamilyType(e.target.value)}
-                                                    >
-                                                        <MenuItem value={1}>부</MenuItem>
-                                                        <MenuItem value={2}>모</MenuItem>
-                                                        <MenuItem value={3}>형제</MenuItem>
-                                                        <MenuItem value={4}>자매</MenuItem>
-                                                        <MenuItem value={5}>배우자</MenuItem>
-                                                        <MenuItem value={6}>자녀</MenuItem>
-                                                    </CustomSelect>
-                                                </FormControl>
-                                                <CategoryName style={{ width: '98%', marginBottom: '0.5rem', fontWeight: 'bold', maxWidth: '1000px' }}>카드 일부분 사진</CategoryName>
-                                                <ImageContainer for={`card_src`} style={{ margin: 'auto', width: '98%' }}>
-
-                                                    {cardSrc ?
-                                                        <>
-                                                            <img src={typeof cardSrc == 'string' ? backUrl + cardSrc : URL.createObjectURL(cardSrc)} alt="#"
-                                                                style={{
-                                                                    width: 'auto', maxHeight: '8rem',
-                                                                    maxWidth: '80%',
-                                                                    margin: 'auto'
-                                                                }} />
-                                                        </>
-                                                        :
-                                                        <>
-                                                            <AiFillFileImage style={{ margin: 'auto', fontSize: '4rem', color: `${theme.color.manager.font3}` }} />
-                                                        </>}
-                                                </ImageContainer>
+                                                <div style={{ margin: '8px 0 8px auto' }} for={`card_src`}>
+                                                    <label style={{
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        fontSize: theme.size.font5,
+                                                        alignItems: 'center',
+                                                        columnGap: '0.5rem',
+                                                        color: theme.color.background2,
+                                                        fontWeight: 'bold',
+                                                    }} for={`card_src`} multiple>
+                                                        <img src={CameraIconSrc} />
+                                                        <div>업로드</div>
+                                                    </label>
+                                                </div>
                                                 <div>
                                                     <input type="file" id={`card_src`} name={'card_src'} onChange={addFile} style={{ display: 'none' }} />
                                                 </div>
+                                                {cardSrc ?
+                                                    <>
+                                                        <img src={typeof cardSrc == 'string' ? backUrl + cardSrc : URL.createObjectURL(cardSrc)} alt="#"
+                                                            style={{
+                                                                width: 'auto', maxHeight: '8rem',
+                                                                maxWidth: '80%',
+                                                                margin: 'auto'
+                                                            }} />
+                                                    </>
+                                                    :
+                                                    <>
+                                                    </>}
 
                                                 <InputComponent
                                                     label={'휴대폰번호*'}
@@ -676,38 +817,45 @@ const ChangeCard = () => {
                                             :
                                             <>
                                             </>}
-
-                                        <div style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            width: '100%',
-                                            margin: '1rem 0',
-                                        }}>
-                                            <div />
-                                            <div style={{ display: 'flex' }}>
-                                                <Button
-                                                    sx={{ ...colorButtonStyle, marginRight: '0.5rem' }}
-                                                    startIcon={<Icon icon="akar-icons:arrow-cycle" />}
-                                                    onClick={() => {
-                                                        onClickEditButton({}, 0, true)
-                                                    }}
-                                                >초기화</Button>
-                                                <Button
-                                                    sx={{ ...colorButtonStyle }}
-                                                    startIcon={<Icon icon="line-md:confirm" />}
-                                                    onClick={onChangeMyCard}
-                                                >저장</Button>
-
-                                            </div>
-                                        </div>
+                                        <RowContent style={{ columnGap: '0.5rem', marginTop: '1rem' }}>
+                                            <Button sx={{ ...borderButtonStyle, width: '50%' }} onClick={() => {
+                                                onClickEditButton({}, 0, true)
+                                            }}>초기화</Button>
+                                            <Button sx={{ ...colorButtonStyle, width: '50%' }} onClick={onChangeMyCard}>저장</Button>
+                                        </RowContent>
                                     </>
                                     :
                                     <>
                                     </>}
-
+                                {user?.user_level == 0 &&
+                                    <>
+                                        {/* <div style={{ margin: '0.5rem auto', maxWidth: '400px', fontSize: theme.size.font5 }}>현재 등록된 카드로 매월 정기적으로 월세납부를 원하시면 {params?.category == 'family' ? '왼쪽 체크박스 클릭하여 선택 후' : '"저장" 버튼 클릭 후'} 아래 버튼을 눌러주세요.</div> */}
+                                        <RowContent style={{ alignItems: 'center', columnGap: '0.5rem', cursor: 'pointer' }}
+                                            onClick={() => {
+                                                if (isCheckCardRegist()) {
+                                                    onCancelAutoCard();
+                                                } else {
+                                                    registerAutoCard();
+                                                }
+                                            }}
+                                        >
+                                            <img src={CardIconSrc} />
+                                            <div>월세 정기결제 카드 등록하기</div>
+                                            <img src={isCheckCardRegist() ? OnIconSrc : OffIconSrc} style={{ marginLeft: 'auto', marginTop: '0.5rem' }} />
+                                        </RowContent>
+                                    </>
+                                }
                                 {params?.category == 'family' ?
                                     <>
-                                        <ContentTable
+                                        <CardData
+                                            data={posts}
+                                            checkOnlyOne={checkOnlyOne}
+                                            checkCardPk={checkCardPk}
+                                            setCheckCardPk={setCheckCardPk}
+                                            onClickEditButton={onClickEditButton}
+                                            deleteItem={deleteItem}
+                                        />
+                                        {/* <ContentTable
                                             columns={objHistoryListContent['user_card'] ?? []}
                                             checkOnlyOne={checkOnlyOne}
                                             data={posts}
@@ -717,59 +865,31 @@ const ChangeCard = () => {
                                             pageSetting={() => {
                                                 getCard(page);
                                             }}
-                                        />
+                                        /> */}
                                         <MBottomContent style={{ width: '100%' }}>
-                                            <div style={{ width: '64px' }} />
+                                            <div />
                                             <PageContainer>
-                                                <PageButton onClick={() => getCard(1)}>
+                                                <PageButton onClick={() => getCard(1)} style={{ color: '#000', background: '#fff', border: '1px solid #ccc' }}>
                                                     처음
                                                 </PageButton>
                                                 {pageList.map((item, index) => (
                                                     <>
-                                                        <PageButton onClick={() => getCard(item)} style={{ color: `${page == item ? '#fff' : ''}`, background: `${page == item ? theme.color.background1 : ''}`, display: `${Math.abs(index + 1 - page) > 4 ? 'none' : ''}` }}>
+                                                        <PageButton onClick={() => getCard(item)} style={{ color: `${page == item ? '#000' : ''}`, background: `${page == item ? theme.color.background1 : ''}`, display: `${Math.abs(index + 1 - page) > 4 ? 'none' : ''}` }}>
                                                             {item}
                                                         </PageButton>
                                                     </>
                                                 ))}
-                                                <PageButton onClick={() => getCard(pageList.length ?? 1)}>
+                                                <PageButton onClick={() => getCard(pageList.length ?? 1)} style={{ color: '#000', background: '#fff', border: '1px solid #ccc' }}>
                                                     마지막
                                                 </PageButton>
                                             </PageContainer>
-                                            <Button style={colorButtonStyle} onClick={() => {
-                                                setCardNumber("");
-                                                setName("");
-                                                setExpiry("");
-                                                setCvc("");
-                                                setBirth("");
-                                                setPassword("");
-                                                setPhone("");
-                                                setPhoneCheck("");
-                                                setIsSeeCard(true);
-                                                setIsSendSms(false);
-                                                sendMessage();
-                                                toast.success("문자 및 알림을 확인해 주세요.");
-                                            }}>추가</Button>
+                                            <div />
                                         </MBottomContent>
                                     </>
                                     :
                                     <>
                                     </>}
 
-                                {user?.user_level == 0 ?
-                                    <>
-                                        <div style={{ margin: '0.5rem auto', maxWidth: '400px', fontSize: theme.size.font5 }}>현재 등록된 카드로 매월 정기적으로 월세납부를 원하시면 {params?.category == 'family'?'왼쪽 체크박스 클릭하여 선택 후':'"저장" 버튼 클릭 후'} 아래 버튼을 눌러주세요.</div>
-                                        <Button variant="text" sx={twoOfThreeButtonStyle} onClick={registerAutoCard}>{params?.category == 'family' ? '선택한 카드 월세 정기결제 신청' : '월세 정기결제 카드등록'}</Button>
-                                    </>
-                                    :
-                                    <>
-                                    </>}
-                                {user?.user_level == 0 ?
-                                    <>
-                                        <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '1rem' }} onClick={onCancelAutoCard}>{'정기 결제 사용안함'}</Button>
-                                    </>
-                                    :
-                                    <>
-                                    </>}
                             </ContentWrappers>
 
                         </>}

@@ -1,33 +1,14 @@
 //계약생성
 
 import { colorButtonStyle, ContentWrappers, InputComponent, postCodeStyle, smallButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import { useEffect, useState } from "react";
 import { getLocalStorage } from "../../../functions/LocalStorage";
 import { toast } from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import theme from "../../../styles/theme";
-import { Button } from "@mui/material";
-import Autocomplete from '@mui/material/Autocomplete';
-import styled from "styled-components";
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
 import { motion } from "framer-motion";
 import axios from "axios";
-import { Icon } from "@iconify/react";
-import Swal from "sweetalert2";
-import $ from 'jquery';
-import { Explain, ImageContainer } from "../../../components/elements/ManagerTemplete";
-import { AiFillFileImage } from "react-icons/ai";
 import { backUrl } from "../../../data/Data";
-import Modal from '../../../components/Modal';
-import DaumPostcode from 'react-daum-postcode';
 import Loading from "../../../components/Loading";
-import { getEnLevelByNum, getKoLevelByNum } from "../../../functions/utils";
 import PayItemCard from "../../../components/PayItemCard";
 
 const PayReady = () => {
