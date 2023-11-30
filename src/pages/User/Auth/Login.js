@@ -39,7 +39,7 @@ transform: translate(-50%, 0);
 }
 `
 const OverBannerPaddingTop = styled.div`
-margin-bottom: 50vh;
+margin-bottom: 40rem;
 @media screen and (max-width: 1000px) {
     margin-bottom: 80vw;
 }
