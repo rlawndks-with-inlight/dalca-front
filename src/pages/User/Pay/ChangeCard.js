@@ -778,7 +778,7 @@ const ChangeCard = () => {
                                                     <input type="file" id={`card_src`} name={'card_src'} onChange={addFile} style={{ display: 'none' }} />
                                                 </div>
                                                 {cardSrc ?
-                                                    <>
+                                                     <>
                                                         <img src={typeof cardSrc == 'string' ? backUrl + cardSrc : URL.createObjectURL(cardSrc)} alt="#"
                                                             style={{
                                                                 width: 'auto', maxHeight: '8rem',
