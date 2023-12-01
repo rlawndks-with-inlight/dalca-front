@@ -58,10 +58,10 @@ const zManagerRoute = [
     { link: '/manager/edit/user_card/:pk', element: <MUserCardEdit />, title: "결제 카드 관리" },
     { link: '/manager/edit/real_estate/:pk', element: <MRealEstateEdit />, title: "부동산 관리" },
     { link: '/manager/edit/point/:pk', element: <MPointEdit />, title: "포인트 관리" },
-    
+
     { link: '/manager/edit/setting', element: <MSettingEdit />, title: "환경설정" },
     { link: '/manager/edit/pay_excel', element: <MPayExcelEdit />, title: "" },
-    
+
     { link: '/manager/edit/:table/:pk', element: <MItemEdit />, title: "" },
     { link: '/manager/list/:table/:pk', element: <MItemList />, title: "" },
     { link: '/manager/list/:table', element: <MItemList />, title: "" },
@@ -83,12 +83,12 @@ const zUserRoute = [
     { link: '/card/:category', element: <ChangeCard />, title: "" },
     { link: '/around-realestate', element: <AroundRealEstate />, title: "" },
     { link: '/change_pay_status', element: <ChangePayStatus />, title: "" },
-    
+
     //{ link: '/payready/:pk', element: <PayReady />, title: "결제준비" },
     //{ link: '/authpay/:pk', element: <AuthPay />, title: "결제" },
     //{ link: '/authpay', element: <AuthPay />, title: "결제" },
     //{ link: '/authpay-v2/:pk', element: <AuthPayV2 />, title: "결제 v2" },
-   // { link: '/keyrecieve', element: <KeyRecieve />, title: "결제" },
+    // { link: '/keyrecieve', element: <KeyRecieve />, title: "결제" },
 
     // { link: '/selectissuecategory', element: <SelectIssueCategory />, title: "핵심이슈" },
     // { link: '/selectfeaturecategory', element: <SelectFeatureCategory />, title: "특징주" },
@@ -102,7 +102,7 @@ const zUserRoute = [
     { link: '/', element: <Login />, title: "로그인" },
     { link: '/login', element: <Login />, title: "로그인" },
     { link: '/mypage', element: <MyPage />, title: "마이페이지" },
-    { link: '/editmyinfo', element: <EditMyInfo />, title: "회원수정" },
+    { link: '/editmyinfo/:type', element: <EditMyInfo />, title: "회원수정" },
     { link: '/findmyinfo', element: <FindMyInfo />, title: "아이디/비밀번호 찾기" },
     { link: '/signup/:user_level', element: <SignUp />, title: "회원가입" },
     { link: '/resign', element: <Resign />, title: "회원탈퇴" },

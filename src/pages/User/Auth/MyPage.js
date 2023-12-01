@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { borderButtonStyle, HalfTitle, SelectType, ShadowContainer, TextButton, Title, Type, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { borderButtonStyle, HalfTitle, RowContainer, RowContent, SelectType, ShadowContainer, TextButton, Title, Type, Wrappers } from "../../../components/elements/UserContentTemplete";
 import { backUrl } from "../../../data/Data";
 import defaultImg from '../../../assets/images/icon/default-profile.png'
 import axios from "axios";
@@ -11,52 +11,47 @@ import theme from "../../../styles/theme";
 import ContentTable from "../../../components/ContentTable";
 import { Button } from "@mui/material";
 import { getUserLevelByNumber } from "../../../functions/format";
-
+import DefaultAvatar from '../../../assets/images/test/default-avatar.svg';
+import BluePointIconSrc from '../../../assets/images/icon/blue-point.svg';
+import { Icon } from "@iconify/react";
+import { commarNumber } from "../../../functions/utils";
 const MyCard = styled.div`
 display:flex;
-width:100%;
-height:400px;
-border:1px solid ${props => props.theme.color.background3};
-@media screen and (max-width:700px) {
-    flex-direction:column;
-    height:800px;
-}
+flex-direction: column;
 `
 const ProfileContainer = styled.div`
-width:50%;
 display:flex;
 flex-direction:column;
-align-items:center;
-height:400px;
-background:#f4f4f4;
-@media screen and (max-width:700px) {
-    width:100%;
-}
+row-gap: 0.5rem;
+width: 100%;
+
 `
 const Container = styled.div`
-width:50%;
-font-size:14px;
-@media screen and (max-width:700px) {
-    width:100%;
-}
+display:flex;
+flex-direction:column;
+row-gap: 1rem;
+font-size: ${theme.size.font5};
+margin-top: 2rem;
+`
+const UserLevelContent = styled.div`
+background: ${theme.color.background2};
+color:#fff;
+font-size: ${theme.size.font6};
+padding: 0.25rem;
+border-radius: 0.5rem;
 `
 const Content = styled.div`
 width:100%;
 display:flex;
+justify-content: space-between;
 `
 const Category = styled.div`
-width:100px;
-padding:16px 0;
-height:18px;
-padding-left:16px;
-border-right:1px solid ${props => props.theme.color.background1};
+color:${theme.color.font5};
 `
 const Result = styled.div`
-padding:16px 0;
-height:18px;
-padding-left:16px;
 display:flex;
 align-items:center;
+column-gap: 0.25rem;
 `
 const LogoutButton = styled.button`
 width:160px;
@@ -82,6 +77,7 @@ const MyPage = () => {
             if (response?.data?.pk > 0) {
                 await localStorage.setItem('auth', JSON.stringify(response?.data))
                 let obj = response?.data;
+                console.log(obj)
                 setAuth(obj);
             } else {
                 localStorage.removeItem('auth');
@@ -146,125 +142,97 @@ const MyPage = () => {
                     <>
                     </>}
 
-                <div style={{ margin: '2rem 0 1rem auto', color: `${theme.color.font2}`, fontSize: theme.size.font4, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center' }} onClick={() => { navigate('/editmyinfo') }}>
+                {/* <div style={{ margin: '2rem 0 1rem auto', color: `${theme.color.font2}`, fontSize: theme.size.font4, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center' }} onClick={() => { navigate('/editmyinfo') }}>
                     <div style={{ paddingRight: '8px' }}>내정보 수정하기</div>
                     <MdEdit />
-                </div>
+                </div> */}
                 <MyCard>
                     <ProfileContainer>
-                        <img src={auth?.profile_img ? auth?.profile_img.substring(0, 4) == "http" ? auth?.profile_img : backUrl + auth?.profile_img : defaultImg} alt="#" onError={defaultImg} style={{ height: '125px', width: '125px', borderRadius: '50%', background: '#fff', margin: 'auto' }} />
+                        <img src={auth?.profile_img ? auth?.profile_img.substring(0, 4) == "http" ? auth?.profile_img : backUrl + auth?.profile_img : DefaultAvatar} alt="#" onError={DefaultAvatar} style={{ height: '5rem', width: '5rem', borderRadius: '50%', background: '#fff', margin: 'auto' }} />
+                        <RowContainer style={{ margin: '0 auto', alignItems: 'center', columnGap: '0.5rem' }}>
+                            <UserLevelContent>
+                                {getUserLevelByNumber(auth?.user_level)}
+                            </UserLevelContent>
+                            <div>{auth?.name}</div>
+                            <Icon icon={'ooui:next-ltr'} />
+                        </RowContainer>
+                        <RowContainer style={{ margin: '0.5rem auto', alignItems: 'center', columnGap: '0.5rem' }}>
+                            <img src={BluePointIconSrc} />
+                            <div style={{ fontWeight: 'bold' }}>{commarNumber(auth?.total_point)}</div>
+                            <Icon icon={'ooui:next-ltr'} />
+                        </RowContainer>
                     </ProfileContainer>
                     <Container>
-
                         <Content>
                             <Category>아이디</Category>
                             <Result>
-                                {auth?.type != 0 ? "---" : auth.id}
+                                <div>
+                                    {auth?.type != 0 ? "---" : auth.id}
+                                </div>
                             </Result>
-
                         </Content>
-                        <Content>
-                            <Category>비밀번호</Category>
-                            <Result>********</Result>
-                        </Content>
-                        <Content>
-                            <Category>이름</Category>
+                        <Content style={{ cursor: 'pointer' }} onClick={() => {
+                            navigate(`/editmyinfo/0`);
+                        }}>
+                            <Category>비밀번호 변경</Category>
                             <Result>
-                                {auth?.name ?? "---"}
+                                <Icon icon={'ooui:next-ltr'} />
                             </Result>
                         </Content>
                         <Content>
                             <Category>유저권한</Category>
-                            <Result>{getUserLevelByNumber(auth?.user_level, true)}</Result>
+                            <Result>
+                                <div>
+                                    {getUserLevelByNumber(auth?.user_level, true)}
+                                </div>
+                            </Result>
                         </Content>
-                        <Content>
-                            <Category>전화번호</Category>
-                            <Result>{auth?.phone ?? "---"}</Result>
+                        <Content style={{ cursor: 'pointer' }} onClick={() => {
+                            navigate(`/editmyinfo/1`);
+                        }}>
+                            <Category>휴대폰번호</Category>
+                            <Result>
+                                <div>
+                                    {auth?.phone ?? "---"}
+                                </div>
+                                <Icon icon={'ooui:next-ltr'} />
+                            </Result>
                         </Content>
                         <Content>
                             <Category>우편번호</Category>
-                            <Result>{auth?.zip_code}</Result>
+                            <Result>
+                                <div>
+                                    {auth?.zip_code}
+                                </div>
+                            </Result>
                         </Content>
-                        <Content>
+                        <Content style={{ cursor: 'pointer' }} onClick={() => {
+                            navigate(`/editmyinfo/2`);
+                        }}>
                             <Category>주소</Category>
-                            <Result>{auth?.address}</Result>
+                            <Result>
+                                <div>
+                                    {auth?.address}&nbsp;
+                                    {auth?.address_detail}
+                                </div>
+                                <Icon icon={'ooui:next-ltr'} />
+                            </Result>
                         </Content>
-                        <Content>
-                            <Category>상세주소</Category>
-                            <Result>{auth?.address_detail}</Result>
+                        <div style={{ borderBottom: `1px solid #ccc` }} />
+                        <Content onClick={onLogout} style={{ cursor: 'pointer' }}>
+                            <Category>로그아웃</Category>
+                            <Result>
+                                <Icon icon={'ooui:next-ltr'} />
+                            </Result>
                         </Content>
-
-
+                        <Content style={{ cursor: 'pointer' }}>
+                            <Category>회원탈퇴</Category>
+                            <Result onClick={() => { navigate('/resign') }}>
+                                <Icon icon={'ooui:next-ltr'} />
+                            </Result>
+                        </Content>
                     </Container>
                 </MyCard>
-                <div style={{ marginTop: '36px' }} />
-                {/* {isWebView ?
-                    <>
-
-                    </>
-                    :
-                    <>
-                        <Title>장바구니</Title>
-                        <ShadowContainer>
-                            <ContentTable columns={[
-                                { name: "수강상품", column: "title", width: 30, type: 'text' },
-                                { name: "강사", column: "master_name", width: 30, type: 'text' },
-                                { name: "수강상태", column: "", width: 30, type: "class_status" },
-                                { name: "삭제", column: "", width: 30, type: 'delete' },
-                            ]}
-                                data={bagList}
-                                schema={'subscribe'}
-                                pageSetting={pageSetting} />
-                        </ShadowContainer>
-                        <div style={{ marginTop: '36px' }} />
-                        <Title>내 강의실</Title>
-                        <ShadowContainer>
-                            <ContentTable columns={[
-                                { name: "수강상품", column: "title", width: 30, type: 'text' },
-                                { name: "강사", column: "master_name", width: 40, type: 'text' },
-                                { name: "이용기간", column: "end_date", width: 30, type: 'end_date' },
-                            ]}
-                                data={calssList}
-                                schema={'subscribe'} />
-                        </ShadowContainer>
-                        <div style={{ marginTop: '36px' }} />
-                        <Title>결제 내역</Title>
-                        <ShadowContainer>
-                            <ContentTable columns={[
-                                { name: "수강상품", column: "title", width: 30, type: 'text' },
-                                { name: "강사", column: "master_name", width: 20, type: 'text' },
-                                { name: "결제금액", column: "price", width: 20, type: 'won' },
-                                { name: "결제일시", column: "trade_date", width: 30, type: 'text' },
-                            ]}
-                                data={payList}
-                                schema={'subscribe'} />
-                        </ShadowContainer>
-                        <div style={{ marginTop: '36px' }} />
-                    </>} */}
-
-                <Content>
-                    <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                        <Button
-                            sx={{ ...borderButtonStyle, margin: '0 0px 0 auto' }}
-                            onClick={() => { navigate('/resign') }}
-                        >회원탈퇴</Button>
-                        <Button
-                            sx={{ ...borderButtonStyle, margin: '0 0px 0 16px' }}
-                            onClick={onLogout}
-                        >로그아웃</Button>
-
-                    </div>
-                </Content>
-
-                {isWebView ?
-                    <>
-                        <LogoutButton onClick={() => navigate('/appsetting')}>
-                            설정
-                        </LogoutButton>
-                    </>
-                    :
-                    <>
-                    </>}
             </Wrappers>
         </>
     )

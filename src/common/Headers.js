@@ -20,9 +20,10 @@ import { getUserLevelByNumber } from '../functions/format';
 import bellIcon from '../assets/images/icon/bell.svg'
 import menuIcon from '../assets/images/icon/menu.svg'
 import EditIconSrc from '../assets/images/icon/edit.svg'
-import { RowContent } from '../components/elements/UserContentTemplete';
+import { RowContent, TopTitleWithBackButton } from '../components/elements/UserContentTemplete';
 import DefaultAvatarSrc from '../assets/images/test/default-avatar.svg';
 import { Icon } from '@iconify/react';
+import _ from 'lodash';
 
 const Header = styled.header`
 position:fixed;
@@ -270,6 +271,12 @@ const Headers = () => {
     }
     setPopupList(popup_list);
   }
+  let back_push_list = [
+    { label: '달카페이 회원 부동산', link: '/around-realestate', go_to_home: false, },
+  ]
+  // if (back_push_list.map(item => { return item?.link }).includes(location.pathname) && window.innerWidth <= 1000) {
+  //   return <TopTitleWithBackButton title={_.find(back_push_list, { link: location.pathname }).label} go_to_home={_.find(back_push_list, { link: location.pathname }).go_to_home} />
+  // }
   return (
     <>
       <Header style={{ display: `${display}` }} className='header'>

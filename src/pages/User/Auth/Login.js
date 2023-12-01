@@ -29,17 +29,16 @@ import { Col } from "../../../components/elements/ManagerTemplete";
 const OverBannerImg = styled.img`
 position: absolute;
 width: 800px;
-top: -10vh;
+top: -10rem;
 left: 50%;
 transform: translate(-50%, 0);
 @media screen and (max-width: 1000px) {
-    
     width: 100vw;
     top: -10vw;
 }
 `
 const OverBannerPaddingTop = styled.div`
-margin-bottom: 40rem;
+margin-bottom: 32rem;
 @media screen and (max-width: 1000px) {
     margin-bottom: 80vw;
 }

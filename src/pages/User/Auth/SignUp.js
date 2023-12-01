@@ -979,15 +979,6 @@ const SignUp = () => {
                                 :
                                 <>
                                 </>}
-                            {isSeePostCode ?
-                                <>
-                                    <Modal onClickXbutton={() => { setIsSeePostCode(false) }}>
-                                        <DaumPostcode style={postCodeStyle} onComplete={onSelectAddress} />
-                                    </Modal>
-                                </>
-                                :
-                                <>
-                                </>}
                             {step != 0 ?
                                 <>
                                     <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '32px' }} onClick={onPreStep}>이전단계로</Button>
