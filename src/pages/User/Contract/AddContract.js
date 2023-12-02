@@ -208,7 +208,7 @@ const AddContract = () => {
         setValues({ ...values, [key]: value });
         if (key == 'landlord_search') {
             if (value.length >= 2 && !values.landlord?.name) {
-                const { data: response } = await axios.get(`/api/items?table=user&level=5&keyword=${value}`);
+                const { data: response } = await axios.get(`/api/items?table=user&level=5&keyword=${value}&status=1`);
                 setLandlordList(response?.data ?? []);
             } else {
                 setLandlordList([]);
@@ -216,7 +216,7 @@ const AddContract = () => {
         }
         if (key == 'lessee_search') {
             if (value.length >= 2 && !values.lessee?.name) {
-                const { data: response } = await axios.get(`/api/items?table=user&level=0&keyword=${value}`);
+                const { data: response } = await axios.get(`/api/items?table=user&level=0&keyword=${value}&status=1`);
                 setLesseeList(response?.data ?? []);
             } else {
                 setLesseeList([]);

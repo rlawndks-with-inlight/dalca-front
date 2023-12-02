@@ -37,7 +37,6 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
     const notUseCard = ['all', 'user_statistics'];
     const navigate = useNavigate();
     const ref = useRef(null)
-    const [status, setStatus] = useState(data?.status);
     useEffect(() => {
         $('.manager-data-tr > td').css('word-break', 'break-all');
     }, [])
@@ -105,7 +104,7 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
     drag(drop(ref))
 
 
-    
+
     const getPostCategoryNameByEng = (str) => {
         if (str == 'oneword') {
             return "하루1단어";
@@ -133,7 +132,7 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
         else if (num == 1)
             return '동의완료'
     }
-    
+
     return (
         <>
             <Tr ref={obj.is_move ? ref : null} data-handler-id={handlerId} className='manager-data-tr'>
@@ -141,10 +140,10 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                     <>
                         <Td style={{ width: `${col.width}%` }}>
                             {returnColumn(
-                                data, 
-                                col.type, 
-                                col.column, 
-                                schema, 
+                                data,
+                                col.type,
+                                col.column,
+                                schema,
                                 true,
                                 {
                                     navigate,
@@ -153,7 +152,7 @@ const DataTr = ({ id, data, index, moveCard, column, schema, list, sort, obj, op
                                     opTheTopItem,
                                     onPayCancel
                                 },
-                                )}
+                            )}
                         </Td>
                         {/* {col.type == 'text' ?
                             <>

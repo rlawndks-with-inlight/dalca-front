@@ -225,9 +225,9 @@ const MyPage = () => {
                                 <Icon icon={'ooui:next-ltr'} />
                             </Result>
                         </Content>
-                        <Content style={{ cursor: 'pointer' }}>
+                        <Content style={{ cursor: 'pointer' }} onClick={() => { navigate('/resign') }}>
                             <Category>회원탈퇴</Category>
-                            <Result onClick={() => { navigate('/resign') }}>
+                            <Result>
                                 <Icon icon={'ooui:next-ltr'} />
                             </Result>
                         </Content>

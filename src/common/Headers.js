@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import '../styles/style.css'
 import { zSidebarMenu } from '../data/ContentData';
 import { backUrl, logoTextSrc } from '../data/Data';
@@ -24,6 +24,7 @@ import { RowContent, TopTitleWithBackButton } from '../components/elements/UserC
 import DefaultAvatarSrc from '../assets/images/test/default-avatar.svg';
 import { Icon } from '@iconify/react';
 import _ from 'lodash';
+import HomeIconSrc from '../assets/images/icon/home.svg';
 
 const Header = styled.header`
 position:fixed;
@@ -161,9 +162,30 @@ width:62px;
   display:none;
 }
 `
+const NoneShowMobile = styled.div`
+display:flex;
+align-items:center;
+justify-content: space-between;
+width: 100%;
+@media screen and (max-width:1050px) { 
+  display:none;
+}
+`
+const ShowMobile = styled.div`
+display:flex;
+align-items:center;
+justify-content: space-between;
+width: 100%;
+font-weight: bold;
+font-size: ${theme.size.font5};
+`
+const IconImg = styled.img`
+cursor: pointer;
+`
 const Headers = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const params = useParams();
   const [display, setDisplay] = useState('flex');
   const [menuDisplay, setMenuDisplay] = useState('none');
   const [auth, setAuth] = useState({})
@@ -271,12 +293,47 @@ const Headers = () => {
     }
     setPopupList(popup_list);
   }
-  let back_push_list = [
-    { label: '달카페이 회원 부동산', link: '/around-realestate', go_to_home: false, },
-  ]
-  // if (back_push_list.map(item => { return item?.link }).includes(location.pathname) && window.innerWidth <= 1000) {
-  //   return <TopTitleWithBackButton title={_.find(back_push_list, { link: location.pathname }).label} go_to_home={_.find(back_push_list, { link: location.pathname }).go_to_home} />
-  // }
+  const getLinkFormat = (link = "") => {
+    if (header_content[link]) {
+      return link;
+    }
+    let link_list = link.split('/');
+    for (var i = 0; i < link_list.length; i++) {
+      if (!isNaN(parseInt(link_list[i]))) {
+        link_list[i] = ':num';
+      }
+    }
+    let link_result = link_list.join('/');
+    return link_result;
+  }
+  let header_content = {
+    '/post/guide/1': { left_icon: 'home', center_text: `임차인 이용가이드`, right_icon: '' },
+    '/post/guide/2': { left_icon: 'home', center_text: '임대인 이용가이드', right_icon: '' },
+    '/post/guide/3': { left_icon: 'home', center_text: '공인중개사 이용가이드', right_icon: '' },
+    '/around-realestate': { left_icon: 'home', center_text: '달카페이 회원 부동산', right_icon: '' },
+    '/history/contract': { left_icon: 'home', center_text: '계약정보', right_icon: '' },
+    '/history/pay': { left_icon: 'home', center_text: '결제정보', right_icon: '' },
+    '/list/notice': { left_icon: 'home', center_text: '공지사항 및 문의하기', right_icon: '' },
+    '/list/faq': { left_icon: 'home', center_text: '공지사항 및 문의하기', right_icon: '' },
+    '/list/request': { left_icon: 'home', center_text: '공지사항 및 문의하기', right_icon: '' },
+    '/post/notice/:num': { left_icon: 'back', center_text: '공지사항', right_icon: '' },
+    '/post/faq/:num': { left_icon: 'back', center_text: '자주묻는 질문', right_icon: '' },
+    '/request': { left_icon: '', center_text: '문의하기', right_icon: 'close' },
+    '/request/:num': { left_icon: 'back', center_text: '문의하기', right_icon: '' },
+    '/mypage': { left_icon: 'home', center_text: '내 정보 및 포인트 적립내역 확인하기', right_icon: '' },
+    '/history/point': { left_icon: 'home', center_text: '내 정보 및 포인트 적립내역 확인하기', right_icon: '' },
+    '/editmyinfo/0': { left_icon: 'back', center_text: '비밀번호 변경하기', right_icon: '' },
+    '/editmyinfo/1': { left_icon: 'back', center_text: '휴대폰번호 변경하기', right_icon: '' },
+    '/editmyinfo/2': { left_icon: 'mypage', center_text: '주소 변경하기', right_icon: '' },
+    '/change_pay_status': { left_icon: 'back', center_text: '결제 상태변경', right_icon: '' },
+    '/addcontract/:num': { left_icon: 'home_back', center_text: '계약서', right_icon: '' },
+    '/addcontract': { left_icon: 'home_back', center_text: '계약서', right_icon: '' },
+    '/customer-info': { left_icon: 'home', center_text: '고객정보조회', right_icon: '' },
+    '/history/commission': { left_icon: 'home', center_text: '정산내역', right_icon: '' },
+    '/contract/:num': { left_icon: 'back', center_text: '계약서', right_icon: '' },
+    '/resign': { left_icon: 'mypage', center_text: '회원탈퇴', right_icon: '' },
+  }
+
   return (
     <>
       <Header style={{ display: `${display}` }} className='header'>
@@ -309,16 +366,73 @@ const Headers = () => {
             :
             <>
             </>}
-          <LeftNoneIcon />
-          <HeaderLogo src={logoTextSrc} alt="홈으로" onClick={() => { navigate('/home') }} />
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton sx={{ padding: '0', mr: 1 }}>
-              <img src={bellIcon} style={{ marginRight: '6px' }} />
-            </IconButton>
-            <IconButton sx={{ padding: '0' }}>
-              <img src={menuIcon} onClick={onChangeMenuDisplay} />
-            </IconButton>
-          </div>
+          <NoneShowMobile>
+            <LeftNoneIcon />
+            <HeaderLogo src={logoTextSrc} alt="홈으로" onClick={() => { navigate('/home') }} />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <IconButton sx={{ padding: '0', mr: 1 }}>
+                <img src={bellIcon} style={{ marginRight: '6px' }} />
+              </IconButton>
+              <IconButton sx={{ padding: '0' }}>
+                <img src={menuIcon} onClick={onChangeMenuDisplay} />
+              </IconButton>
+            </div>
+          </NoneShowMobile>
+          <ShowMobile>
+            {header_content[getLinkFormat(location.pathname)] ?
+              <>
+                <div style={{ minWidth: '28px' }}>
+                  {header_content[getLinkFormat(location.pathname)].left_icon == 'home' &&
+                    <>
+                      <IconImg src={HomeIconSrc} onClick={() => {
+                        navigate('/home');
+                      }} />
+                    </>}
+                  {header_content[getLinkFormat(location.pathname)].left_icon == 'back' &&
+                    <>
+                      <Icon icon={'ion:arrow-back'} style={{ fontSize: '1.8rem', cursor: 'pointer' }} onClick={() => {
+                        navigate(-1);
+                      }} />
+                    </>}
+                  {header_content[getLinkFormat(location.pathname)].left_icon == 'mypage' &&
+                    <>
+                      <Icon icon={'ion:arrow-back'} style={{ fontSize: '1.8rem', cursor: 'pointer' }} onClick={() => {
+                        navigate('/mypage');
+                      }} />
+                    </>}
+                  {header_content[getLinkFormat(location.pathname)].left_icon == 'home_back' &&
+                    <>
+                      <Icon icon={'ion:arrow-back'} style={{ fontSize: '1.8rem', cursor: 'pointer' }} onClick={() => {
+                        navigate('/home');
+                      }} />
+                    </>}
+                </div>
+                <div style={{}}>
+                  {header_content[getLinkFormat(location.pathname)].center_text}
+                </div>
+                <div style={{ minWidth: '28px', textAlign: 'right' }}>
+                  {header_content[getLinkFormat(location.pathname)].right_icon == 'close' &&
+                    <>
+                      <Icon icon={'mingcute:close-line'} style={{ fontSize: '1.8rem', cursor: 'pointer' }} onClick={() => {
+                        navigate(-1);
+                      }} />
+                    </>}
+                </div>
+              </>
+              :
+              <>
+                <LeftNoneIcon />
+                <HeaderLogo src={logoTextSrc} alt="홈으로" onClick={() => { navigate('/home') }} />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <IconButton sx={{ padding: '0', mr: 1 }}>
+                    <img src={bellIcon} style={{ marginRight: '6px' }} />
+                  </IconButton>
+                  <IconButton sx={{ padding: '0' }}>
+                    <img src={menuIcon} onClick={onChangeMenuDisplay} />
+                  </IconButton>
+                </div>
+              </>}
+          </ShowMobile>
           <OpenSideBarBackground className='sidebar-open-background' onClick={onChangeMenuDisplay} />
 
           <SideBarContainer className="sidebar-menu-list">

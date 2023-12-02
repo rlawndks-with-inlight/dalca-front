@@ -129,8 +129,8 @@ const ResignCard = () => {
     return (
         <>
             <WrapperForm>
-                <Title>회원탈퇴</Title>
                 <InputComponent
+                    top_label={'비밀번호 재확인'}
                     label={'비밀번호를 입력해주세요.'}
                     input_type={{
                         placeholder: '',
@@ -141,7 +141,7 @@ const ResignCard = () => {
                     value={values?.password}
                     isSeeButton={true}
                 />
-                <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '32px' }} onClick={onResign} >회원탈퇴</Button>
+                <Button variant="text" sx={{ ...twoOfThreeButtonStyle, marginTop: '1rem' }} onClick={onResign} >회원탈퇴</Button>
 
             </WrapperForm>
         </>

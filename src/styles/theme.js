@@ -39,8 +39,8 @@ const theme = {
       { font: '#000', background: '#f5f6f8' },
     ],
     manager: {
-      background1: "#3250D2",
-      background2: "#eef1fd",
+      background1: "#FFD80A",
+      background2: "#FFD80A",
       background3: "#f5f6f8",
       font1: "#495057",
       font2: "#596275",

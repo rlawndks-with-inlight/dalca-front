@@ -166,7 +166,7 @@ const AroundRealEstate = () => {
                         <RenderAfterNavermapsLoaded	   // render 후 지도 호출(비동기 랜더링)
                             ncpClientId={'w2ogk0newp'} // 지도서비스 Client ID
                             error={<p>error</p>}
-                            loading={<p>Maps Loading</p>}
+                            loading={<p></p>}
                             submodules={["geocoder"]} //추가로 사용할 서브모듈이 있는경우
                         >
                             <NaverMap
