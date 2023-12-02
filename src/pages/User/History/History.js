@@ -11,7 +11,7 @@ import ContentTable from "../../../components/ContentTable";
 import MBottomContent from "../../../components/elements/MBottomContent";
 import PageButton from "../../../components/elements/pagination/PageButton";
 import PageContainer from "../../../components/elements/pagination/PageContainer";
-import { colorButtonStyle, HalfTitle, InputComponent, RowContent, SelectType, borderButtonStyle, twoOfThreeButtonStyle, Type, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, HalfTitle, InputComponent, RowContent, SelectType, borderButtonStyle, twoOfThreeButtonStyle, Type, Wrappers, RowContainer } from "../../../components/elements/UserContentTemplete";
 import Loading from "../../../components/Loading";
 import { mainPhone, objHistoryListContent } from "../../../data/ContentData";
 import { getLocalStorage } from "../../../functions/LocalStorage";
@@ -23,6 +23,7 @@ import { Col, Input, Row, Title } from "../../../components/elements/ManagerTemp
 import TelAlertIconSrc from '../../../assets/images/icon/tel-alert.svg'
 import KakaoTalkBigIconSrc from '../../../assets/images/icon/kakao-talk-big.svg'
 import $ from 'jquery';
+import BluePointIconSrc from '../../../assets/images/icon/blue-point.svg';
 const Post = styled.div`
 padding:0 8px;
 transition: 0.3s;
@@ -136,10 +137,15 @@ const returnTopContent = (data, func) => {
     if (table == 'point') {
         return (
             <>
-                <Row>
-                    <div> 총 포인트: </div>
-                    <div style={{ marginLeft: '0.5rem' }}>{commarNumber(optionObj?.point_sum)}P</div>
-                </Row>
+                <Col style={{ margin: '1rem auto', alignItems: 'center', rowGap: '0.5rem' }}>
+                    <div style={{ fontSize: theme.size.font6, color: theme.color.font3 }}>총 포인트</div>
+                    <RowContainer style={{ columnGap: '0.5rem' }}>
+                        <img src={BluePointIconSrc} />
+                        <div style={{ fontWeight: 'bold', fontSize: theme.size.font4 }}>
+                            {commarNumber(optionObj?.point_sum)}
+                        </div>
+                    </RowContainer>
+                </Col>
             </>
         )
     }

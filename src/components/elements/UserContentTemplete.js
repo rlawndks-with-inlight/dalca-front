@@ -310,11 +310,11 @@ background: #fff;
 }
 `
 export const TopTitleWithBackButton = (props) => {
-    const { title, onClickBackIcon } = props;
+    const { title, onClickBackIcon, style } = props;
     const navigate = useNavigate();
     return (
         <>
-            <TopTitleContainer>
+            <TopTitleContainer style={style}>
                 <Icon icon={'ion:arrow-back'} style={{ fontSize: '2rem', cursor: 'pointer' }} onClick={() => {
                     if (onClickBackIcon) {
                         onClickBackIcon();

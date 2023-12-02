@@ -8,8 +8,6 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdEdit } from 'react-icons/md';
 import theme from "../../../styles/theme";
-import ContentTable from "../../../components/ContentTable";
-import { Button } from "@mui/material";
 import { getUserLevelByNumber } from "../../../functions/format";
 import DefaultAvatar from '../../../assets/images/test/default-avatar.svg';
 import BluePointIconSrc from '../../../assets/images/icon/blue-point.svg';
@@ -156,11 +154,16 @@ const MyPage = () => {
                             <div>{auth?.name}</div>
                             <Icon icon={'ooui:next-ltr'} />
                         </RowContainer>
-                        <RowContainer style={{ margin: '0.5rem auto', alignItems: 'center', columnGap: '0.5rem' }}>
-                            <img src={BluePointIconSrc} />
-                            <div style={{ fontWeight: 'bold' }}>{commarNumber(auth?.total_point)}</div>
-                            <Icon icon={'ooui:next-ltr'} />
-                        </RowContainer>
+                        {auth?.user_level == 0 &&
+                            <>
+                                <RowContainer style={{ margin: '0.5rem auto', alignItems: 'center', columnGap: '0.5rem', cursor: 'pointer' }} onClick={() => {
+                                    navigate(`/history/point`)
+                                }}>
+                                    <img src={BluePointIconSrc} />
+                                    <div style={{ fontWeight: 'bold' }}>{commarNumber(auth?.total_point)}</div>
+                                    <Icon icon={'ooui:next-ltr'} />
+                                </RowContainer>
+                            </>}
                     </ProfileContainer>
                     <Container>
                         <Content>

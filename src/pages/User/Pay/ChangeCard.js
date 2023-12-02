@@ -1,6 +1,6 @@
 //카드변경
 
-import { colorButtonStyle, ContentWrappers, borderButtonStyle, CustomSelect, InputComponent, RowContent, SelectType, twoOfThreeButtonStyle, Type, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { colorButtonStyle, ContentWrappers, borderButtonStyle, CustomSelect, InputComponent, RowContent, SelectType, twoOfThreeButtonStyle, Type, Wrappers, TopTitleWithBackButton } from "../../../components/elements/UserContentTemplete";
 // ** React Imports
 import { useState } from 'react'
 // ** MUI Imports
@@ -50,7 +50,8 @@ import CheckOnIconSrc from '../../../assets/images/icon/check-on.svg'
 import CheckOffIconSrc from '../../../assets/images/icon/check-off.svg'
 import NoneCardSrc from '../../../assets/images/test/none-card.svg'
 import CameraIconSrc from '../../../assets/images/icon/camera.svg';
-
+import HomeIconSrc from '../../../assets/images/icon/home.svg';
+import PlusIconSrc from '../../../assets/images/icon/plus.svg';
 
 const CardWrapper = muiStyled('div')({
     display: 'flex',
@@ -68,6 +69,7 @@ top: -30rem;
 @media screen and (max-width: 1000px) {
 top: 0;
 width: 100%;
+z-index: 11;
 }
 `
 const Table = styled.table`
@@ -80,6 +82,28 @@ align-items: center;
 const Td = styled.td`
 padding: 0.3rem 0;
 align-items: center;
+`
+const TopTitleContainer = styled.div`
+align-items: center ;
+justify-content: space-between ;
+height: 4rem;
+display: none;
+position: fixed;
+width: 800px;
+z-index: 10;
+background: transparent;
+font-size: ${theme.size.font5};
+@media screen and (max-width:1000px) { 
+    display: flex;
+    width: 90vw;
+}
+`
+const TopTitlePaddingTop = styled.div`
+display: none;
+padding-top: 4rem;
+@media screen and (max-width:1000px) { 
+    display: flex;
+}
 `
 const CardData = (props) => {
 
@@ -565,7 +589,35 @@ const ChangeCard = () => {
                 <input type="hidden" id="Okurl" name="Okurl" value={frontUrl + '/api/'} ref={el => cardIdRef.current[4] = el} />
             </form>
             <OverBannerImg src={CardBannerSrc} />
-            <Wrappers>
+            <Wrappers style={{ zIndex: `${window.innerWidth <= 1000 ? 11 : ''}`, marginTop: `${window.innerWidth <= 1000 ? '0' : ''}` }}>
+                <TopTitleContainer>
+                    <img src={HomeIconSrc} style={{ cursor: 'pointer' }} onClick={() => {
+                        navigate('/home')
+                    }} />
+                    <div>결제카드등록 및 변경</div>
+                    {params?.category == 'family' ?
+                        <>
+                            <img src={PlusIconSrc} style={{ cursor: 'pointer' }} onClick={() => {
+                                setCardNumber("");
+                                setName("");
+                                setExpiry("");
+                                setCvc("");
+                                setBirth("");
+                                setPassword("");
+                                setPhone("");
+                                setPhoneCheck("");
+                                setIsSeeCard(true);
+                                setIsSendSms(false);
+                                sendMessage();
+                                toast.success("문자 및 알림을 확인해 주세요.");
+                            }} />
+                        </>
+                        :
+                        <>
+                            <div style={{ width: '24px' }} />
+                        </>}
+                </TopTitleContainer>
+                <TopTitlePaddingTop />
                 <SelectType className="select-type">
                     <Type style={{ border: `1px solid transparent`, color: `${params?.category == 'change' ? theme.color.background2 : theme.color.font3}`, background: `${params?.category == 'change' ? '#fff' : 'transparent'}`, }} onClick={() => { navigate(`/card/change`) }}>본인카드 등록 및 변경</Type>
                     <Type style={{ border: `1px solid transparent`, color: `${params?.category == 'family' ? theme.color.background2 : theme.color.font3}`, background: `${params?.category == 'family' ? '#fff' : 'transparent'}`, }} onClick={() => { navigate(`/card/family`) }}>타인카드 등록 및 변경</Type>
@@ -778,7 +830,7 @@ const ChangeCard = () => {
                                                     <input type="file" id={`card_src`} name={'card_src'} onChange={addFile} style={{ display: 'none' }} />
                                                 </div>
                                                 {cardSrc ?
-                                                     <>
+                                                    <>
                                                         <img src={typeof cardSrc == 'string' ? backUrl + cardSrc : URL.createObjectURL(cardSrc)} alt="#"
                                                             style={{
                                                                 width: 'auto', maxHeight: '8rem',

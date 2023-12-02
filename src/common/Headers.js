@@ -172,12 +172,15 @@ width: 100%;
 }
 `
 const ShowMobile = styled.div`
-display:flex;
+display:none;
 align-items:center;
 justify-content: space-between;
 width: 100%;
 font-weight: bold;
 font-size: ${theme.size.font5};
+@media screen and (max-width:1050px) { 
+  display:flex;
+}
 `
 const IconImg = styled.img`
 cursor: pointer;
@@ -322,8 +325,8 @@ const Headers = () => {
     '/request/:num': { left_icon: 'back', center_text: '문의하기', right_icon: '' },
     '/mypage': { left_icon: 'home', center_text: '내 정보 및 포인트 적립내역 확인하기', right_icon: '' },
     '/history/point': { left_icon: 'home', center_text: '내 정보 및 포인트 적립내역 확인하기', right_icon: '' },
-    '/editmyinfo/0': { left_icon: 'back', center_text: '비밀번호 변경하기', right_icon: '' },
-    '/editmyinfo/1': { left_icon: 'back', center_text: '휴대폰번호 변경하기', right_icon: '' },
+    '/editmyinfo/0': { left_icon: 'mypage', center_text: '비밀번호 변경하기', right_icon: '' },
+    '/editmyinfo/1': { left_icon: 'mypage', center_text: '휴대폰번호 변경하기', right_icon: '' },
     '/editmyinfo/2': { left_icon: 'mypage', center_text: '주소 변경하기', right_icon: '' },
     '/change_pay_status': { left_icon: 'back', center_text: '결제 상태변경', right_icon: '' },
     '/addcontract/:num': { left_icon: 'home_back', center_text: '계약서', right_icon: '' },
