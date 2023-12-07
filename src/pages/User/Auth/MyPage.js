@@ -16,6 +16,7 @@ import { commarNumber } from "../../../functions/utils";
 const MyCard = styled.div`
 display:flex;
 flex-direction: column;
+margin-top: 2rem;
 `
 const ProfileContainer = styled.div`
 display:flex;

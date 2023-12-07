@@ -1,6 +1,6 @@
 //계약생성
 
-import { ContentWrappers, CustomSelect, InputComponent, postCodeStyle, RowContent, twoOfThreeButtonStyle, Wrappers } from "../../../components/elements/UserContentTemplete";
+import { ContentWrappers, CustomSelect, InputComponent, postCodeStyle, RowContent, twoOfThreeButtonStyle, Wrappers, colorButtonStyle } from "../../../components/elements/UserContentTemplete";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -834,6 +834,7 @@ const AddContract = () => {
                                                         <Button sx={{
                                                             ...twoOfThreeButtonStyle, background: theme.color.background2, color: '#fff', '&:hover': {
                                                                 background: theme.color.background2,
+                                                                marginTop: 'auto'
                                                             },
                                                             '&:active': {
                                                                 background: theme.color.background2,
@@ -958,23 +959,16 @@ const AddContract = () => {
                                 :
                                 <>
                                 </>}
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '100%',
-                                marginTop: '1rem',
-                                rowGap: '1rem'
-                            }}>
+                            <RowContent style={{ columnGap: '0.5rem', marginTop: '1rem' }}>
                                 {activeStep == 0 ?
                                     <>
-                                        <div />
                                     </>
                                     :
                                     <>
-                                        <Button sx={twoOfThreeButtonStyle} onClick={onPrevButton}>이전</Button>
+                                        <Button sx={{ ...colorButtonStyle, width: '50%' }} onClick={onPrevButton}>이전</Button>
                                     </>}
-                                <Button sx={twoOfThreeButtonStyle} onClick={onNextButton} disabled={!canNextButton(activeStep)}>{activeStep == 3 ? '완료' : '다음'}</Button>
-                            </div>
+                                <Button sx={{ ...colorButtonStyle, width: `${activeStep == 0 ? '100%' : '50%'}` }} onClick={onNextButton} disabled={!canNextButton(activeStep)}>{activeStep == 3 ? '완료' : '다음'}</Button>
+                            </RowContent>
                             {isSeePostCode ?
                                 <>
                                     <Modal onClickXbutton={() => { setIsSeePostCode(false) }}>

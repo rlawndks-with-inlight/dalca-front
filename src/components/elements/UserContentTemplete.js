@@ -19,7 +19,7 @@ display:flex;
 flex-direction:column;
 width: 90%;
 max-width:1000px;
-margin-top:6rem;
+margin-top:7rem;
 margin-left:auto;
 margin-right:auto;
 margin-bottom:6rem;
