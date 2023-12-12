@@ -68,6 +68,7 @@ const Login = () => {
     const location = useLocation();
     const [signUpCount, setSignUpCount] = useState(0);
     const [state, setState] = useState({});
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         window.scrollTo(0, 0);
         setState(location.state)
@@ -81,10 +82,12 @@ const Login = () => {
         isAuth();
     }, [])
     const isAuth = async () => {
+
         const { data: response } = await axios.get(`/api/auth`);
         if (response?.pk > 0) {
             navigate('/home');
         }
+        setLoading(false);
     }
     const handleChange = (value, key) => {
         setValues({ ...values, [key]: value });
@@ -112,6 +115,12 @@ const Login = () => {
             window.location.href = state?.redirect_url ?? '/home';
 
         }
+    }
+    if (loading) {
+        return (
+            <>
+            </>
+        )
     }
     return (
         <>
